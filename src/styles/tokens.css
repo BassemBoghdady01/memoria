@@ -1,0 +1,82 @@
+/* ————————————————————————————————————————————————
+   MEMÓRIA · Design tokens
+   Palette taken verbatim from the supplied brand
+   colour sheet (brand-src/color-palette.jpeg).
+   ———————————————————————————————————————————————— */
+
+:root {
+  /* — Supplied palette — */
+  --parchment: #e8ddc8;   /* Background */
+  --sand: #d8c3a3;        /* Secondary neutral */
+  --brown: #5a3522;       /* Typography & primary brand */
+  --cocoa: #3e281b;       /* Strong text & focus */
+  --dust: #7b786f;        /* Archive details & support */
+  --paper-grey: #b5b0a6;  /* Secondary neutral */
+  --teal: #2f6670;        /* Cultural highlight (sparing) */
+  --terracotta: #b66a4b;  /* Warm accent (sparing) */
+
+  /* — Derived tints/shades (hierarchy only, never replacing the palette) — */
+  --parchment-bright: #f1e9d8; /* raised cards / labels */
+  --parchment-deep: #ded1b6;   /* recessed surfaces */
+  --sand-soft: #e2d2b8;
+  --cocoa-deep: #2c1c11;       /* darkest ink / footer ground */
+  --teal-deep: #24505a;
+  --terracotta-deep: #9e5539;
+
+  /* — Semantic — */
+  --bg: var(--parchment);
+  --surface: var(--parchment-bright);
+  --ink: var(--cocoa);
+  --ink-soft: var(--brown);
+  --ink-faint: var(--dust);
+  --line: color-mix(in srgb, var(--brown) 26%, transparent);
+  --line-strong: color-mix(in srgb, var(--brown) 55%, transparent);
+  --line-faint: color-mix(in srgb, var(--brown) 14%, transparent);
+  --focus-ring: 2px solid var(--teal);
+
+  /* — Type — */
+  --font-serif: 'Cormorant Garamond', 'Cormorant Garamond Fallback', Georgia, 'Times New Roman', serif;
+  --font-ui: 'Jost', 'Jost Fallback', 'Century Gothic', 'Futura', system-ui, sans-serif;
+  --font-mono: 'Courier Prime', 'Courier New', monospace;
+  --font-hand: 'Caveat', 'Segoe Script', cursive;
+
+  /* Fluid type scale */
+  --fs-display: clamp(2.6rem, 1.2rem + 6vw, 6.4rem);
+  --fs-h1: clamp(2.2rem, 1.2rem + 4vw, 4.4rem);
+  --fs-h2: clamp(1.8rem, 1.1rem + 2.6vw, 3.2rem);
+  --fs-h3: clamp(1.4rem, 1.05rem + 1.4vw, 2.1rem);
+  --fs-lede: clamp(1.08rem, 1rem + 0.5vw, 1.35rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-label: 0.72rem;
+  --fs-label-lg: 0.8rem;
+
+  --track-label: 0.18em;
+  --track-wide: 0.3em;
+
+  /* — Space & layout — */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2.5rem;
+  --space-6: 4rem;
+  --space-7: 6rem;
+  --space-8: 8.5rem;
+  --container: 82rem;
+  --container-narrow: 46rem;
+  --gutter: clamp(1.1rem, 4vw, 3rem);
+  --header-h: 4.25rem;
+  --ribbon-h: 2rem;
+
+  /* — Motion — */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-slow: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 180ms;
+  --dur-med: 420ms;
+  --dur-slow: 900ms;
+
+  /* — Elevation (soft, print-like; no glassy glows) — */
+  --shadow-card: 0 1px 2px rgba(62, 40, 27, 0.08), 0 10px 30px -12px rgba(62, 40, 27, 0.22);
+  --shadow-float: 0 2px 6px rgba(62, 40, 27, 0.12), 0 24px 60px -18px rgba(62, 40, 27, 0.34);
+}

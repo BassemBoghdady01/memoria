@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git --version)",
+      "Bash(node -e ' *)",
+      "Bash(mkdir -p brand-src)",
+      "Bash(mv \"WhatsApp Image 2026-08-05 at 5.58.20 PM.jpeg\" brand-src/color-palette.jpeg)",
+      "Bash(mv memoria_svgg.svg brand-src/memoria-logo.svg)",
+      "Bash(mv logo_extract_0.png brand-src/logo-mask.png)",
+      "Bash(mv logo_extract_1.png brand-src/logo-color.png)",
+      "Bash(node -e \"require\\('sharp'\\); console.log\\('sharp ok'\\)\")",
+      "Bash(node --input-type=module -e \"import\\('sharp'\\).then\\(\\(\\)=>console.log\\('sharp ok'\\)\\)\")",
+      "Bash(npm i *)",
+      "Bash(npx vite *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173/)",
+      "Bash(npx playwright *)"
+    ]
+  }
+}

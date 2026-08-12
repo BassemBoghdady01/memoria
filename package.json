@@ -1,0 +1,26 @@
+{
+  "name": "memoria",
+  "private": true,
+  "version": "1.0.0",
+  "description": "MEMÓRIA — perfume house e-commerce. Rooted in memory. Inspired by Cairo.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "assets": "node scripts/build-brand-assets.mjs"
+  },
+  "dependencies": {
+    "@fontsource/caveat": "^5.3.0",
+    "@fontsource/cormorant-garamond": "^5.1.0",
+    "@fontsource/courier-prime": "^5.1.0",
+    "@fontsource/jost": "^5.1.0",
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.14"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1",
+    "sharp": "^0.33.5",
+    "vite": "^5.4.10"
+  }
+}
