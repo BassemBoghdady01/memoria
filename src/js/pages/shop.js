@@ -39,11 +39,11 @@ function makePage(gender) {
           <p class="serif-lede" data-reveal>${copy.lede}</p>
         </div>
         <div class="shop__bar">
-          <div class="filters filters--left" role="group" aria-label="Filter by">
-            <a class="filter-tab" href="/shop" aria-pressed="${gender === 'all'}">All</a>
-            <a class="filter-tab" href="/women" aria-pressed="${gender === 'her'}">Women</a>
-            <a class="filter-tab" href="/men" aria-pressed="${gender === 'him'}">Men</a>
-          </div>
+          <nav class="filters filters--left" aria-label="Filter by">
+            <a class="filter-tab" href="/shop" ${gender === 'all' ? 'aria-current="true"' : ''}>All</a>
+            <a class="filter-tab" href="/women" ${gender === 'her' ? 'aria-current="true"' : ''}>Women</a>
+            <a class="filter-tab" href="/men" ${gender === 'him' ? 'aria-current="true"' : ''}>Men</a>
+          </nav>
           <span class="shop__count">${list.length} scent${list.length === 1 ? '' : 's'} · Eau de Parfum</span>
         </div>
         ${renderProductGrid(list)}

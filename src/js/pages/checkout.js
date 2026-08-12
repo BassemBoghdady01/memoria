@@ -7,7 +7,8 @@ import { esc, money, toast } from '../utils.js';
 import { cart } from '../store/cart.js';
 import { renderBottle } from '../components/bottle.js';
 import { icons } from '../components/icons.js';
-import { navigate } from '../router.js';
+import { navigate, renderRoute } from '../router.js';
+import { onPageCleanup } from '../motion.js';
 
 function summary() {
   const items = cart.items;
@@ -127,16 +128,36 @@ export default {
   },
 
   mount(root) {
+    /* If the bag is edited via the header drawer while on /checkout,
+       re-render so items and totals never go stale. */
+    let placing = false;
+    onPageCleanup(
+      cart.onChange(() => {
+        if (!placing) renderRoute({ scroll: false });
+      })
+    );
+
     const form = root.querySelector('[data-checkout-form]');
     if (!form) return;
 
+    /* aria wiring for validation messages */
+    form.querySelectorAll('.field input[required]').forEach((input, i) => {
+      const err = input.closest('.field').querySelector('.field__error');
+      if (err) {
+        err.id = `co-err-${i}`;
+        input.setAttribute('aria-describedby', err.id);
+      }
+    });
+
     form.addEventListener('submit', (e) => {
       e.preventDefault();
+      if (!cart.items.length) return;
       let valid = true;
       form.querySelectorAll('.field input[required]').forEach((input) => {
         const field = input.closest('.field');
         const ok = input.checkValidity() && input.value.trim().length > 0;
         field.classList.toggle('has-error', !ok);
+        input.setAttribute('aria-invalid', String(!ok));
         if (!ok) valid = false;
       });
       if (!valid) {
@@ -144,6 +165,7 @@ export default {
         toast('A few details are missing — check the highlighted fields.');
         return;
       }
+      placing = true;
 
       /* Simulated order placement (backend integration point). */
       const orderNo = `MEM-${String(Math.floor(1000 + Math.random() * 9000))}`;

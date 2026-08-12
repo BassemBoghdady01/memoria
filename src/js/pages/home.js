@@ -13,6 +13,7 @@ import { openFinder } from '../components/finder.js';
 import {
   gsap, ScrollTrigger, motionOK, attachTilt, floatBottle, sweepBottle, driftMist, onPageCleanup,
 } from '../motion.js';
+import { renderRoute } from '../router.js';
 
 const featured = getFeatured();
 
@@ -298,17 +299,18 @@ export default {
     /* — Collection filter — */
     const grid = root.querySelector('[data-collection-grid]');
     const tabs = root.querySelectorAll('.filter-tab');
+    let disposeCards = mountProductCards(root);
     tabs.forEach((tab) =>
       tab.addEventListener('click', () => {
         tabs.forEach((t) => t.setAttribute('aria-pressed', String(t === tab)));
         const f = tab.dataset.filter;
         const list = f === 'all' ? products : products.filter((p) => p.gender === f);
+        disposeCards();
         grid.innerHTML = renderProductGrid(list);
         grid.querySelectorAll('[data-reveal]').forEach((n) => n.classList.add('is-in'));
-        mountProductCards(grid);
+        disposeCards = mountProductCards(grid);
       })
     );
-    mountProductCards(root);
 
     /* — Finder — */
     root.querySelector('[data-open-finder]').addEventListener('click', openFinder);
@@ -331,9 +333,16 @@ export default {
           scrollTrigger: { trigger: root.querySelector('.hero'), start: 'top top', end: 'bottom top', scrub: 0.6 },
         }
       );
-      /* slow ambient push-in on load */
-      gsap.from(heroBg, { scale: 1.05, duration: 3.2, ease: 'power2.out' });
+      /* slow ambient reveal on load (opacity only — scale belongs to the scrub) */
+      gsap.from(root.querySelector('.hero__glow'), { opacity: 0, duration: 2.6, ease: 'power2.out' });
     }
+
+    /* Re-render if the viewport crosses the pin/carousel breakpoint,
+       so the pinned showcase and cine scene swap modes cleanly. */
+    const mq = window.matchMedia('(max-width: 820px)');
+    const onMq = () => renderRoute({ scroll: false });
+    mq.addEventListener('change', onMq);
+    onPageCleanup(() => mq.removeEventListener('change', onMq));
 
     /* — Cinematic zoom-to-scent scene — */
     const cine = root.querySelector('[data-cine]');

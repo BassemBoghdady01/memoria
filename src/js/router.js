@@ -3,7 +3,15 @@
  * Routes map to page modules: { title, render(params) -> html, mount(root, params) }.
  */
 import { $, $$ } from './utils.js';
-import { flushPage, scanReveals, scrollToTop, refreshTriggers } from './motion.js';
+import { flushPage, scanReveals, scrollToTop, scrollToY, refreshTriggers } from './motion.js';
+
+function safeDecode(v) {
+  try {
+    return decodeURIComponent(v);
+  } catch {
+    return v;
+  }
+}
 
 const routes = [];
 
@@ -29,7 +37,7 @@ function match(path) {
     const m = clean.match(r.rx);
     if (m) {
       const params = {};
-      r.keys.forEach((k, i) => (params[k] = decodeURIComponent(m[i + 1])));
+      r.keys.forEach((k, i) => (params[k] = safeDecode(m[i + 1])));
       return { page: r.page, params };
     }
   }
@@ -61,6 +69,10 @@ export async function renderRoute({ scroll = true } = {}) {
   page.mount?.(main, params);
   scanReveals(main);
   requestAnimationFrame(() => refreshTriggers());
+  if (currentPath !== null && currentPath !== path) {
+    /* let assistive tech know the view changed */
+    main.focus({ preventScroll: true });
+  }
   currentPath = path;
 }
 
@@ -71,6 +83,10 @@ export function navigate(href, { replace = false } = {}) {
     return;
   }
   const same = url.pathname === location.pathname && url.search === location.search;
+  if (!same) {
+    /* stamp the outgoing entry with its scroll position for Back/Forward */
+    history.replaceState({ ...(history.state || {}), scrollY: window.scrollY }, '', location.href);
+  }
   if (replace) history.replaceState({}, '', url);
   else if (!same) history.pushState({}, '', url);
   if (!same || url.pathname !== currentPath) renderRoute();
@@ -111,6 +127,12 @@ export function initRouter() {
     navigate(href);
   });
 
-  window.addEventListener('popstate', () => renderRoute());
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.addEventListener('popstate', (e) => {
+    const y = e.state?.scrollY ?? 0;
+    renderRoute({ scroll: false }).then(() => {
+      requestAnimationFrame(() => scrollToY(y));
+    });
+  });
   renderRoute();
 }

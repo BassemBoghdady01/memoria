@@ -30,9 +30,33 @@ export function initSmoothScroll() {
   gsap.ticker.lagSmoothing(0);
 }
 
+/* Pause smooth scroll while an overlay/drawer owns the viewport, so
+   panel contents can be wheel-scrolled natively. */
+document.addEventListener('memoria:scroll-lock', () => lenis?.stop());
+document.addEventListener('memoria:scroll-unlock', () => lenis?.start());
+
 export function scrollToTop(immediate = true) {
-  if (lenis) lenis.scrollTo(0, { immediate });
-  else window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+  if (lenis) {
+    lenis.scrollTo(0, { immediate });
+    return;
+  }
+  /* bypass `html { scroll-behavior: smooth }` for route changes */
+  const html = document.documentElement;
+  const prev = html.style.scrollBehavior;
+  html.style.scrollBehavior = 'auto';
+  window.scrollTo(0, 0);
+  requestAnimationFrame(() => (html.style.scrollBehavior = prev));
+}
+
+export function scrollToY(y) {
+  if (lenis) lenis.scrollTo(y, { immediate: true });
+  else {
+    const html = document.documentElement;
+    const prev = html.style.scrollBehavior;
+    html.style.scrollBehavior = 'auto';
+    window.scrollTo(0, y);
+    requestAnimationFrame(() => (html.style.scrollBehavior = prev));
+  }
 }
 
 export function stopLenis() { lenis?.stop(); }
@@ -78,6 +102,9 @@ export function flushPage() {
   cleanups.clear();
   ScrollTrigger.getAll().forEach((st) => st.kill());
   gsap.globalTimeline.clear();
+  /* drop reveal observations of the outgoing page's nodes */
+  revealObserver?.disconnect();
+  revealObserver = null;
 }
 
 export function refreshTriggers() {

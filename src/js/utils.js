@@ -67,10 +67,15 @@ let scrollLocks = 0;
 export function lockScroll() {
   scrollLocks++;
   document.documentElement.style.overflow = 'hidden';
+  /* motion.js listens and pauses Lenis so overlay panels can wheel-scroll */
+  document.dispatchEvent(new CustomEvent('memoria:scroll-lock'));
 }
 export function unlockScroll() {
   scrollLocks = Math.max(0, scrollLocks - 1);
-  if (scrollLocks === 0) document.documentElement.style.overflow = '';
+  if (scrollLocks === 0) {
+    document.documentElement.style.overflow = '';
+    document.dispatchEvent(new CustomEvent('memoria:scroll-unlock'));
+  }
 }
 
 /** Tiny toast feedback. */

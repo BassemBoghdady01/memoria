@@ -109,14 +109,14 @@ export default {
             </div>
 
             <div class="pdp__price">
-              <span data-price-display>${money(p.sizes[p.sizes.length - 1].price)}</span>
+              <span data-price-display aria-live="polite">${money(p.sizes[p.sizes.length - 1].price)}</span>
               <small>VAT included · placeholder pricing</small>
             </div>
 
             <div class="pdp__ctarow">
               <div class="qty" aria-label="Quantity">
                 <button data-qty="-1" aria-label="Decrease quantity">−</button>
-                <span data-qty-display>1</span>
+                <span data-qty-display aria-live="polite">1</span>
                 <button data-qty="1" aria-label="Increase quantity">+</button>
               </div>
               <button class="btn btn--primary" data-add-main>Add to Bag</button>

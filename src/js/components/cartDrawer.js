@@ -11,6 +11,7 @@ import { navigate } from '../router.js';
 let drawer = null;
 let untrap = null;
 let isOpen = false;
+let lastFocus = null;
 
 function ensureDrawer() {
   if (drawer) return drawer;
@@ -22,7 +23,7 @@ function ensureDrawer() {
           <span class="drawer__title">Your Bag <span data-drawer-count></span></span>
           <button class="iconbtn" data-close-cart aria-label="Close bag">${icons.close()}</button>
         </div>
-        <div class="drawer__body" data-drawer-body></div>
+        <div class="drawer__body" data-drawer-body data-lenis-prevent></div>
         <div class="drawer__foot" data-drawer-foot hidden>
           <div class="drawer__subtotal">
             <span class="label">Subtotal</span>
@@ -30,7 +31,7 @@ function ensureDrawer() {
           </div>
           <a class="btn btn--primary btn--block" href="/checkout" data-drawer-checkout>Checkout</a>
           <a class="link-line" style="align-self:center" href="/cart" data-drawer-viewbag>View bag</a>
-          <p class="drawer__note">Delivery & taxes calculated at checkout.</p>
+          <p class="drawer__note">Delivery confirmed by phone after checkout.</p>
         </div>
       </aside>
     </div>`);
@@ -54,6 +55,17 @@ function renderBody() {
   const count = drawer.querySelector('[data-drawer-count]');
   const items = cart.items;
   count.textContent = items.length ? `· ${cart.count}` : '';
+
+  /* remember which control the user was on, so a rebuild doesn't drop
+     keyboard focus back to <body> */
+  const focused = document.activeElement;
+  const focusMemo =
+    body.contains(focused) && focused.closest('[data-line]')
+      ? {
+          line: focused.closest('[data-line]').dataset.line,
+          kind: focused.dataset.qty || (focused.dataset.remove !== undefined ? 'remove' : null),
+        }
+      : null;
 
   if (!items.length) {
     body.innerHTML = `
@@ -104,11 +116,23 @@ function renderBody() {
 
   foot.hidden = false;
   drawer.querySelector('[data-drawer-subtotal]').textContent = money(cart.subtotal);
+
+  if (focusMemo) {
+    const row = body.querySelector(`[data-line="${focusMemo.line}"]`) || body.querySelector('[data-line]');
+    if (row) {
+      const target =
+        focusMemo.kind === 'remove'
+          ? row.querySelector('[data-remove]')
+          : row.querySelector(`[data-qty="${focusMemo.kind}"]`) || row.querySelector('[data-qty]');
+      target?.focus();
+    }
+  }
 }
 
 export function openCartDrawer() {
   ensureDrawer();
   renderBody();
+  lastFocus = document.activeElement;
   drawer.classList.add('is-open');
   drawer.setAttribute('aria-hidden', 'false');
   lockScroll();
@@ -124,4 +148,5 @@ export function closeCartDrawer() {
   unlockScroll();
   isOpen = false;
   untrap?.();
+  lastFocus?.focus?.();
 }

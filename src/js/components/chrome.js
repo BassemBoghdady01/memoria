@@ -7,8 +7,10 @@ import { cart } from '../store/cart.js';
 import { openCartDrawer } from './cartDrawer.js';
 import { openSearch } from './searchOverlay.js';
 
-const LOGO = '/brand/logo-brown-560.png';
-const LOGO_CREAM = '/brand/logo-cream-560.png';
+/* 320px variants — the chrome renders the mark at ~110px wide, so 320
+   is already ~3× density; the 560/900/1400 sizes serve larger uses. */
+const LOGO = '/brand/logo-brown-320.png';
+const LOGO_CREAM = '/brand/logo-cream-320.png';
 
 /* Tagline supplied on the brand palette sheet — used verbatim. */
 const TAGLINE = ['Rooted in memory', 'Inspired by Cairo', 'Made to be remembered', 'Twenty years of scents'];
@@ -17,9 +19,10 @@ export function renderRibbon() {
   const items = TAGLINE.map(
     (t) => `<span class="ribbon__item"><span>${t}</span><span class="ribbon__dot" aria-hidden="true"></span></span>`
   ).join('');
+  /* an even number of copies keeps the -50% marquee loop seamless */
   $('#ribbon').innerHTML = `
     <div class="ribbon" aria-hidden="true">
-      <div class="ribbon__track">${items}${items}${items}</div>
+      <div class="ribbon__track">${items}${items}${items}${items}</div>
     </div>`;
 }
 
@@ -35,7 +38,7 @@ export function renderHeader() {
           <a class="header__navlink" data-navlink href="/men">Men</a>
         </nav>
         <a class="header__logo" href="/" aria-label="MEMÓRIA — home">
-          <img src="${LOGO}" alt="MEMÓRIA" width="560" height="142" />
+          <img src="${LOGO}" alt="MEMÓRIA" width="320" height="81" />
         </a>
         <nav class="header__nav header__nav--right" aria-label="House">
           <a class="header__navlink" data-navlink href="/our-story">Our Story</a>
@@ -95,7 +98,9 @@ export function renderHeader() {
   /* mobile nav */
   const nav = header.querySelector('[data-mobilenav]');
   let untrap = null;
+  let navLastFocus = null;
   const openNav = () => {
+    navLastFocus = document.activeElement;
     nav.classList.add('is-open');
     nav.setAttribute('aria-hidden', 'false');
     lockScroll();
@@ -107,6 +112,7 @@ export function renderHeader() {
     nav.setAttribute('aria-hidden', 'true');
     unlockScroll();
     untrap?.();
+    navLastFocus?.focus?.();
   };
   header.querySelector('[data-open-mobilenav]').addEventListener('click', openNav);
   nav.querySelectorAll('[data-close-mobilenav]').forEach((b) => b.addEventListener('click', closeNav));
@@ -122,8 +128,8 @@ export function renderFooter() {
     <div class="footer">
       <div class="container footer__inner">
         <div class="footer__brand">
-          <img src="${LOGO_CREAM}" alt="MEMÓRIA" width="560" height="142" />
-          <p>A perfume house rooted in memory, inspired by Cairo — twenty years of scents in six bottles.</p>
+          <img src="${LOGO_CREAM}" alt="MEMÓRIA" width="320" height="81" />
+          <p>Rooted in memory. Inspired by Cairo. Made to be remembered.</p>
         </div>
         <div class="footer__col">
           <h3>Shop</h3>

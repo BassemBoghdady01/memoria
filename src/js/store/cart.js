@@ -29,6 +29,14 @@ function persist() {
   bus.dispatchEvent(new CustomEvent('change'));
 }
 
+/* Keep concurrent tabs in sync — reload on external writes. */
+window.addEventListener('storage', (e) => {
+  if (e.key === KEY) {
+    items = load();
+    bus.dispatchEvent(new CustomEvent('change'));
+  }
+});
+
 export const cart = {
   get items() {
     return items.map((l) => {

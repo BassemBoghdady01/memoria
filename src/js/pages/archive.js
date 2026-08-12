@@ -88,7 +88,7 @@ export default {
             <div class="archive__meta">
               <span class="year" data-reveal>${era.year}</span>
               <span class="stamp" data-reveal>${esc(era.tag)}</span>
-              <h3 data-reveal>${esc(era.title)}</h3>
+              <h2 data-reveal>${esc(era.title)}</h2>
               <p data-reveal>${esc(era.text)}</p>
             </div>
             <div class="archive__cards">

@@ -36,8 +36,13 @@ export function renderProductGrid(list, opts = {}) {
   return `<div class="pgrid">${list.map((p, i) => renderProductCard(p, { revealDelay: (i % 3) * 90, ...opts })).join('')}</div>`;
 }
 
-/** Wire up add-to-bag buttons + bottle tilt inside a container. */
+/**
+ * Wire up add-to-bag buttons + bottle tilt inside a container.
+ * Returns a disposer — call it before replacing the container's HTML
+ * (filter tabs, live search) so infinite tweens don't outlive their cards.
+ */
 export function mountProductCards(root) {
+  const offs = [];
   root.querySelectorAll('[data-add]').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -48,9 +53,13 @@ export function mountProductCards(root) {
   root.querySelectorAll('[data-pcard]').forEach((card) => {
     /* Tilt listens on the whole card: the full-card link overlay sits above
        the stage, so pointer events must be caught at card level. */
-    const off1 = attachTilt(card, { max: 6 });
-    const off2 = sweepBottle(card, { every: 7 + Math.random() * 5 });
-    onPageCleanup(off1);
-    onPageCleanup(off2);
+    offs.push(attachTilt(card, { max: 6 }));
+    offs.push(sweepBottle(card, { every: 7 + Math.random() * 5 }));
   });
+  const dispose = () => {
+    offs.forEach((fn) => fn?.());
+    offs.length = 0;
+  };
+  onPageCleanup(dispose);
+  return dispose;
 }

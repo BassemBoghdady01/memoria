@@ -64,6 +64,7 @@ let isOpen = false;
 let untrap = null;
 let step = 0;
 let answers = {};
+let lastFocus = null;
 
 function ensure() {
   if (overlay) return overlay;
@@ -76,7 +77,7 @@ function ensure() {
           <span class="drawer__title" style="flex:1">Find Your Memory</span>
           <button class="iconbtn" data-close-finder aria-label="Close finder">${icons.close()}</button>
         </div>
-        <div class="finder__body" data-finder-body></div>
+        <div class="finder__body" data-finder-body data-lenis-prevent></div>
       </div>
     </div>`);
   document.querySelector('#overlays').appendChild(overlay);
@@ -87,7 +88,7 @@ function ensure() {
   return overlay;
 }
 
-function renderStep() {
+function renderStep({ focusFirst = false } = {}) {
   const body = overlay.querySelector('[data-finder-body]');
   if (step < STEPS.length) {
     const s = STEPS[step];
@@ -113,13 +114,14 @@ function renderStep() {
       b.addEventListener('click', () => {
         answers[s.key] = b.dataset.val;
         step++;
-        renderStep();
+        renderStep({ focusFirst: true });
       })
     );
     body.querySelector('[data-back]')?.addEventListener('click', () => {
       step--;
-      renderStep();
+      renderStep({ focusFirst: true });
     });
+    if (focusFirst) body.querySelector('.finder__opt')?.focus();
   } else {
     const recs = recommend(answers);
     body.innerHTML = `
@@ -154,8 +156,9 @@ function renderStep() {
     body.querySelector('[data-restart]').addEventListener('click', () => {
       step = 0;
       answers = {};
-      renderStep();
+      renderStep({ focusFirst: true });
     });
+    if (focusFirst) body.querySelector('.search__item')?.focus();
   }
 }
 
@@ -164,6 +167,7 @@ export function openFinder() {
   step = 0;
   answers = {};
   renderStep();
+  lastFocus = document.activeElement;
   overlay.classList.add('is-open');
   overlay.setAttribute('aria-hidden', 'false');
   lockScroll();
@@ -179,4 +183,5 @@ export function closeFinder() {
   unlockScroll();
   isOpen = false;
   untrap?.();
+  lastFocus?.focus?.();
 }

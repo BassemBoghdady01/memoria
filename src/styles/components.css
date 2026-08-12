@@ -701,6 +701,7 @@
   transform: translateX(-50%) translateY(14px);
   width: min(94vw, 40rem);
   max-height: 84vh;
+  max-height: 84dvh;
   background: var(--parchment);
   border: 1px solid var(--line);
   box-shadow: var(--shadow-float);
@@ -741,7 +742,7 @@
   min-width: 0;
 }
 .search__input::placeholder {
-  color: var(--paper-grey);
+  color: var(--dust);
   font-style: italic;
 }
 .search__results {
@@ -1068,7 +1069,8 @@
 .filter-tab:hover {
   border-color: var(--brown);
 }
-.filter-tab[aria-pressed='true'] {
+.filter-tab[aria-pressed='true'],
+.filter-tab[aria-current='true'] {
   background: var(--brown);
   border-color: var(--brown);
   color: var(--parchment);
@@ -1109,7 +1111,7 @@
   box-shadow: 0 0 0 1px var(--teal);
 }
 .field input::placeholder {
-  color: var(--paper-grey);
+  color: var(--dust);
 }
 .field .field__error {
   font-size: 0.7rem;
@@ -1264,6 +1266,7 @@
     opacity var(--dur-med) ease,
     transform var(--dur-med) var(--ease-out);
   max-height: 88vh;
+  max-height: 88dvh;
   overflow-y: auto;
 }
 .lightbox.is-open .lightbox__card {

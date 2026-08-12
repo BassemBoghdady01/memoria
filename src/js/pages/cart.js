@@ -44,7 +44,7 @@ function renderList() {
     <aside class="cartpage__summary" aria-label="Order summary">
       <h2>Summary</h2>
       <div class="sumline"><span>Subtotal</span><span>${money(cart.subtotal)}</span></div>
-      <div class="sumline"><span>Delivery</span><span>Calculated at checkout</span></div>
+      <div class="sumline"><span>Delivery</span><span>Confirmed by phone</span></div>
       <div class="sumline sumline--total">
         <span class="label">Total</span>
         <strong>${money(cart.subtotal)}</strong>

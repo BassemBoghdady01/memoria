@@ -12,6 +12,17 @@ let isOpen = false;
 let untrap = null;
 let activeIndex = -1;
 let results = [];
+let lastFocus = null;
+
+/* Global shortcut registered at boot (module is imported by chrome.js),
+   so Ctrl/Cmd-K works before the overlay has ever been opened. */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && isOpen) closeSearch();
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    isOpen ? closeSearch() : openSearch();
+  }
+});
 
 function ensure() {
   if (overlay) return overlay;
@@ -25,7 +36,7 @@ function ensure() {
                  aria-label="Search perfumes" autocomplete="off" spellcheck="false" />
           <button class="iconbtn" data-close-search aria-label="Close search">${icons.close()}</button>
         </div>
-        <div class="search__results" data-results></div>
+        <div class="search__results" data-results data-lenis-prevent aria-live="polite"></div>
         <div class="search__kbd" aria-hidden="true">
           <span>↑↓ browse</span><span>↵ open</span><span>esc close</span>
         </div>
@@ -94,13 +105,6 @@ function ensure() {
   });
 
   overlay.querySelectorAll('[data-close-search]').forEach((b) => b.addEventListener('click', closeSearch));
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && isOpen) closeSearch();
-    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-      e.preventDefault();
-      isOpen ? closeSearch() : openSearch();
-    }
-  });
 
   renderHint();
   return overlay;
@@ -108,6 +112,7 @@ function ensure() {
 
 export function openSearch() {
   ensure();
+  lastFocus = document.activeElement;
   overlay.classList.add('is-open');
   overlay.setAttribute('aria-hidden', 'false');
   lockScroll();
@@ -126,4 +131,5 @@ export function closeSearch() {
   unlockScroll();
   isOpen = false;
   untrap?.();
+  lastFocus?.focus?.();
 }

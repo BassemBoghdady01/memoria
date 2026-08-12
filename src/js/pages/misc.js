@@ -28,9 +28,12 @@ export const searchPage = {
     const form = root.querySelector('[data-search-form]');
     const input = form.querySelector('input');
     const results = root.querySelector('[data-search-results]');
+    let disposeCards = () => {};
 
     const run = (q) => {
       const found = searchProducts(q);
+      disposeCards();
+      disposeCards = () => {};
       if (!q.trim()) {
         results.innerHTML = `<div class="shop__empty"><p>Type to search the six scents of the collection.</p></div>`;
         return;
@@ -45,7 +48,7 @@ export const searchPage = {
       }
       results.innerHTML = renderProductGrid(found);
       results.querySelectorAll('[data-reveal]').forEach((n) => n.classList.add('is-in'));
-      mountProductCards(results);
+      disposeCards = mountProductCards(results);
     };
 
     form.addEventListener('submit', (e) => {

@@ -28,7 +28,9 @@
   --surface: var(--parchment-bright);
   --ink: var(--cocoa);
   --ink-soft: var(--brown);
-  --ink-faint: var(--dust);
+  /* dust darkened for ≥4.5:1 small-text contrast on parchment;
+     pure --dust stays for borders/decoration */
+  --ink-faint: #625d50;
   --line: color-mix(in srgb, var(--brown) 26%, transparent);
   --line-strong: color-mix(in srgb, var(--brown) 55%, transparent);
   --line-faint: color-mix(in srgb, var(--brown) 14%, transparent);
