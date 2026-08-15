@@ -12,15 +12,6 @@ import { openCartDrawer } from '../components/cartDrawer.js';
 import { navigate } from '../router.js';
 import { attachTilt, floatBottle, sweepBottle, driftMist, onPageCleanup, motionOK, gsap } from '../motion.js';
 
-const MEMORY_MOTIFS = {
-  'jasmine-dusk': ['balcony', 'city'],
-  'rose-vellum': ['letter', 'postcard'],
-  'sunday-linen': ['linenline', 'city'],
-  'nile-cedar': ['felucca', 'city'],
-  'oud-memoir': ['study', 'shelf'],
-  'vetiver-arcade': ['arcade', 'city'],
-};
-
 function notesBlock(p) {
   return `
   <div class="notes-block">
@@ -48,7 +39,7 @@ export default {
       </section>`;
     }
 
-    const motifs = MEMORY_MOTIFS[p.slug] || ['sketch', 'city'];
+    const motifs = p.motifs || ['sketch', 'city'];
     const allNotes = [...p.topNotes, ...p.heartNotes, ...p.baseNotes];
     const related = getRelated(p, 2);
     const genderCrumb = p.gender === 'her' ? { href: '/women', label: 'Women' } : { href: '/men', label: 'Men' };
@@ -62,7 +53,7 @@ export default {
             <div class="pdp__stage" data-pdp-stage>
               <span class="stamp">Nº ${p.number} · Cairo</span>
               <span class="stamp stamp--r">${esc(p.concentration)}</span>
-              ${renderBottleStage(p, { mists: 3 })}
+              ${renderBottleStage(p, { mists: 3, reflection: true })}
             </div>
             <p class="pdp__hint">Move over the bottle — it turns toward you</p>
             <div class="pdp__views" aria-hidden="true">

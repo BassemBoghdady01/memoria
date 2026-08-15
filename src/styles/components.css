@@ -904,6 +904,23 @@
   z-index: 1;
   will-change: transform, opacity;
 }
+/* the bottle stands on a surface — faded mirror beneath */
+.bottle-reflection {
+  position: absolute;
+  top: 99%;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  transform: scaleY(-1);
+  opacity: 0.16;
+  filter: blur(1.5px);
+  -webkit-mask-image: linear-gradient(0deg, black 55%, transparent 90%);
+  mask-image: linear-gradient(0deg, black 55%, transparent 90%);
+  pointer-events: none;
+}
+.bottle-reflection .bottle {
+  filter: none;
+}
 
 /* ——— Product card ——— */
 .pcard {
@@ -932,13 +949,69 @@
     radial-gradient(90% 70% at 50% 88%, color-mix(in srgb, var(--mist-c, var(--sand)) 30%, transparent), transparent 70%),
     linear-gradient(180deg, var(--parchment-bright), var(--parchment-deep));
   border-bottom: 1px solid var(--line-faint);
+  transition: background-color var(--dur-slow) ease;
 }
 .pcard__stage .bottle-stage {
-  width: min(52%, 11.5rem);
+  width: min(54%, 12rem);
   transition: transform var(--dur-slow) var(--ease-slow);
 }
 .pcard:hover .pcard__stage .bottle-stage {
-  transform: translateY(-6px);
+  transform: translateY(-6px) scale(1.03);
+}
+/* a memory surfaces behind the bottle on hover — image transition */
+.pcard__memory {
+  position: absolute;
+  inset: 8% 10% auto;
+  z-index: 0;
+  background: var(--parchment-bright);
+  border: 1px solid var(--line-faint);
+  box-shadow: var(--shadow-card);
+  padding: 0.45rem 0.45rem 1.5rem;
+  width: 56%;
+  left: auto;
+  right: 7%;
+  top: 9%;
+  opacity: 0;
+  transform: rotate(6deg) translateY(14px) scale(0.94);
+  transition:
+    opacity var(--dur-slow) var(--ease-slow),
+    transform var(--dur-slow) var(--ease-slow);
+  pointer-events: none;
+}
+.pcard__memory svg {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line-faint);
+}
+.pcard__memory .hand {
+  position: absolute;
+  bottom: 0.1rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.95rem;
+}
+.pcard:hover .pcard__memory {
+  opacity: 1;
+  transform: rotate(3deg) translateY(0) scale(1);
+}
+/* ghost catalogue number */
+.pcard__ghost {
+  position: absolute;
+  left: 0.4rem;
+  bottom: -1.2rem;
+  z-index: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(4.4rem, 9vw, 6.4rem);
+  font-style: italic;
+  line-height: 1;
+  color: color-mix(in srgb, var(--brown) 13%, transparent);
+  pointer-events: none;
+  transition: color var(--dur-slow) ease, transform var(--dur-slow) var(--ease-slow);
+}
+.pcard:hover .pcard__ghost {
+  color: color-mix(in srgb, var(--brown) 24%, transparent);
+  transform: translateX(4px);
 }
 .pcard__no {
   position: absolute;

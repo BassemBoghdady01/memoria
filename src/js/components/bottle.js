@@ -203,8 +203,9 @@ export function renderBottle(product, opts = {}) {
 /**
  * A bottle inside a stage with fragrance-mist layers.
  * mists: number of mist blobs (0 to skip).
+ * reflection: adds a faded, flipped copy beneath — the bottle stands on a surface.
  */
-export function renderBottleStage(product, { label = true, mists = 0, stageClass = '' } = {}) {
+export function renderBottleStage(product, { label = true, mists = 0, stageClass = '', reflection = false } = {}) {
   let mistHtml = '';
   for (let i = 0; i < mists; i++) {
     const size = 46 + i * 22;
@@ -212,9 +213,13 @@ export function renderBottleStage(product, { label = true, mists = 0, stageClass
     const y = [18, 30, 6][i % 3];
     mistHtml += `<span class="mist" style="width:${size}%;aspect-ratio:1;left:${x}%;top:${y}%;background:radial-gradient(circle, ${product.mist}55, ${product.mist}00 70%);"></span>`;
   }
+  const reflectionHtml = reflection
+    ? `<div class="bottle-reflection" aria-hidden="true">${renderBottle(product, { label: false })}</div>`
+    : '';
   return `
   <div class="bottle-stage ${stageClass}" style="--mist-c:${product.mist}">
     ${mistHtml}
     ${renderBottle(product, { label })}
+    ${reflectionHtml}
   </div>`;
 }

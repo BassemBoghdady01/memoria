@@ -30,10 +30,12 @@ html.lenis body {
 
 body {
   background-color: var(--bg);
-  /* faint paper fibre — two ultra-soft washes, no heavy overlay */
+  /* aged-paper atmosphere, matched to the supplied palette sheet:
+     sun-warmed centre, deeper toasted edges — depth, not flatness */
   background-image:
-    radial-gradient(120% 90% at 50% 0%, rgba(216, 195, 163, 0.35), transparent 60%),
-    radial-gradient(140% 110% at 50% 105%, rgba(216, 195, 163, 0.3), transparent 55%);
+    radial-gradient(115% 85% at 50% 30%, rgba(241, 233, 216, 0.55), transparent 62%),
+    radial-gradient(130% 100% at 50% 110%, rgba(184, 156, 118, 0.34), transparent 60%),
+    linear-gradient(180deg, rgba(216, 195, 163, 0.25), rgba(216, 195, 163, 0) 30%);
   color: var(--ink);
   font-family: var(--font-ui);
   font-size: var(--fs-body);
@@ -41,6 +43,21 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   min-height: 100vh;
+}
+
+/* fixed page vignette — the toasted edges of an old catalogue sheet */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2147482999;
+  background: radial-gradient(
+    135% 110% at 50% 45%,
+    transparent 58%,
+    rgba(90, 53, 34, 0.05) 78%,
+    rgba(62, 40, 27, 0.16) 100%
+  );
 }
 
 /* Film grain — pure SVG turbulence, fixed, extremely subtle */

@@ -1,11 +1,13 @@
 /* ————————————————————————————————————————————————
-   MEMÓRIA · Homepage
+   MEMÓRIA · Homepage — the memory desk
+   Layered, assembled, cinematic. Never a centered
+   bottle on a flat background.
    ———————————————————————————————————————————————— */
 
-/* ——— Hero ——— */
+/* ═══════════ HERO — the memory desk ═══════════ */
 .hero {
   position: relative;
-  min-height: calc(100svh - var(--header-h) - var(--ribbon-h));
+  min-height: min(92svh, 60rem);
   display: grid;
   align-items: center;
   overflow: hidden;
@@ -19,33 +21,39 @@
 .hero__lattice {
   position: absolute;
   inset: 0;
-  opacity: 0.5;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%235a3522' stroke-opacity='0.06'%3E%3Cpath d='M60 4 116 60 60 116 4 60Z'/%3E%3Cpath d='M60 28 92 60 60 92 28 60Z'/%3E%3Ccircle cx='60' cy='60' r='10'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.8;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%235a3522' stroke-opacity='0.07'%3E%3Cpath d='M60 4 116 60 60 116 4 60Z'/%3E%3Cpath d='M60 28 92 60 60 92 28 60Z'/%3E%3Ccircle cx='60' cy='60' r='10'/%3E%3C/g%3E%3C/svg%3E");
   background-size: 120px 120px;
-  -webkit-mask-image: radial-gradient(80% 80% at 70% 40%, black, transparent 75%);
-  mask-image: radial-gradient(80% 80% at 70% 40%, black, transparent 75%);
+  -webkit-mask-image: radial-gradient(75% 85% at 68% 40%, black, transparent 72%);
+  mask-image: radial-gradient(75% 85% at 68% 40%, black, transparent 72%);
 }
 .hero__glow {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(50% 55% at 72% 58%, color-mix(in srgb, var(--sand) 65%, transparent), transparent 70%),
-    radial-gradient(40% 45% at 20% 20%, color-mix(in srgb, var(--parchment-bright) 80%, transparent), transparent 70%);
+    radial-gradient(52% 60% at 70% 55%, color-mix(in srgb, var(--sand) 70%, transparent), transparent 70%),
+    radial-gradient(45% 50% at 16% 18%, color-mix(in srgb, var(--parchment-bright) 85%, transparent), transparent 70%),
+    radial-gradient(70% 45% at 50% 108%, color-mix(in srgb, #b89c76 42%, transparent), transparent 62%);
 }
 .hero__inner {
   position: relative;
+  width: 100%;
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   align-items: center;
-  gap: clamp(1.5rem, 4vw, 4rem);
-  padding-block: clamp(2rem, 6vh, 4rem);
+  gap: clamp(1rem, 3vw, 3rem);
+  padding-block: clamp(1.6rem, 4vh, 3.4rem);
 }
+
+/* — copy — */
 .hero__copy {
+  position: relative;
+  z-index: 6;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1.4rem;
-  max-width: 36rem;
+  gap: 1.35rem;
+  max-width: 38rem;
 }
 .hero__eyebrow {
   display: flex;
@@ -60,83 +68,265 @@
 .hero__title {
   font-size: var(--fs-display);
   font-weight: 500;
-  line-height: 1.02;
-  letter-spacing: -0.01em;
+  line-height: 0.98;
+  letter-spacing: -0.015em;
 }
-.hero__title em {
+.hero__title .t-line {
+  display: block;
+}
+/* the word "memory." is a cut-out paper label taped over the headline */
+.hero__title .t-chip {
+  display: inline-block;
   font-style: italic;
   color: var(--brown);
+  background: var(--parchment-bright);
+  border: 1px solid var(--line-faint);
+  box-shadow: var(--shadow-card);
+  padding: 0 0.35em 0.06em;
+  transform: rotate(-2deg);
+  position: relative;
+  margin-top: 0.08em;
+}
+.hero__title .t-chip::before {
+  /* tape — fixed size, independent of the display font scale */
+  content: '';
+  position: absolute;
+  top: -0.7rem;
+  left: 14%;
+  width: 3.6rem;
+  height: 1.15rem;
+  background: color-mix(in srgb, var(--sand) 68%, transparent);
+  border-left: 1px dashed rgba(90, 53, 34, 0.25);
+  border-right: 1px dashed rgba(90, 53, 34, 0.25);
+  transform: rotate(-7deg);
 }
 .hero__lede {
   font-family: var(--font-serif);
   font-size: var(--fs-lede);
   color: var(--ink-soft);
-  max-width: 42ch;
+  max-width: 40ch;
 }
 .hero__ctas {
   display: flex;
   gap: 0.9rem;
   flex-wrap: wrap;
-  margin-top: 0.4rem;
+  margin-top: 0.3rem;
 }
-.hero__fig {
-  position: relative;
+.hero__meta {
+  display: flex;
+  gap: 1.6rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+.hero__meta .stamp {
+  font-size: 0.6rem;
+}
+
+/* — the collage: paper artifacts at different depths — */
+.collage__item {
+  position: absolute;
+  margin: 0;
+  will-change: transform;
+  transform: rotate(var(--r, 0deg));
+}
+.collage__item figcaption {
+  text-align: center;
+}
+/* archival photograph, taped */
+.collage__photo {
+  z-index: 1;
+  top: 3%;
+  right: 33%;
+  width: clamp(11rem, 18vw, 15.5rem);
+  background: var(--parchment-bright);
+  border: 1px solid var(--line-faint);
+  box-shadow: var(--shadow-float);
+  padding: 0.55rem 0.55rem 0.8rem;
+}
+.collage__photo svg {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line-faint);
+}
+.collage__photo figcaption {
+  padding-top: 0.45rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.collage__photo .hand {
+  font-size: 1.05rem;
+}
+.collage__photo .stamp {
+  font-size: 0.55rem;
+  flex: none;
+}
+.tape {
+  position: absolute;
+  width: 3.2rem;
+  height: 1.1rem;
+  background: color-mix(in srgb, var(--sand) 62%, transparent);
+  border-left: 1px dashed rgba(90, 53, 34, 0.22);
+  border-right: 1px dashed rgba(90, 53, 34, 0.22);
+  box-shadow: 0 1px 2px rgba(62, 40, 27, 0.08);
+}
+.tape--tl { top: -0.55rem; left: -1.1rem; transform: rotate(-38deg); }
+.tape--tr { top: -0.55rem; right: -1.1rem; transform: rotate(38deg); }
+
+/* polaroid, lower left */
+.collage__polaroid {
+  z-index: 5;
+  bottom: 2%;
+  left: 37%;
+  width: clamp(8.5rem, 13vw, 11.5rem);
+  background: var(--parchment-bright);
+  border: 1px solid var(--line-faint);
+  box-shadow: var(--shadow-float);
+  padding: 0.45rem 0.45rem 1.7rem;
+}
+.collage__polaroid svg {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line-faint);
+}
+.collage__polaroid .hand {
+  position: absolute;
+  bottom: 0.15rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 1rem;
+}
+/* handwritten note scrap */
+.collage__note {
+  z-index: 1;
+  top: 16%;
+  right: 3%;
+  width: clamp(8rem, 13vw, 11rem);
+  background: var(--parchment-bright);
+  border: 1px solid var(--line-faint);
+  box-shadow: var(--shadow-card);
+  padding: 0.8rem 0.9rem 0.9rem;
+}
+.collage__note .hand {
+  font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+  line-height: 1.25;
+  display: block;
+}
+.collage__note .stamp {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.55rem;
+}
+/* postage stamp + postmark */
+.collage__stamp {
+  z-index: 6;
+  top: 52%;
+  right: 43.5%;
+  width: 4.6rem;
+  aspect-ratio: 4/4.8;
+  background: var(--parchment-bright);
+  border: 1px solid var(--line);
+  /* perforated edge */
+  --perf: radial-gradient(circle at 2px 2px, transparent 2.5px, var(--parchment-bright) 2.6px);
+  padding: 0.35rem;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  outline: 3px dashed color-mix(in srgb, var(--dust) 40%, transparent);
+  outline-offset: -5px;
+}
+.collage__stamp svg {
+  width: 78%;
+  height: auto;
+  color: var(--teal);
+}
+.collage__stamp .stamp {
+  font-size: 0.5rem;
+  color: var(--teal);
+}
+.collage__postmark {
+  position: absolute;
+  right: -2.1rem;
+  bottom: -1.6rem;
+  width: 4.4rem;
+  height: 4.4rem;
+  border: 1.5px solid color-mix(in srgb, var(--terracotta) 60%, transparent);
+  border-radius: 50%;
   display: grid;
   place-items: center;
-  min-height: min(58vh, 34rem);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.48rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--terracotta) 85%, transparent);
+  transform: rotate(-14deg);
+  line-height: 1.6;
+}
+/* jasmine sprig laid across the desk */
+.collage__sprig {
+  z-index: 6;
+  bottom: 3%;
+  right: 4%;
+  width: clamp(7rem, 11vw, 10rem);
+  color: var(--brown);
+  opacity: 0.9;
+  filter: drop-shadow(0 3px 4px rgba(44, 28, 17, 0.18));
+}
+.collage__sprig svg {
+  width: 100%;
+  height: auto;
+}
+
+/* — the bottle: big, physical, alive — */
+.hero__fig {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  min-height: min(66vh, 38rem);
 }
 .hero__fig .bottle-stage {
-  width: min(64%, 17rem);
+  width: clamp(15rem, 26vw, 21rem);
+}
+.hero__shelf {
+  position: absolute;
+  bottom: 6%;
+  left: 8%;
+  right: 8%;
+  height: 1.4rem;
+  background: radial-gradient(50% 100% at 50% 0%, rgba(44, 28, 17, 0.22), transparent 75%);
+  z-index: 3;
+  pointer-events: none;
 }
 .hero__fignote {
   position: absolute;
-  bottom: 4%;
-  right: 2%;
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  align-items: flex-end;
-}
-.hero__figframe {
-  position: absolute;
-  inset: 4% 6%;
-  border: 1px solid var(--line-faint);
-  pointer-events: none;
-}
-.hero__figframe::before,
-.hero__figframe::after {
-  content: '';
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border-color: var(--line-strong);
-  border-style: solid;
-}
-.hero__figframe::before {
-  top: -1px;
-  left: -1px;
-  border-width: 1px 0 0 1px;
-}
-.hero__figframe::after {
-  bottom: -1px;
-  right: -1px;
-  border-width: 0 1px 1px 0;
+  bottom: 0.6%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  white-space: nowrap;
 }
 .hero__scrollcue {
   position: absolute;
   left: 50%;
-  bottom: 1.1rem;
+  bottom: 0.9rem;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   color: var(--ink-faint);
+  z-index: 7;
 }
 .hero__scrollcue .line {
   width: 1px;
-  height: 34px;
+  height: 30px;
   background: var(--line-strong);
   overflow: hidden;
   position: relative;
@@ -157,7 +347,45 @@
   100% { top: 100%; }
 }
 
-/* ——— Cinematic scroll scene ——— */
+/* ═══════════ Catalogue plate headers ═══════════ */
+.plate-head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: var(--space-6);
+  position: relative;
+}
+.plate-head__rules {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: min(34rem, 80vw);
+}
+.plate-head__rules::before,
+.plate-head__rules::after {
+  content: '';
+  flex: 1;
+  height: 3px;
+  border-block: 1px solid var(--line);
+}
+.plate-head__rules .stamp {
+  flex: none;
+}
+.plate-head h2 {
+  font-size: var(--fs-h2);
+  font-weight: 500;
+}
+.plate-head h2 em {
+  font-style: italic;
+  color: var(--brown);
+}
+.plate-head .serif-lede {
+  max-width: 52ch;
+}
+
+/* ═══════════ CINE — the fragrance becomes a memory ═══════════ */
 .cine {
   position: relative;
   background: var(--parchment);
@@ -166,32 +394,24 @@
   height: 100svh;
   position: relative;
   overflow: hidden;
-  display: grid;
-  place-items: center;
 }
 .cine__vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(120% 90% at 50% 50%, transparent 40%, color-mix(in srgb, var(--cocoa) 30%, transparent) 100%);
+  background: radial-gradient(115% 85% at 50% 50%, transparent 34%, color-mix(in srgb, var(--cocoa) 42%, transparent) 100%);
   opacity: 0;
   pointer-events: none;
   z-index: 4;
 }
 .cine__copy {
   position: absolute;
-  z-index: 3;
+  z-index: 5;
   text-align: center;
-  max-width: 34rem;
-  padding-inline: var(--gutter);
-  pointer-events: none;
-  top: clamp(3rem, 9vh, 6rem);
+  top: clamp(2.6rem, 8vh, 5.4rem);
   left: 50%;
   transform: translateX(-50%);
-  width: max-content;
-  max-width: min(34rem, 92vw);
-}
-.cine__copy--intro {
-  z-index: 5;
+  width: min(36rem, 92vw);
+  pointer-events: none;
 }
 .cine__copy h2 {
   font-size: var(--fs-h2);
@@ -201,53 +421,98 @@
 .cine__copy .stamp {
   display: block;
 }
-.cine__stagebottle {
-  position: relative;
+.cine__bottlewrap {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  transform: translate(-50%, -50%);
   z-index: 2;
-  width: min(46vw, 15rem);
-  margin-top: 8vh;
+  width: min(44vw, 15rem);
   will-change: transform;
 }
+/* the fragrance column rising from the neck */
+.cine__mistcol {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.cine__mistcol .mist {
+  filter: blur(30px);
+}
+.cine__particle {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+/* the photograph the mist becomes */
 .cine__memory {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 3;
   display: grid;
   place-items: center;
-  opacity: 0;
   pointer-events: none;
 }
-.cine__memory-inner {
+.cine__photo {
   position: relative;
-  width: min(80vw, 46rem);
-  height: min(60vh, 30rem);
-}
-.cine__polaroid {
-  position: absolute;
+  width: min(66vw, 25rem);
   background: var(--parchment-bright);
   border: 1px solid var(--line-faint);
   box-shadow: var(--shadow-float);
-  padding: 0.6rem 0.6rem 2rem;
-  transform: rotate(var(--tilt));
-  width: clamp(9rem, 22vw, 13rem);
+  padding: 0.7rem 0.7rem 2.6rem;
+  opacity: 0;
+  will-change: transform, opacity, filter;
 }
-.cine__polaroid svg {
+.cine__photo svg {
   width: 100%;
   height: auto;
   border: 1px solid var(--line-faint);
 }
-.cine__polaroid .hand {
+.cine__photo .hand {
   position: absolute;
-  bottom: 0.28rem;
+  bottom: 0.45rem;
   left: 0;
   right: 0;
   text-align: center;
-  font-size: 1.05rem;
+  font-size: 1.35rem;
 }
+.cine__side {
+  position: absolute;
+  width: clamp(8rem, 17vw, 11.5rem);
+  background: var(--parchment-bright);
+  border: 1px solid var(--line-faint);
+  box-shadow: var(--shadow-card);
+  padding: 0.45rem 0.45rem 1.5rem;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.cine__side svg {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line-faint);
+}
+.cine__side .hand {
+  position: absolute;
+  bottom: 0.1rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.95rem;
+}
+.cine__side--l { transform: rotate(-7deg); }
+.cine__side--r { transform: rotate(6deg); }
 .cine__final {
   position: absolute;
-  z-index: 5;
-  bottom: 9vh;
+  z-index: 6;
+  bottom: 6vh;
   left: 0;
   right: 0;
   text-align: center;
@@ -262,34 +527,45 @@
   font-style: italic;
   font-size: var(--fs-lede);
   color: var(--ink-soft);
-  margin-bottom: 1.1rem;
+  margin-bottom: 1rem;
 }
 
-/* Reduced-motion / static fallback for the scene */
+/* static fallback (mobile / reduced motion) */
 .cine--static .cine__stage {
   height: auto;
-  padding-block: var(--space-7);
-  grid-template-rows: auto auto auto;
-  gap: 2rem;
+  padding-block: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.2rem;
 }
 .cine--static .cine__copy,
 .cine--static .cine__final {
   position: static;
-  opacity: 1;
   transform: none;
+  opacity: 1;
   pointer-events: auto;
   width: auto;
   max-width: 34rem;
-  margin-inline: auto;
 }
-.cine--static .cine__stagebottle {
-  margin-top: 0;
+.cine--static .cine__bottlewrap {
+  position: static;
+  transform: none;
+  width: min(52vw, 13rem);
 }
+.cine--static .cine__mistcol,
+.cine--static .cine__vignette,
 .cine--static .cine__copy--outro { display: none; }
-.cine--static .cine__memory { display: none; }
-.cine--static .cine__vignette { display: none; }
+.cine--static .cine__memory {
+  position: static;
+}
+.cine--static .cine__photo {
+  opacity: 1;
+  transform: rotate(-2deg);
+}
+.cine--static .cine__side { display: none; }
 
-/* ——— Scroll showcase (six perfumes) ——— */
+/* ═══════════ Six-scent showcase (pinned / rail) ═══════════ */
 .showcase {
   position: relative;
   background: linear-gradient(180deg, var(--parchment), var(--parchment-deep) 50%, var(--parchment));
@@ -325,7 +601,25 @@
   visibility: hidden;
 }
 .showcase__slide .bottle-stage {
-  width: clamp(9rem, 22vh, 15rem);
+  width: clamp(10rem, 26vh, 17rem);
+}
+.showcase__slidememory {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-64%, -58%) rotate(-5deg);
+  width: clamp(10rem, 24vh, 14rem);
+  background: var(--parchment-bright);
+  border: 1px solid var(--line-faint);
+  box-shadow: var(--shadow-card);
+  padding: 0.4rem 0.4rem 1.3rem;
+  opacity: 0.85;
+  z-index: -1;
+}
+.showcase__slidememory svg {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line-faint);
 }
 .showcase__left {
   text-align: right;
@@ -342,9 +636,10 @@
 }
 .showcase__no {
   font-family: var(--font-serif);
-  font-size: clamp(3rem, 8vh, 5rem);
+  font-size: clamp(3.4rem, 9vh, 5.8rem);
+  font-style: italic;
   line-height: 1;
-  color: color-mix(in srgb, var(--brown) 30%, transparent);
+  color: color-mix(in srgb, var(--brown) 32%, transparent);
   font-weight: 500;
 }
 .showcase__name {
@@ -399,8 +694,6 @@
 .showcase__tick.is-active::after {
   transform: scaleX(1);
 }
-
-/* Mobile / static showcase => horizontal snap carousel */
 .showcase__scroller {
   display: none;
 }
@@ -411,9 +704,6 @@
   .showcase__scroller {
     display: block;
     padding-block: var(--space-6);
-  }
-  .showcase__scroller .sechead {
-    margin-bottom: var(--space-5);
   }
   .showcase__rail {
     display: flex;
@@ -443,7 +733,7 @@
   }
 }
 
-/* ——— Memory strip (chapter with paper artifacts) ——— */
+/* ═══════════ Memory strip (chapter) ═══════════ */
 .memstrip {
   position: relative;
   overflow: hidden;
@@ -488,7 +778,7 @@
 .memstrip__stack .acard:nth-child(2) { top: 18%; right: 6%; }
 .memstrip__stack .acard:nth-child(3) { bottom: 2%; left: 24%; }
 
-/* ——— Archive preview / timeline teaser ——— */
+/* ═══════════ Archive preview ═══════════ */
 .archprev__rail {
   display: flex;
   gap: 1rem;
@@ -529,7 +819,7 @@
   line-height: 1.55;
 }
 
-/* ——— Finder CTA band ——— */
+/* ═══════════ Finder band ═══════════ */
 .finderband {
   background: var(--teal);
   color: var(--parchment);
@@ -572,25 +862,36 @@
   max-width: 46ch;
 }
 
-/* ——— Home collection section ——— */
+/* ═══════════ Home collection ═══════════ */
+.homecoll {
+  position: relative;
+}
 .homecoll__foot {
   display: flex;
   justify-content: center;
   margin-top: var(--space-6);
 }
 
-/* ——— Responsive: home ——— */
+/* ═══════════ Responsive: home ═══════════ */
+@media (max-width: 1100px) {
+  .collage__photo { right: 30%; width: clamp(10rem, 17vw, 14rem); }
+  .collage__note { right: 2%; }
+}
 @media (max-width: 920px) {
+  .hero {
+    min-height: 0;
+  }
   .hero__inner {
     grid-template-columns: 1fr;
-    padding-block: 2.2rem 4.4rem;
+    padding-block: 1.6rem 3.6rem;
+    gap: 0.6rem;
   }
   .hero__fig {
     order: -1;
-    min-height: min(44vh, 24rem);
+    min-height: min(42vh, 23rem);
   }
   .hero__fig .bottle-stage {
-    width: min(46%, 13rem);
+    width: clamp(10.5rem, 34vw, 14rem);
   }
   .hero__copy {
     align-items: center;
@@ -598,8 +899,18 @@
     margin-inline: auto;
   }
   .hero__eyebrow { justify-content: center; }
-  .hero__ctas { justify-content: center; }
+  .hero__ctas { justify-content: center; width: 100%; }
+  .hero__ctas .btn { flex: 1 1 auto; }
+  .hero__meta { display: none; }
   .hero__fignote { display: none; }
+  /* simplified desk on small screens — fewer, smaller layers */
+  .collage__photo { top: 1%; right: auto; left: -2%; width: clamp(8rem, 26vw, 11rem); }
+  .collage__photo figcaption .stamp { display: none; }
+  .collage__photo .hand { font-size: 0.9rem; }
+  .collage__note { top: 4%; right: -1%; width: clamp(7rem, 24vw, 9.5rem); }
+  .collage__polaroid { bottom: 1%; left: 0%; width: clamp(7rem, 22vw, 9rem); }
+  .collage__sprig { right: 1%; bottom: 0; width: clamp(5.5rem, 18vw, 7.5rem); }
+  .collage__stamp { display: none; }
   .memstrip__inner {
     grid-template-columns: 1fr;
     padding-block: var(--space-6);
@@ -610,6 +921,7 @@
 }
 @media (max-width: 640px) {
   .hero__scrollcue { display: none; }
+  .collage__polaroid { display: none; }
   .memstrip__stack .acard {
     width: clamp(10rem, 52%, 13rem);
   }

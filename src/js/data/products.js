@@ -15,6 +15,7 @@ export const CURRENCY = 'EGP';
 export const products = [
   {
     id: 'p01',
+    motifs: ['balcony','city'], // archival artwork for memory scenes
     slug: 'jasmine-dusk',
     number: '01',
     name: 'Jasmine Dusk',
@@ -55,6 +56,7 @@ export const products = [
   },
   {
     id: 'p02',
+    motifs: ['letter','postcard'], // archival artwork for memory scenes
     slug: 'rose-vellum',
     number: '02',
     name: 'Rose Vellum',
@@ -95,6 +97,7 @@ export const products = [
   },
   {
     id: 'p03',
+    motifs: ['linenline','city'], // archival artwork for memory scenes
     slug: 'sunday-linen',
     number: '03',
     name: 'Sunday Linen',
@@ -135,6 +138,7 @@ export const products = [
   },
   {
     id: 'p04',
+    motifs: ['felucca','city'], // archival artwork for memory scenes
     slug: 'nile-cedar',
     number: '04',
     name: 'Nile Cedar',
@@ -175,6 +179,7 @@ export const products = [
   },
   {
     id: 'p05',
+    motifs: ['study','shelf'], // archival artwork for memory scenes
     slug: 'oud-memoir',
     number: '05',
     name: 'Oud Memoir',
@@ -215,6 +220,7 @@ export const products = [
   },
   {
     id: 'p06',
+    motifs: ['arcade','city'], // archival artwork for memory scenes
     slug: 'vetiver-arcade',
     number: '06',
     name: 'Vetiver Arcade',

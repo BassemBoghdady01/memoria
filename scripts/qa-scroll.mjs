@@ -33,7 +33,7 @@ for (let i = 0; i < steps; i++) {
   const y = Math.round((total * i) / (steps - 1));
   await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'auto' }), y);
   await page.waitForTimeout(650);
-  await page.screenshot({ path: `${OUT}/${slug}-${vpName}-${String(i).padStart(2, '0')}.png` });
+  await page.screenshot({ path: `${OUT}/${slug}-${vpName}-${String(i).padStart(2, '0')}.jpeg`, type: 'jpeg', quality: 80 });
 }
 await browser.close();
 console.log('done:', slug, vpName);

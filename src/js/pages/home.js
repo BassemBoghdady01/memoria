@@ -1,8 +1,9 @@
 /**
- * MEMÓRIA · Homepage — cinematic hero, collection, zoom-to-scent scene,
- * memory chapter, six-scent showcase, archive teaser, finder band, values.
+ * MEMÓRIA · Homepage — "the memory desk".
+ * Layered collage hero, catalogue-plate collection, and the signature
+ * sequence where the fragrance escapes the bottle and becomes a memory.
  */
-import { esc, money, isNarrow } from '../utils.js';
+import { esc, money, isNarrow, isTouch } from '../utils.js';
 import { products, getFeatured, genderLabel, minPrice } from '../data/products.js';
 import { archiveEras } from '../data/archive.js';
 import { renderBottleStage } from '../components/bottle.js';
@@ -17,40 +18,88 @@ import { renderRoute } from '../router.js';
 
 const featured = getFeatured();
 
+/* Jasmine sprig laid across the desk */
+const SPRIG = `
+<svg viewBox="0 0 160 90" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+  <path d="M6 78 C 40 66, 90 48, 150 16"/>
+  <path d="M38 66 q -2 -14 8 -20 q 4 12 -8 20Z" fill="currentColor" fill-opacity="0.12"/>
+  <path d="M64 55 q -1 -13 9 -18 q 3 11 -9 18Z" fill="currentColor" fill-opacity="0.12"/>
+  <path d="M92 42 q 0 -12 10 -16 q 2 10 -10 16Z" fill="currentColor" fill-opacity="0.12"/>
+  <g fill="#f1e9d8" stroke-width="1.1">
+    <circle cx="120" cy="28" r="4.2"/><circle cx="130" cy="20" r="3.4"/>
+    <circle cx="138" cy="27" r="3"/><circle cx="128" cy="33" r="2.7"/>
+  </g>
+  <circle cx="128" cy="27" r="1.4" fill="currentColor" stroke="none" opacity="0.7"/>
+</svg>`;
+
+/* ————— HERO ————— */
 function heroSection() {
   return `
   <section class="hero" aria-label="MEMÓRIA — every scent holds a memory">
     <div class="hero__bg" data-hero-bg>
-      <div class="hero__lattice"></div>
+      <div class="hero__lattice" data-hero-lattice></div>
       <div class="hero__glow"></div>
     </div>
+
     <div class="container hero__inner">
       <div class="hero__copy">
-        <span class="hero__eyebrow" data-reveal>
+        <span class="hero__eyebrow" data-desk data-depth="0.2">
           <span class="rule" aria-hidden="true"></span>
-          <span class="label">Twenty Years of Scents · Cairo</span>
+          <span class="label">MEMÓRIA · Twenty Years of Scents · Cairo</span>
         </span>
-        <h1 class="hero__title" data-reveal style="--reveal-delay:90ms">
-          Every scent<br/>holds a <em>memory.</em>
+        <h1 class="hero__title" data-desk data-depth="0.12">
+          <span class="t-line">Every scent</span>
+          <span class="t-line">holds a <span class="t-chip">memory.</span></span>
         </h1>
-        <p class="hero__lede" data-reveal style="--reveal-delay:180ms">
-          Two decades of passion and craft, bottled into six timeless perfumes —
-          three for her, three for him.
+        <p class="hero__lede" data-desk data-depth="0.18">
+          Six perfumes, two decades of Cairo evenings, rooftops and letters —
+          each bottle keeps one hour of the city.
         </p>
-        <div class="hero__ctas" data-reveal style="--reveal-delay:260ms">
+        <div class="hero__ctas" data-desk data-depth="0.15">
           <a class="btn btn--primary" href="/shop">Shop the Collection</a>
-          <a class="btn" href="/our-story">Discover Our Story</a>
+          <a class="btn" href="/our-story">Our Story</a>
+        </div>
+        <div class="hero__meta" data-desk data-depth="0.1">
+          <span class="stamp">Catalogue Vol. VI</span>
+          <span class="stamp">Nº 01 – 06 · Eau de Parfum</span>
+          <span class="stamp">For Her · For Him</span>
         </div>
       </div>
-      <div class="hero__fig" data-hero-fig>
-        <div class="hero__figframe" aria-hidden="true"></div>
-        ${renderBottleStage(featured, { mists: 3 })}
-        <div class="hero__fignote" aria-hidden="true">
-          <span class="stamp">Fig. ${featured.number} — ${esc(featured.name)}</span>
-          <span class="stamp">Eau de Parfum · The Collection</span>
+
+      <div class="hero__fig">
+        <div class="hero__shelf" aria-hidden="true"></div>
+        <div data-desk data-depth="1" data-hero-bottle>
+          ${renderBottleStage(featured, { mists: 3, reflection: true })}
         </div>
+        <span class="hero__fignote stamp" aria-hidden="true">Fig. ${featured.number} — ${esc(featured.name)} · Eau de Parfum</span>
       </div>
     </div>
+
+    <!-- the desk: paper artifacts at different depths -->
+    <figure class="collage__item collage__photo" style="--r:-4deg" data-desk data-depth="0.45" aria-hidden="true">
+      <span class="tape tape--tl"></span><span class="tape tape--tr"></span>
+      ${renderMotif('balcony', { title: '' })}
+      <figcaption><span class="hand">the balcony, at dusk</span><span class="stamp">FIG. 01 · CAIRO</span></figcaption>
+    </figure>
+
+    <figure class="collage__item collage__note" style="--r:2.5deg" data-desk data-depth="0.6" aria-hidden="true">
+      <span class="hand">jasmine, 6 pm —<br/>keep this one.</span>
+      <span class="stamp">— the perfumer’s note</span>
+    </figure>
+
+    <figure class="collage__item collage__polaroid" style="--r:5deg" data-desk data-depth="0.8" aria-hidden="true">
+      ${renderMotif('felucca', { title: '' })}
+      <span class="hand">the river, later</span>
+    </figure>
+
+    <figure class="collage__item collage__stamp" style="--r:-7deg" data-desk data-depth="0.9" aria-hidden="true">
+      ${renderNoteIcon('reed')}
+      <span class="stamp">CAIRO · POSTES</span>
+      <span class="collage__postmark">Memória<br/>· kept ·</span>
+    </figure>
+
+    <span class="collage__item collage__sprig" style="--r:8deg" data-desk data-depth="0.7" aria-hidden="true">${SPRIG}</span>
+
     <div class="hero__scrollcue" aria-hidden="true">
       <span class="stamp">Scroll</span>
       <span class="line"></span>
@@ -58,14 +107,15 @@ function heroSection() {
   </section>`;
 }
 
+/* ————— COLLECTION (immediately after the hero) ————— */
 function collectionSection() {
   return `
-  <section class="section homecoll" aria-labelledby="coll-title">
+  <section class="section--tight homecoll" aria-labelledby="coll-title" style="padding-top: var(--space-6)">
     <div class="container">
-      <div class="sechead">
-        <span class="stamp" data-reveal>Catalogue · Six Scents</span>
-        <h2 id="coll-title" data-reveal>The Collection</h2>
-        <p class="serif-lede" data-reveal>Each perfume keeps one memory. Find yours, or begin a new one.</p>
+      <div class="plate-head">
+        <div class="plate-head__rules" data-reveal><span class="stamp">Plate I · The Catalogue</span></div>
+        <h2 id="coll-title" data-reveal>The <em>Collection</em></h2>
+        <p class="serif-lede" data-reveal>Six scents, twenty years in the making. Each keeps one memory — find yours.</p>
         <div class="filters" role="group" aria-label="Filter collection" data-reveal>
           <button class="filter-tab" data-filter="all" aria-pressed="true">All</button>
           <button class="filter-tab" data-filter="her" aria-pressed="false">Women</button>
@@ -76,16 +126,17 @@ function collectionSection() {
         ${renderProductGrid(products)}
       </div>
       <div class="homecoll__foot" data-reveal>
-        <a class="link-line" href="/shop">View the full catalogue</a>
+        <a class="link-line" href="/shop">Open the full catalogue</a>
       </div>
     </div>
   </section>`;
 }
 
+/* ————— CINE — the fragrance becomes a memory ————— */
 function cineSection() {
   const p = featured;
   return `
-  <section class="cine" data-cine aria-label="A memory escaping from the bottle">
+  <section class="cine" data-cine aria-label="The fragrance becomes a memory">
     <div class="cine__stage" data-cine-stage>
       <div class="cine__vignette" data-cine-vignette></div>
 
@@ -94,30 +145,30 @@ function cineSection() {
         <h2>Come closer —<br/>this one remembers.</h2>
       </div>
 
-      <div class="cine__stagebottle" data-cine-bottle>
-        ${renderBottleStage(p, { mists: 3 })}
-      </div>
-
-      <div class="cine__memory" data-cine-memory>
-        <div class="cine__memory-inner">
-          <div class="cine__polaroid" style="--tilt:-5deg; top:6%; left:4%;" data-cine-pol>
-            ${renderMotif('balcony', { title: 'A balcony at sunset' })}
-            <span class="hand">the balcony, at dusk</span>
-          </div>
-          <div class="cine__polaroid" style="--tilt:4deg; top:0%; right:6%;" data-cine-pol>
-            ${renderMotif('city', { title: 'The city from the roof' })}
-            <span class="hand">home, from the roof</span>
-          </div>
-          <div class="cine__polaroid" style="--tilt:-2deg; bottom:2%; left:30%;" data-cine-pol>
-            ${renderMotif('letter', { title: 'A kept letter' })}
-            <span class="hand">a letter, kept</span>
-          </div>
-        </div>
-      </div>
-
       <div class="cine__copy cine__copy--outro" data-cine-outro style="opacity:0">
         <span class="stamp">Nº ${p.number} · ${esc(p.fragranceFamily)}</span>
-        <h2>${esc(p.memoryPlace)}</h2>
+        <h2>…and the scent became a place.</h2>
+      </div>
+
+      <div class="cine__bottlewrap" data-cine-bottle>
+        ${renderBottleStage(p, { mists: 0, reflection: true })}
+      </div>
+
+      <div class="cine__mistcol" data-cine-mistcol aria-hidden="true"></div>
+
+      <div class="cine__memory" data-cine-memory>
+        <figure class="cine__side cine__side--l" data-cine-side style="left:14%; top:24%">
+          ${renderMotif('city', { title: '' })}
+          <span class="hand">home, from the roof</span>
+        </figure>
+        <figure class="cine__side cine__side--r" data-cine-side style="right:13%; bottom:20%">
+          ${renderMotif('letter', { title: '' })}
+          <span class="hand">a letter, kept</span>
+        </figure>
+        <figure class="cine__photo" data-cine-photo>
+          ${renderMotif('balcony', { title: esc(p.memoryPlace) })}
+          <span class="hand" data-cine-caption>${esc(p.memoryPlace.toLowerCase())} — ${p.archiveYear}*</span>
+        </figure>
       </div>
 
       <div class="cine__final" data-cine-final>
@@ -128,6 +179,7 @@ function cineSection() {
   </section>`;
 }
 
+/* ————— Memory strip ————— */
 function memstripSection() {
   return `
   <section class="memstrip" aria-labelledby="memstrip-title">
@@ -160,6 +212,7 @@ function memstripSection() {
   </section>`;
 }
 
+/* ————— Six-scent showcase ————— */
 function showcaseSection() {
   const slides = products
     .map(
@@ -171,7 +224,10 @@ function showcaseSection() {
           <span class="label label--faint">${genderLabel(p.gender)} · ${esc(p.fragranceFamily)}</span>
           <p class="showcase__desc">${esc(p.shortDescription)}</p>
         </div>
-        ${renderBottleStage(p, { mists: 2 })}
+        <div style="position:relative">
+          <figure class="showcase__slidememory" aria-hidden="true">${renderMotif((p.motifs && p.motifs[0]) || 'sketch', { title: '' })}</figure>
+          ${renderBottleStage(p, { mists: 2, reflection: true })}
+        </div>
         <div class="showcase__right">
           <div class="showcase__noterow"><span class="label">Top Notes</span><p>${esc(p.topNotes.join(', '))}</p></div>
           <div class="showcase__noterow"><span class="label">Heart Notes</span><p>${esc(p.heartNotes.join(', '))}</p></div>
@@ -207,8 +263,8 @@ function showcaseSection() {
       </div>
     </div>
     <div class="showcase__scroller">
-      <div class="sechead">
-        <span class="stamp" data-reveal>The Six · In Order</span>
+      <div class="plate-head">
+        <div class="plate-head__rules" data-reveal><span class="stamp">The Six · In Order</span></div>
         <h2 data-reveal>One by one</h2>
       </div>
       <div class="showcase__rail">${railCards}</div>
@@ -216,13 +272,14 @@ function showcaseSection() {
   </section>`;
 }
 
+/* ————— Archive preview ————— */
 function archivePreviewSection() {
   return `
   <section class="section" aria-labelledby="archprev-title">
     <div class="container">
-      <div class="sechead">
-        <span class="stamp" data-reveal>Vol. I – VI · Placeholder years</span>
-        <h2 id="archprev-title" data-reveal>The MEMÓRIA Archive</h2>
+      <div class="plate-head">
+        <div class="plate-head__rules" data-reveal><span class="stamp">Vol. I – VI · Placeholder years</span></div>
+        <h2 id="archprev-title" data-reveal>The MEMÓRIA <em>Archive</em></h2>
         <p class="serif-lede" data-reveal>Twenty years of labels, letters and light — kept, not curated.</p>
       </div>
       <div class="archprev__rail" data-reveal tabindex="0" aria-label="Archive timeline preview — scroll horizontally">
@@ -295,8 +352,9 @@ export default {
       ${valuesSection()}
     `;
   },
+
   mount(root) {
-    /* — Collection filter — */
+    /* ——— Collection filter ——— */
     const grid = root.querySelector('[data-collection-grid]');
     const tabs = root.querySelectorAll('.filter-tab');
     let disposeCards = mountProductCards(root);
@@ -312,84 +370,195 @@ export default {
       })
     );
 
-    /* — Finder — */
     root.querySelector('[data-open-finder]').addEventListener('click', openFinder);
 
-    /* — Hero motion — */
-    const heroFig = root.querySelector('[data-hero-fig] .bottle-stage');
-    onPageCleanup(attachTilt(root.querySelector('[data-hero-fig]'), { max: 8 }));
-    onPageCleanup(floatBottle(heroFig, { y: 8, dur: 5.5 }));
-    onPageCleanup(sweepBottle(heroFig, { every: 5 }));
-    onPageCleanup(driftMist(root.querySelector('[data-hero-fig]'), { opacity: 0.55 }));
+    /* ——— HERO: the desk assembles, then breathes ——— */
+    const hero = root.querySelector('.hero');
+    const deskItems = hero.querySelectorAll('[data-desk]');
+    const heroBottleWrap = hero.querySelector('[data-hero-bottle]');
+    const heroStage = heroBottleWrap.querySelector('.bottle-stage');
+
+    onPageCleanup(floatBottle(heroStage, { y: 9, dur: 5.5 }));
+    onPageCleanup(sweepBottle(heroStage, { every: 4 }));
+    onPageCleanup(driftMist(hero.querySelector('.hero__fig'), { opacity: 0.6 }));
+    onPageCleanup(attachTilt(hero.querySelector('.hero__fig'), { max: 9 }));
 
     if (motionOK()) {
-      const heroBg = root.querySelector('[data-hero-bg]');
+      /* entrance: artifacts are laid on the desk one by one */
+      const tl = gsap.timeline();
+      tl.from(deskItems, {
+        y: 44,
+        opacity: 0,
+        rotation: (i, el) => (parseFloat(getComputedStyle(el).getPropertyValue('--r')) || 0) * 2.4,
+        duration: 0.9,
+        stagger: 0.07,
+        ease: 'power3.out',
+        clearProps: 'opacity',
+      });
+
+      /* physical presence: continuous slow sway on the stage (tilt rides on the svg) */
+      gsap.set(heroBottleWrap, { transformPerspective: 800 });
+      gsap.to(heroBottleWrap, {
+        rotationY: 7,
+        duration: 6.5,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+      });
+
+      /* lattice light drifts like sun through a screen */
+      gsap.to(hero.querySelector('[data-hero-lattice]'), {
+        backgroundPosition: '120px 60px',
+        duration: 60,
+        ease: 'none',
+        repeat: -1,
+      });
+
+      /* slow ambient push-in + depth parallax while scrolling away */
       gsap.fromTo(
-        heroBg,
-        { scale: 1.0 },
-        {
-          scale: 1.07,
-          ease: 'none',
-          scrollTrigger: { trigger: root.querySelector('.hero'), start: 'top top', end: 'bottom top', scrub: 0.6 },
-        }
+        hero.querySelector('[data-hero-bg]'),
+        { scale: 1 },
+        { scale: 1.07, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.6 } }
       );
-      /* slow ambient reveal on load (opacity only — scale belongs to the scrub) */
-      gsap.from(root.querySelector('.hero__glow'), { opacity: 0, duration: 2.6, ease: 'power2.out' });
+      deskItems.forEach((item) => {
+        const depth = parseFloat(item.dataset.depth || 0.4);
+        gsap.to(item, {
+          yPercent: -34 * depth,
+          ease: 'none',
+          scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.8 },
+        });
+      });
+
+      /* mouse parallax across the desk */
+      if (!isTouch()) {
+        const quicks = [...deskItems].map((item) => ({
+          depth: parseFloat(item.dataset.depth || 0.4),
+          x: gsap.quickTo(item, 'x', { duration: 1.1, ease: 'power3.out' }),
+          yq: gsap.quickTo(item, 'y', { duration: 1.1, ease: 'power3.out' }),
+        }));
+        const onMove = (e) => {
+          const nx = e.clientX / window.innerWidth - 0.5;
+          const ny = e.clientY / window.innerHeight - 0.5;
+          quicks.forEach((q) => {
+            q.x(nx * 26 * q.depth);
+            q.yq(ny * 16 * q.depth);
+          });
+        };
+        hero.addEventListener('pointermove', onMove);
+        onPageCleanup(() => hero.removeEventListener('pointermove', onMove));
+      }
     }
 
-    /* Re-render if the viewport crosses the pin/carousel breakpoint,
-       so the pinned showcase and cine scene swap modes cleanly. */
-    const mq = window.matchMedia('(max-width: 820px)');
-    const onMq = () => renderRoute({ scroll: false });
-    mq.addEventListener('change', onMq);
-    onPageCleanup(() => mq.removeEventListener('change', onMq));
-
-    /* — Cinematic zoom-to-scent scene — */
+    /* ——— CINE: zoom → fragrance escapes → becomes a memory ——— */
     const cine = root.querySelector('[data-cine]');
     const useCinePin = motionOK() && !isNarrow();
     if (!useCinePin) {
       cine.classList.add('cine--static');
       const stage = cine.querySelector('[data-cine-bottle] .bottle-stage');
-      onPageCleanup(driftMist(cine.querySelector('[data-cine-bottle]'), { opacity: 0.4 }));
       if (motionOK()) onPageCleanup(floatBottle(stage, { y: 6 }));
     } else {
       const stageEl = cine.querySelector('[data-cine-stage]');
       const bottle = cine.querySelector('[data-cine-bottle]');
-      const mists = bottle.querySelectorAll('.mist');
       const intro = cine.querySelector('[data-cine-intro]');
       const outro = cine.querySelector('[data-cine-outro]');
-      const memory = cine.querySelector('[data-cine-memory]');
-      const pols = memory.querySelectorAll('[data-cine-pol]');
       const vignette = cine.querySelector('[data-cine-vignette]');
+      const photo = cine.querySelector('[data-cine-photo]');
+      const sides = cine.querySelectorAll('[data-cine-side]');
       const final = cine.querySelector('[data-cine-final]');
+      const mistcol = cine.querySelector('[data-cine-mistcol]');
 
-      gsap.set(bottle, { scale: 0.86, yPercent: 4 });
+      /* build the fragrance column: mist blobs + fine particles at the neck */
+      const mistC = featured.mist;
+      const blobs = [];
+      for (let i = 0; i < 5; i++) {
+        const s = 90 + i * 55;
+        const b = document.createElement('span');
+        b.className = 'mist';
+        b.style.cssText = `width:${s}px;height:${s}px;left:${-s / 2}px;top:${-s / 2}px;background:radial-gradient(circle, ${mistC}66, ${mistC}00 70%);`;
+        mistcol.appendChild(b);
+        blobs.push(b);
+      }
+      const particles = [];
+      for (let i = 0; i < 9; i++) {
+        const d = document.createElement('span');
+        d.className = 'cine__particle';
+        d.style.background = i % 3 === 0 ? 'var(--terracotta)' : mistC;
+        d.style.left = `${-40 + Math.random() * 80}px`;
+        d.style.top = `0px`;
+        mistcol.appendChild(d);
+        particles.push(d);
+      }
+
+      gsap.set(bottle, { scale: 0.9, yPercent: 6 });
+      gsap.set(photo, { opacity: 0, scale: 0.62, y: 60, rotation: 5, filter: 'blur(22px)' });
+      gsap.set(sides, { opacity: 0, y: 70 });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: stageEl,
           start: 'top top',
-          end: '+=270%',
+          end: '+=330%',
           scrub: 0.8,
           pin: true,
           anticipatePin: 1,
         },
       });
 
-      tl.to(intro, { opacity: 0, y: -40, duration: 0.16, ease: 'power1.in' }, 0.02)
-        .to(bottle, { scale: 1.65, yPercent: 0, duration: 0.5, ease: 'power1.inOut' }, 0.06)
-        .to(bottle.querySelector('.bottle'), { rotationY: 9, rotationX: -3, duration: 0.5, ease: 'sine.inOut' }, 0.06)
-        .to(vignette, { opacity: 1, duration: 0.4 }, 0.18)
-        .to(mists, { opacity: 0.75, scale: 1.5, stagger: 0.05, duration: 0.3, ease: 'sine.out' }, 0.3)
-        .to(memory, { opacity: 1, duration: 0.28 }, 0.44)
-        .from(pols, { y: 70, opacity: 0, stagger: 0.07, duration: 0.3, ease: 'power2.out' }, 0.46)
-        .to(bottle, { scale: 1.28, yPercent: 6, duration: 0.3, ease: 'sine.inOut' }, 0.55)
-        .to(bottle.querySelector('.bottle'), { rotationY: -6, duration: 0.3, ease: 'sine.inOut' }, 0.55)
-        .to(outro, { opacity: 1, y: -14, duration: 0.2 }, 0.62)
-        .to(mists, { opacity: 0.35, duration: 0.3 }, 0.72)
-        .to(final, { opacity: 1, y: -8, duration: 0.2 }, 0.8);
+      /* Act I — approach: the camera closes in */
+      tl.to(intro, { opacity: 0, y: -40, duration: 0.1, ease: 'power1.in' }, 0.02)
+        .to(bottle, { scale: 2.3, yPercent: 14, duration: 0.34, ease: 'power1.inOut' }, 0.04)
+        .to(bottle.querySelector('.bottle'), { rotationY: 12, rotationX: -4, duration: 0.34, ease: 'sine.inOut' }, 0.04)
+        .to(vignette, { opacity: 1, duration: 0.3 }, 0.12)
+
+        /* Act II — the fragrance escapes: a column of mist rises from the neck */
+        .to(blobs, {
+          opacity: 0.85,
+          y: (i) => -120 - i * 62,
+          x: (i) => (i % 2 ? 34 : -30) * (1 + i * 0.12),
+          scale: 1.35,
+          stagger: 0.03,
+          duration: 0.2,
+          ease: 'sine.out',
+        }, 0.3)
+        .to(particles, {
+          opacity: 0.9,
+          y: () => -140 - Math.random() * 240,
+          x: (i) => -60 + Math.random() * 120,
+          duration: 0.26,
+          stagger: 0.012,
+          ease: 'sine.out',
+        }, 0.32)
+
+        /* Act III — transformation: the mist gathers into a photograph */
+        .to(blobs, {
+          y: -230,
+          x: 0,
+          scale: 2.1,
+          opacity: 0.55,
+          duration: 0.14,
+          ease: 'power1.inOut',
+        }, 0.5)
+        .to(bottle, { scale: 1.05, yPercent: 34, xPercent: -46, duration: 0.24, ease: 'power2.inOut' }, 0.5)
+        .to(bottle.querySelector('.bottle'), { rotationY: -8, duration: 0.24 }, 0.5)
+        .to(photo, {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          rotation: -3,
+          filter: 'blur(0px)',
+          duration: 0.22,
+          ease: 'power2.out',
+        }, 0.56)
+        .to(blobs, { opacity: 0, scale: 2.6, duration: 0.12, ease: 'sine.in' }, 0.62)
+        .to(particles, { opacity: 0, duration: 0.1 }, 0.62)
+
+        /* Act IV — the memory settles; companions join it */
+        .to(sides, { opacity: 0.95, y: 0, stagger: 0.06, duration: 0.16, ease: 'power2.out' }, 0.68)
+        .to(outro, { opacity: 1, y: 6, duration: 0.12 }, 0.7)
+        .to(final, { opacity: 1, y: -8, duration: 0.14 }, 0.84);
     }
 
-    /* — Six-scent pinned showcase (desktop, motion allowed) — */
+    /* ——— Showcase pin (desktop) ——— */
     const usePin = motionOK() && !isNarrow();
     if (usePin) {
       const pin = root.querySelector('[data-showcase-pin]');
@@ -398,7 +567,7 @@ export default {
       const per = 1 / slides.length;
 
       gsap.set(slides, { autoAlpha: 0 });
-      gsap.set(slides[0], { autoAlpha: 1 }); /* first slide visible before the pin engages */
+      gsap.set(slides[0], { autoAlpha: 1 });
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: pin,
@@ -426,6 +595,12 @@ export default {
             at
           )
           .fromTo(
+            slide.querySelector('.showcase__slidememory'),
+            { y: 40, opacity: 0, rotation: -10 },
+            { y: 0, opacity: 0.85, rotation: -5, duration: fade * 1.5, ease: 'power2.out' },
+            at + fade * 0.3
+          )
+          .fromTo(
             slide.querySelectorAll('.showcase__left > *, .showcase__right > *'),
             { y: 26, autoAlpha: 0 },
             { y: 0, autoAlpha: 1, stagger: 0.012, duration: fade, ease: 'power2.out' },
@@ -438,7 +613,7 @@ export default {
       });
     }
 
-    /* — Memory-stack drift — */
+    /* ——— Memory-stack drift ——— */
     if (motionOK()) {
       const stack = root.querySelector('[data-memstack]');
       stack.querySelectorAll('.acard').forEach((card, i) => {
@@ -449,5 +624,11 @@ export default {
         });
       });
     }
+
+    /* re-render when crossing the pin/carousel breakpoint */
+    const mq = window.matchMedia('(max-width: 820px)');
+    const onMq = () => renderRoute({ scroll: false });
+    mq.addEventListener('change', onMq);
+    onPageCleanup(() => mq.removeEventListener('change', onMq));
   },
 };
