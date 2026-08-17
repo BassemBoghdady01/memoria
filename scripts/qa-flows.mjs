@@ -88,9 +88,9 @@ try {
   /* 10 — finder flow */
   await page.goto(BASE + '/', { waitUntil: 'networkidle' });
   await page.waitForTimeout(500);
-  await page.evaluate(() => document.querySelector('[data-open-finder]').scrollIntoView());
+  await page.evaluate(() => document.querySelector('[data-open-finder-2]').scrollIntoView());
   await page.waitForTimeout(800);
-  await page.click('[data-open-finder]');
+  await page.click('[data-open-finder-2]');
   await page.waitForTimeout(400);
   await page.click('.finder__opt[data-val="woody"]');
   await page.click('.finder__opt[data-val="him"]');

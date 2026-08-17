@@ -5,7 +5,8 @@
  * placeholder creative content awaiting the client's real product
  * information. Replace values here; every page reads from this file.
  *
- * `bottle` configures the SVG bottle renderer (src/js/components/bottle.js).
+ * `bottle` is legacy config (the illustrated renderer is retired — bottles
+ * are photoreal renders in public/renders, see renderSrc below).
  * `mist` colours the fragrance-visualisation layers.
  * `finder` tags feed the "Find Your Memory" quiz scoring.
  */
@@ -43,6 +44,9 @@ export const products = [
     relatedProducts: ['rose-vellum', 'sunday-linen'],
     finder: { mood: ['floral', 'warm'], time: ['night', 'special'] },
     mist: '#d8a97a',
+    tint: '#F2E3C2', // card plate ground
+    world: { color: '#B66A4B' }, // the scene you enter when you spray it
+    ad: 'Smells like staying ten more minutes.',
     bottle: {
       shape: 'shoulder',
       glass: '#c8b490',
@@ -84,6 +88,9 @@ export const products = [
     relatedProducts: ['jasmine-dusk', 'oud-memoir'],
     finder: { mood: ['floral', 'soft'], time: ['day', 'everyday'] },
     mist: '#c98d76',
+    tint: '#F0DDC9',
+    world: { color: '#9A5240' },
+    ad: 'Some letters are worn, not sent.',
     bottle: {
       shape: 'oval',
       glass: '#c9b195',
@@ -125,6 +132,9 @@ export const products = [
     relatedProducts: ['jasmine-dusk', 'vetiver-arcade'],
     finder: { mood: ['fresh', 'soft'], time: ['day', 'everyday'] },
     mist: '#e3d3ae',
+    tint: '#F3EAC9',
+    world: { color: '#5E8289' },
+    ad: 'The week can wait until Monday.',
     bottle: {
       shape: 'column',
       glass: '#cfc0a4',
@@ -166,6 +176,9 @@ export const products = [
     relatedProducts: ['vetiver-arcade', 'oud-memoir'],
     finder: { mood: ['fresh', 'woody'], time: ['day', 'everyday'] },
     mist: '#7fa3a8',
+    tint: '#E4D9BC',
+    world: { color: '#2F6670' },
+    ad: 'Smells familiar. Isn’t.',
     bottle: {
       shape: 'apothecary',
       glass: '#b7ab90',
@@ -207,6 +220,9 @@ export const products = [
     relatedProducts: ['nile-cedar', 'rose-vellum'],
     finder: { mood: ['warm', 'bold', 'woody'], time: ['night', 'special'] },
     mist: '#8c6a4f',
+    tint: '#E6D2B4',
+    world: { color: '#3E281B' },
+    ad: 'Some memories fade. This one has excellent projection.',
     bottle: {
       shape: 'block',
       glass: '#a89478',
@@ -248,6 +264,9 @@ export const products = [
     relatedProducts: ['nile-cedar', 'sunday-linen'],
     finder: { mood: ['fresh', 'bold'], time: ['day', 'everyday'] },
     mist: '#97957e',
+    tint: '#E7E0C4',
+    world: { color: '#6E6B52' },
+    ad: 'Downtown after rain. Bottled before it dried.',
     bottle: {
       shape: 'slim',
       glass: '#b3a88c',
@@ -291,6 +310,12 @@ export function minPrice(product) {
 
 export function genderLabel(g) {
   return g === 'her' ? 'For Her' : g === 'him' ? 'For Him' : 'For All';
+}
+
+/** Photoreal bottle render paths (public/renders, built by scripts/build-bottle-renders.mjs). */
+export function renderSrc(p, w = 720) {
+  const n = Number(p.number);
+  return { webp: `/renders/no${n}-${w}.webp`, png: `/renders/no${n}-${w}.png` };
 }
 
 export function searchProducts(query) {

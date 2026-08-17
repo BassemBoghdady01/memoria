@@ -15,7 +15,7 @@ export const archiveEras = [
     text: 'Placeholder — the founding chapter. A small atelier, a first accord, and the idea that a scent could hold a memory in place. Real history to be supplied.',
     artifacts: [
       { motif: 'atelier', caption: 'the first atelier', stamp: 'FIG. 01 · CAIRO', tilt: -2.4 },
-      { motif: 'sketch', caption: 'early bottle sketches', stamp: 'FIG. 02', tilt: 1.8 },
+      { motif: 'sketch', caption: 'the first label proofs', stamp: 'FIG. 02', tilt: 1.8 },
     ],
   },
   {
@@ -52,7 +52,7 @@ export const archiveEras = [
     year: '2022',
     tag: 'Vol. V · The Archive Room',
     title: 'Keeping what mattered',
-    text: 'Placeholder — every formula, sketch and photograph gathered into one room: the beginning of the MEMÓRIA archive this site is named for.',
+    text: 'Placeholder — every formula, label and photograph gathered into one room: the beginning of the MEMÓRIA archive this site is named for.',
     artifacts: [
       { motif: 'shelf', caption: 'the archive shelves', stamp: 'FIG. 09', tilt: -1.8 },
       { motif: 'film', caption: 'campaign contact sheet', stamp: 'FIG. 10', tilt: 2.2 },

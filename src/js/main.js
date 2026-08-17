@@ -11,7 +11,7 @@ import '@fontsource/jost/400.css';
 import '@fontsource/jost/500.css';
 import '@fontsource/jost/600.css';
 import '@fontsource/courier-prime/400.css';
-import '@fontsource/caveat/500.css';
+/* handwriting face retired with the 2026 creative reset */
 import '../styles/main.css';
 
 import { initSmoothScroll } from './motion.js';

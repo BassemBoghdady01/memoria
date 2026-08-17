@@ -4,42 +4,44 @@
 import { el, esc, money, trapFocus, lockScroll, unlockScroll } from '../utils.js';
 import { icons } from './icons.js';
 import { products, genderLabel, minPrice } from '../data/products.js';
-import { renderBottle } from './bottle.js';
+import { bottleImg } from './render.js';
 import { navigate } from '../router.js';
 
+/* Personality-driven questions. Values still map onto the catalogue's
+   finder tags (mood / who / time) so scoring stays unchanged. */
 const STEPS = [
   {
     key: 'mood',
-    q: 'What mood are you looking for?',
-    hint: 'Pick the feeling, not the ingredient.',
+    q: 'Where are we going?',
+    hint: 'Be honest. The Department can tell.',
     opts: [
-      { v: 'fresh', t: 'Fresh', s: 'clean air, citrus, morning' },
-      { v: 'warm', t: 'Warm', s: 'amber, skin, low light' },
-      { v: 'floral', t: 'Floral', s: 'jasmine, rose, petals' },
-      { v: 'woody', t: 'Woody', s: 'cedar, vetiver, ground' },
-      { v: 'bold', t: 'Bold', s: 'presence, depth, trail' },
-      { v: 'soft', t: 'Soft', s: 'musk, linen, closeness' },
+      { v: 'warm', t: 'Dinner we shouldn’t be late for.', s: 'amber, low light, good company' },
+      { v: 'bold', t: 'Somewhere with a dress code.', s: 'presence required at the door' },
+      { v: 'soft', t: 'Nowhere. That’s the point.', s: 'linen, musk, the sofa' },
+      { v: 'fresh', t: 'Out early, back late.', s: 'citrus, open windows' },
+      { v: 'floral', t: 'Someone’s balcony.', s: 'jasmine, rose, an excuse' },
+      { v: 'woody', t: 'A long walk, no destination.', s: 'cedar, vetiver, ground' },
     ],
   },
   {
     key: 'who',
-    q: 'Who is it for?',
+    q: 'Who is wearing it?',
     hint: 'Scents are memories — borrow freely.',
     opts: [
-      { v: 'her', t: 'Her', s: 'Nº 01 – 03' },
-      { v: 'him', t: 'Him', s: 'Nº 04 – 06' },
-      { v: 'either', t: 'Either', s: 'the whole collection' },
+      { v: 'her', t: 'Her.', s: 'Nº 01 – 03' },
+      { v: 'him', t: 'Him.', s: 'Nº 04 – 06' },
+      { v: 'either', t: 'Whoever gets there first.', s: 'the whole collection' },
     ],
   },
   {
     key: 'time',
-    q: 'When will you wear it?',
-    hint: 'Every hour smells different.',
+    q: 'How should it behave?',
+    hint: 'Projection is a personality trait.',
     opts: [
-      { v: 'day', t: 'Day', s: 'light, open, near' },
-      { v: 'night', t: 'Night', s: 'deeper, slower' },
-      { v: 'everyday', t: 'Everyday', s: 'a signature' },
-      { v: 'special', t: 'Occasions', s: 'kept for moments' },
+      { v: 'day', t: 'Keep the morning going.', s: 'light, open, near' },
+      { v: 'night', t: 'Last until sunrise.', s: 'deeper, slower' },
+      { v: 'everyday', t: 'Stay close. Mind its business.', s: 'a signature' },
+      { v: 'special', t: 'Announce me at the door.', s: 'kept for moments' },
     ],
   },
 ];
@@ -126,15 +128,15 @@ function renderStep({ focusFirst = false } = {}) {
     const recs = recommend(answers);
     body.innerHTML = `
       <div class="finder__result-head">
-        <span class="hand">we remember something like this…</span>
-        <p>${recs.length} scent${recs.length === 1 ? '' : 's'} from the collection, closest to your memory.</p>
+        <span class="stamp">The Memory Department recommends</span>
+        <p>${recs.length} scent${recs.length === 1 ? '' : 's'} from the collection. The Department is rarely wrong twice.</p>
       </div>
       <div class="finder__results">
         ${recs
           .map(
             (p) => `
           <button class="search__item" data-slug="${p.slug}">
-            <span class="cartline__thumb">${renderBottle(p, { label: false })}</span>
+            <span class="cartline__thumb">${bottleImg(p, { w: 360 })}</span>
             <span>
               <span class="search__itemname">Nº ${p.number} · ${esc(p.name)}</span><br/>
               <span class="search__itemmeta">${genderLabel(p.gender)} · ${esc(p.fragranceFamily)} · ${esc(p.smellsLike.join(', '))}</span>

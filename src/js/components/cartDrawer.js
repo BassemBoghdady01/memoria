@@ -4,7 +4,7 @@
 import { $, el, esc, money, trapFocus, lockScroll, unlockScroll } from '../utils.js';
 import { icons } from './icons.js';
 import { cart } from '../store/cart.js';
-import { renderBottle } from './bottle.js';
+import { bottleImg } from './render.js';
 import { genderLabel } from '../data/products.js';
 import { navigate } from '../router.js';
 
@@ -83,7 +83,7 @@ function renderBody() {
       (l) => `
       <div class="cartline" data-line="${l.slug}:${l.ml}">
         <a class="cartline__thumb" href="/product/${l.slug}" aria-hidden="true" tabindex="-1">
-          ${renderBottle(l.product, { label: false })}
+          ${bottleImg(l.product, { w: 360 })}
         </a>
         <div class="cartline__info">
           <a class="cartline__name" href="/product/${l.slug}">Nº ${l.product.number} · ${esc(l.product.name)}</a>

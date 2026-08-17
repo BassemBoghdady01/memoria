@@ -3,7 +3,7 @@
  */
 import { esc, money } from '../utils.js';
 import { cart } from '../store/cart.js';
-import { renderBottle } from '../components/bottle.js';
+import { bottleImg } from '../components/render.js';
 import { genderLabel } from '../data/products.js';
 import { onPageCleanup } from '../motion.js';
 
@@ -23,7 +23,7 @@ function renderList() {
         .map(
           (l) => `
         <div class="cartline" data-line="${l.slug}:${l.ml}">
-          <a class="cartline__thumb" href="/product/${l.slug}">${renderBottle(l.product, { label: false })}</a>
+          <a class="cartline__thumb" href="/product/${l.slug}">${bottleImg(l.product, { w: 360 })}</a>
           <div class="cartline__info">
             <a class="cartline__name" href="/product/${l.slug}">Nº ${l.product.number} · ${esc(l.product.name)}</a>
             <span class="cartline__meta">${genderLabel(l.product.gender)} · ${esc(l.product.concentration)} · ${l.ml} ml</span>

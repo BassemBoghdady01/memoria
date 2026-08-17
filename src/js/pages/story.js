@@ -1,10 +1,20 @@
 /**
  * MEMÓRIA · Our Story — editorial, honest, placeholder-marked.
+ * No illustrations: colour worlds, type, and the product itself.
  */
-import { renderMotif } from '../components/artwork.js';
-import { getFeatured } from '../data/products.js';
-import { renderBottleStage } from '../components/bottle.js';
-import { driftMist, floatBottle, onPageCleanup } from '../motion.js';
+import { products, getProduct } from '../data/products.js';
+import { bottleImg } from '../components/render.js';
+import { gsap, motionOK, onPageCleanup } from '../motion.js';
+
+function recPlate(world, now, place, meta) {
+  return `
+  <div class="worldplate" style="--world:${world}" data-reveal>
+    <span class="worldplate__now">${now}</span>
+    <strong class="worldplate__place">${place}</strong>
+    <span class="worldplate__meta">${meta}</span>
+    <span class="worldplate__fpo">Campaign still: developing — photography arrives with the shoot</span>
+  </div>`;
+}
 
 export default {
   title: 'Our Story — MEMÓRIA',
@@ -24,14 +34,7 @@ export default {
 
       <section class="container story-block" aria-label="The beginning">
         <div class="story-block__art">
-          <div class="acard" style="--tilt:-3deg" data-reveal>
-            <div class="acard__img">${renderMotif('atelier', { title: 'The first atelier' })}</div>
-            <div class="acard__caption"><span class="hand">the first room</span><span class="stamp">FIG. 01</span></div>
-          </div>
-          <div class="acard" style="--tilt:2.4deg; --reveal-delay:140ms" data-reveal>
-            <div class="acard__img">${renderMotif('sketch', { title: 'Early bottle sketches' })}</div>
-            <div class="acard__caption"><span class="hand">first sketches</span><span class="stamp">FIG. 02</span></div>
-          </div>
+          ${recPlate('#B66A4B', 'Chapter I, as remembered:', 'One room. One accord. A lot of jasmine.', 'The first atelier · location on file')}
         </div>
         <div class="story-block__copy">
           <span class="stamp" data-reveal>Chapter I · The Beginning</span>
@@ -58,14 +61,7 @@ export default {
 
       <section class="container story-block story-block--flip" aria-label="The craft">
         <div class="story-block__art">
-          <div class="acard" style="--tilt:2.6deg" data-reveal>
-            <div class="acard__img">${renderMotif('flask', { title: 'Maceration trials' })}</div>
-            <div class="acard__caption"><span class="hand">trial upon trial</span><span class="stamp">FIG. 03</span></div>
-          </div>
-          <div class="acard" style="--tilt:-2deg; --reveal-delay:140ms" data-reveal>
-            <div class="acard__img">${renderMotif('notes', { title: 'The perfumer’s notebook' })}</div>
-            <div class="acard__caption"><span class="hand">the notebook</span><span class="stamp">FIG. 04</span></div>
-          </div>
+          ${recPlate('#2F6670', 'Chapter II, in numbers:', 'Hundreds of trials. Six survivors.', 'The perfumer’s ledger · pages withheld')}
         </div>
         <div class="story-block__copy">
           <span class="stamp" data-reveal>Chapter II · The Craft</span>
@@ -93,24 +89,27 @@ export default {
             </p>
             <a class="btn btn--primary" href="/shop" data-reveal>Shop the Collection</a>
           </div>
-          <div class="memstrip__stack" data-story-stage>
-            <div class="acard" style="--tilt:-2deg; top:6%; left:8%; position:absolute; width:56%;" data-reveal>
-              <div class="acard__img">${renderMotif('collection', { title: 'The six-bottle collection' })}</div>
-              <div class="acard__caption"><span class="hand">six, and enough</span><span class="stamp">VOL. VI</span></div>
-            </div>
-            <div style="position:absolute; right:4%; bottom:0; width:34%;" data-reveal>
-              ${renderBottleStage(getFeatured(), { mists: 2 })}
-            </div>
+          <div class="memstrip__trio" data-story-stage>
+            ${['rose-vellum', 'nile-cedar', 'jasmine-dusk']
+              .map(
+                (slug, i) => `
+              <a class="memstrip__bottle" href="/product/${slug}" data-reveal style="--reveal-delay:${i * 120}ms">
+                ${bottleImg(getProduct(slug), { w: 360 })}
+              </a>`
+              )
+              .join('')}
           </div>
         </div>
       </section>
     </article>`;
   },
   mount(root) {
-    const stage = root.querySelector('[data-story-stage] .bottle-stage');
-    if (stage) {
-      onPageCleanup(floatBottle(stage, { y: 6 }));
-      onPageCleanup(driftMist(stage.parentElement, { opacity: 0.4 }));
+    if (motionOK()) {
+      const bottles = root.querySelectorAll('.memstrip__bottle picture');
+      bottles.forEach((b, i) => {
+        const t = gsap.to(b, { y: -7 - i * 2, duration: 4.6 + i * 0.7, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        onPageCleanup(() => t.kill());
+      });
     }
   },
 };

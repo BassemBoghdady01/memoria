@@ -5,7 +5,7 @@
  */
 import { esc, money, toast } from '../utils.js';
 import { cart } from '../store/cart.js';
-import { renderBottle } from '../components/bottle.js';
+import { bottleImg } from '../components/render.js';
 import { icons } from '../components/icons.js';
 import { navigate, renderRoute } from '../router.js';
 import { onPageCleanup } from '../motion.js';
@@ -20,7 +20,7 @@ function summary() {
         .map(
           (l) => `
         <div class="miniline">
-          <span class="cartline__thumb">${renderBottle(l.product, { label: false })}</span>
+          <span class="cartline__thumb">${bottleImg(l.product, { w: 360 })}</span>
           <span>
             <span class="miniline__name">Nº ${l.product.number} · ${esc(l.product.name)}</span><br/>
             <span class="miniline__meta">${l.ml} ml × ${l.qty}</span>

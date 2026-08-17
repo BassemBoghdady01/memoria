@@ -1,634 +1,453 @@
 /**
- * MEMÓRIA · Homepage — "the memory desk".
- * Layered collage hero, catalogue-plate collection, and the signature
- * sequence where the fragrance escapes the bottle and becomes a memory.
+ * MEMÓRIA · Homepage — a modern perfume shop that behaves as if it has
+ * a rich, strange, charming history.
+ *
+ * Rhythm: HERO AD → THE SIX PERFUMES → forecast interruption → rotating
+ * showcase → the spray moment → two standalone ads → the archive →
+ * scent finder → the hotline. Light ground, real-looking product,
+ * shopping never more than one tap away.
  */
-import { esc, money, isNarrow, isTouch } from '../utils.js';
-import { products, getFeatured, genderLabel, minPrice } from '../data/products.js';
-import { archiveEras } from '../data/archive.js';
-import { renderBottleStage } from '../components/bottle.js';
-import { renderMotif, renderNoteIcon } from '../components/artwork.js';
+import { esc, money, toast } from '../utils.js';
+import { products, getByGender, getProduct } from '../data/products.js';
+import { bottleImg } from '../components/render.js';
 import { renderProductGrid, mountProductCards } from '../components/productCard.js';
-import { icons } from '../components/icons.js';
 import { openFinder } from '../components/finder.js';
-import {
-  gsap, ScrollTrigger, motionOK, attachTilt, floatBottle, sweepBottle, driftMist, onPageCleanup,
-} from '../motion.js';
-import { renderRoute } from '../router.js';
+import { gsap, motionOK, onPageCleanup, scanReveals } from '../motion.js';
 
-const featured = getFeatured();
+/* ————— hero ————— */
 
-/* Jasmine sprig laid across the desk */
-const SPRIG = `
-<svg viewBox="0 0 160 90" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-  <path d="M6 78 C 40 66, 90 48, 150 16"/>
-  <path d="M38 66 q -2 -14 8 -20 q 4 12 -8 20Z" fill="currentColor" fill-opacity="0.12"/>
-  <path d="M64 55 q -1 -13 9 -18 q 3 11 -9 18Z" fill="currentColor" fill-opacity="0.12"/>
-  <path d="M92 42 q 0 -12 10 -16 q 2 10 -10 16Z" fill="currentColor" fill-opacity="0.12"/>
-  <g fill="#f1e9d8" stroke-width="1.1">
-    <circle cx="120" cy="28" r="4.2"/><circle cx="130" cy="20" r="3.4"/>
-    <circle cx="138" cy="27" r="3"/><circle cx="128" cy="33" r="2.7"/>
-  </g>
-  <circle cx="128" cy="27" r="1.4" fill="currentColor" stroke="none" opacity="0.7"/>
-</svg>`;
-
-/* ————— HERO ————— */
 function heroSection() {
+  const hero = getProduct('jasmine-dusk');
   return `
-  <section class="hero" aria-label="MEMÓRIA — every scent holds a memory">
-    <div class="hero__bg" data-hero-bg>
-      <div class="hero__lattice" data-hero-lattice></div>
-      <div class="hero__glow"></div>
-    </div>
-
-    <div class="container hero__inner">
-      <div class="hero__copy">
-        <span class="hero__eyebrow" data-desk data-depth="0.2">
-          <span class="rule" aria-hidden="true"></span>
-          <span class="label">MEMÓRIA · Twenty Years of Scents · Cairo</span>
-        </span>
-        <h1 class="hero__title" data-desk data-depth="0.12">
-          <span class="t-line">Every scent</span>
-          <span class="t-line">holds a <span class="t-chip">memory.</span></span>
-        </h1>
-        <p class="hero__lede" data-desk data-depth="0.18">
-          Six perfumes, two decades of Cairo evenings, rooftops and letters —
-          each bottle keeps one hour of the city.
-        </p>
-        <div class="hero__ctas" data-desk data-depth="0.15">
-          <a class="btn btn--primary" href="/shop">Shop the Collection</a>
-          <a class="btn" href="/our-story">Our Story</a>
+  <section class="hero2">
+    <div class="container hero2__grid">
+      <div class="hero2__copy">
+        <p class="hero2__eyebrow" data-reveal>Memory-Enhancing Compositions · Est. 2006<sup>*</sup></p>
+        <h1 class="hero2__title" data-reveal>Every scent<br/>holds a <em>memory.</em></h1>
+        <p class="hero2__sub" data-reveal>Six scents. Twenty years. No bad memories included.</p>
+        <div class="hero2__ctas" data-reveal>
+          <a class="btn btn--primary btn--big" href="/shop">Shop the Collection</a>
+          <a class="btn btn--ghost" href="/our-story">Discover Memória</a>
         </div>
-        <div class="hero__meta" data-desk data-depth="0.1">
-          <span class="stamp">Catalogue Vol. VI</span>
-          <span class="stamp">Nº 01 – 06 · Eau de Parfum</span>
-          <span class="stamp">For Her · For Him</span>
+        <p class="hero2__foot" data-reveal><sup>*</sup>Placeholder date. Records before 2006 remain suspiciously incomplete.</p>
+      </div>
+      <div class="hero2__plate" data-hero-plate>
+        <div class="hero2__arch" data-hero-arch>
+          ${bottleImg(hero, { w: 720, cls: 'hero2__bottle', eager: true })}
+          <svg class="hero2__stamp" viewBox="0 0 120 120" aria-hidden="true">
+            <defs><path id="stampcircle" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs>
+            <circle cx="60" cy="60" r="58" fill="var(--terracotta)"/>
+            <circle cx="60" cy="60" r="46" fill="none" stroke="rgba(232,221,200,.55)" stroke-width="1"/>
+            <g class="hero2__stampspin">
+              <text font-size="10.6" letter-spacing="2" fill="var(--parchment)">
+                <textPath href="#stampcircle">TWENTY YEARS OF SCENTS · MEMÓRIA ·</textPath>
+              </text>
+            </g>
+            <text x="60" y="66" text-anchor="middle" font-size="20" fill="var(--parchment)" font-family="Cormorant Garamond, serif" font-style="italic">Nº 01</text>
+          </svg>
+          <a class="hero2__chip" href="/product/${hero.slug}">Nº ${hero.number} · from ${money(hero.sizes[0].price)}</a>
         </div>
       </div>
-
-      <div class="hero__fig">
-        <div class="hero__shelf" aria-hidden="true"></div>
-        <div data-desk data-depth="1" data-hero-bottle>
-          ${renderBottleStage(featured, { mists: 3, reflection: true })}
-        </div>
-        <span class="hero__fignote stamp" aria-hidden="true">Fig. ${featured.number} — ${esc(featured.name)} · Eau de Parfum</span>
-      </div>
     </div>
-
-    <!-- the desk: paper artifacts at different depths -->
-    <figure class="collage__item collage__photo" style="--r:-4deg" data-desk data-depth="0.45" aria-hidden="true">
-      <span class="tape tape--tl"></span><span class="tape tape--tr"></span>
-      ${renderMotif('balcony', { title: '' })}
-      <figcaption><span class="hand">the balcony, at dusk</span><span class="stamp">FIG. 01 · CAIRO</span></figcaption>
-    </figure>
-
-    <figure class="collage__item collage__note" style="--r:2.5deg" data-desk data-depth="0.6" aria-hidden="true">
-      <span class="hand">jasmine, 6 pm —<br/>keep this one.</span>
-      <span class="stamp">— the perfumer’s note</span>
-    </figure>
-
-    <figure class="collage__item collage__polaroid" style="--r:5deg" data-desk data-depth="0.8" aria-hidden="true">
-      ${renderMotif('felucca', { title: '' })}
-      <span class="hand">the river, later</span>
-    </figure>
-
-    <figure class="collage__item collage__stamp" style="--r:-7deg" data-desk data-depth="0.9" aria-hidden="true">
-      ${renderNoteIcon('reed')}
-      <span class="stamp">CAIRO · POSTES</span>
-      <span class="collage__postmark">Memória<br/>· kept ·</span>
-    </figure>
-
-    <span class="collage__item collage__sprig" style="--r:8deg" data-desk data-depth="0.7" aria-hidden="true">${SPRIG}</span>
-
-    <div class="hero__scrollcue" aria-hidden="true">
-      <span class="stamp">Scroll</span>
-      <span class="line"></span>
-    </div>
+    <nav class="container hero2__index" aria-label="The six scents">
+      ${products
+        .map(
+          (p) => `
+        <a class="hero2__ix" href="/product/${p.slug}">
+          <strong>Nº ${p.number}</strong><span>${esc(p.name)}</span>
+        </a>`
+        )
+        .join('')}
+    </nav>
   </section>`;
 }
 
-/* ————— COLLECTION (immediately after the hero) ————— */
+/* ————— the collection ————— */
+
 function collectionSection() {
   return `
-  <section class="section--tight homecoll" aria-labelledby="coll-title" style="padding-top: var(--space-6)">
+  <section class="collection2" id="collection" aria-labelledby="collection-title">
     <div class="container">
-      <div class="plate-head">
-        <div class="plate-head__rules" data-reveal><span class="stamp">Plate I · The Catalogue</span></div>
-        <h2 id="coll-title" data-reveal>The <em>Collection</em></h2>
-        <p class="serif-lede" data-reveal>Six scents, twenty years in the making. Each keeps one memory — find yours.</p>
-        <div class="filters" role="group" aria-label="Filter collection" data-reveal>
-          <button class="filter-tab" data-filter="all" aria-pressed="true">All</button>
-          <button class="filter-tab" data-filter="her" aria-pressed="false">Women</button>
-          <button class="filter-tab" data-filter="him" aria-pressed="false">Men</button>
+      <header class="sechead2">
+        <div>
+          <p class="sechead2__kicker" data-reveal>The Collection</p>
+          <h2 id="collection-title" data-reveal>Three for her. Three for him.<br/><em>All six for people who change their mind.</em></h2>
         </div>
-      </div>
-      <div data-collection-grid>
-        ${renderProductGrid(products)}
-      </div>
-      <div class="homecoll__foot" data-reveal>
-        <a class="link-line" href="/shop">Open the full catalogue</a>
-      </div>
+        <div class="filters" role="group" aria-label="Filter the collection" data-reveal>
+          <button class="filter-tab" data-filter="all" aria-pressed="true">All six</button>
+          <button class="filter-tab" data-filter="her" aria-pressed="false">For her</button>
+          <button class="filter-tab" data-filter="him" aria-pressed="false">For him</button>
+        </div>
+      </header>
+      <div data-collection-grid>${renderProductGrid(products)}</div>
+      <p class="collection2__more" data-reveal><a class="link-line" href="/shop">Browse the full catalogue →</a></p>
     </div>
   </section>`;
 }
 
-/* ————— CINE — the fragrance becomes a memory ————— */
-function cineSection() {
-  const p = featured;
+/* ————— scent forecast (teal interruption) ————— */
+
+function forecastSection() {
+  const line = `SCENT FORECAST — CAIRO: WARM, CLEAR, HIGH PROJECTION · Nº 02 UNTIL SUNSET · Nº 05 AFTER DARK · CARRY Nº 03 IN CASE OF SUNDAY`;
+  const item = `<span class="forecast__item">${line}</span><span class="forecast__star" aria-hidden="true">✷</span>`;
   return `
-  <section class="cine" data-cine aria-label="The fragrance becomes a memory">
-    <div class="cine__stage" data-cine-stage>
-      <div class="cine__vignette" data-cine-vignette></div>
-
-      <div class="cine__copy cine__copy--intro" data-cine-intro>
-        <span class="stamp">Chapter I · The Scent</span>
-        <h2>Come closer —<br/>this one remembers.</h2>
-      </div>
-
-      <div class="cine__copy cine__copy--outro" data-cine-outro style="opacity:0">
-        <span class="stamp">Nº ${p.number} · ${esc(p.fragranceFamily)}</span>
-        <h2>…and the scent became a place.</h2>
-      </div>
-
-      <div class="cine__bottlewrap" data-cine-bottle>
-        ${renderBottleStage(p, { mists: 0, reflection: true })}
-      </div>
-
-      <div class="cine__mistcol" data-cine-mistcol aria-hidden="true"></div>
-
-      <div class="cine__memory" data-cine-memory>
-        <figure class="cine__side cine__side--l" data-cine-side style="left:14%; top:24%">
-          ${renderMotif('city', { title: '' })}
-          <span class="hand">home, from the roof</span>
-        </figure>
-        <figure class="cine__side cine__side--r" data-cine-side style="right:13%; bottom:20%">
-          ${renderMotif('letter', { title: '' })}
-          <span class="hand">a letter, kept</span>
-        </figure>
-        <figure class="cine__photo" data-cine-photo>
-          ${renderMotif('balcony', { title: esc(p.memoryPlace) })}
-          <span class="hand" data-cine-caption>${esc(p.memoryPlace.toLowerCase())} — ${p.archiveYear}*</span>
-        </figure>
-      </div>
-
-      <div class="cine__final" data-cine-final>
-        <p>“${esc(p.shortDescription)}”</p>
-        <a class="btn btn--primary" href="/product/${p.slug}">Discover Nº ${p.number} — ${esc(p.name)}</a>
-      </div>
+  <section class="forecast" aria-label="Scent forecast">
+    <div class="forecast__marquee" aria-hidden="true"><div class="forecast__track">${item.repeat(4)}</div></div>
+    <div class="container forecast__row">
+      <p class="forecast__note">Issued daily by the Memory Department. Accuracy not guaranteed, projection is.</p>
+      <button class="btn btn--small btn--onteal" data-open-finder-2>Get a personal forecast</button>
     </div>
   </section>`;
 }
 
-/* ————— Memory strip ————— */
-function memstripSection() {
+/* ————— the six — rotating showcase ————— */
+
+function sixSlide(p) {
   return `
-  <section class="memstrip" aria-labelledby="memstrip-title">
-    <div class="container memstrip__inner">
-      <div class="memstrip__copy">
-        <span class="stamp" data-reveal>Chapter II · Cairo</span>
-        <h2 id="memstrip-title" data-reveal>A house built on <em>kept moments</em></h2>
-        <p data-reveal>
-          For twenty years we have bottled the hours this city gave us — jasmine
-          climbing a balcony rail, linen drying in the morning sun, the river wind
-          at dusk. The perfumes changed. The memories didn’t.
-        </p>
-        <a class="btn" href="/our-story" data-reveal>Read Our Story</a>
-      </div>
-      <div class="memstrip__stack" data-memstack>
-        <div class="acard" style="--tilt:-3deg" data-reveal>
-          <div class="acard__img">${renderMotif('balcony', { title: 'Jasmine on the balcony rail' })}</div>
-          <div class="acard__caption"><span class="hand">jasmine, 6 pm</span><span class="stamp">FIG. 01</span></div>
-        </div>
-        <div class="acard" style="--tilt:2.5deg; --reveal-delay:120ms" data-reveal>
-          <div class="acard__img">${renderMotif('felucca', { title: 'Feluccas on the Nile at dusk' })}</div>
-          <div class="acard__caption"><span class="hand">the river, later</span><span class="stamp">FIG. 02</span></div>
-        </div>
-        <div class="acard" style="--tilt:-1.5deg; --reveal-delay:220ms" data-reveal>
-          <div class="acard__img">${renderMotif('linenline', { title: 'Linen drying on the roof' })}</div>
-          <div class="acard__caption"><span class="hand">sunday, washed</span><span class="stamp">FIG. 03</span></div>
-        </div>
+  <article class="six__slide" style="--tint:${p.tint}; --world:${p.world.color}">
+    <div class="six__slideplate">${bottleImg(p, { w: 720 })}</div>
+    <div class="six__slideinfo">
+      <span class="six__meta">Nº ${p.number} · ${p.gender === 'her' ? 'For Her' : 'For Him'} · ${esc(p.fragranceFamily)}</span>
+      <h3>${esc(p.name)}</h3>
+      <p class="six__notes">${esc([...p.topNotes.slice(0, 1), ...p.heartNotes.slice(0, 2), ...p.baseNotes.slice(0, 1)].join(' · '))}</p>
+      <div class="six__buy">
+        <span class="six__price">${money(p.sizes[p.sizes.length - 1].price)}</span>
+        <button class="btn btn--small" data-add="${p.slug}" data-ml="${p.sizes[p.sizes.length - 1].ml}">Add to Bag</button>
+        <a class="link-line" href="/product/${p.slug}">Full record</a>
       </div>
     </div>
-  </section>`;
+  </article>`;
 }
 
-/* ————— Six-scent showcase ————— */
-function showcaseSection() {
-  const slides = products
-    .map(
-      (p, i) => `
-      <div class="showcase__slide" data-slide="${i}">
-        <div class="showcase__left">
-          <span class="showcase__no" aria-hidden="true">Nº ${p.number}</span>
-          <h3 class="showcase__name">${esc(p.name)}</h3>
-          <span class="label label--faint">${genderLabel(p.gender)} · ${esc(p.fragranceFamily)}</span>
-          <p class="showcase__desc">${esc(p.shortDescription)}</p>
-        </div>
-        <div style="position:relative">
-          <figure class="showcase__slidememory" aria-hidden="true">${renderMotif((p.motifs && p.motifs[0]) || 'sketch', { title: '' })}</figure>
-          ${renderBottleStage(p, { mists: 2, reflection: true })}
-        </div>
-        <div class="showcase__right">
-          <div class="showcase__noterow"><span class="label">Top Notes</span><p>${esc(p.topNotes.join(', '))}</p></div>
-          <div class="showcase__noterow"><span class="label">Heart Notes</span><p>${esc(p.heartNotes.join(', '))}</p></div>
-          <div class="showcase__noterow"><span class="label">Base Notes</span><p>${esc(p.baseNotes.join(', '))}</p></div>
-          <a class="btn btn--small" href="/product/${p.slug}">View Nº ${p.number}</a>
-        </div>
-      </div>`
-    )
-    .join('');
-
-  const railCards = products
-    .map(
-      (p) => `
-      <div class="showcase__railcard">
-        <span class="stamp">Nº ${p.number} · ${genderLabel(p.gender)}</span>
-        ${renderBottleStage(p, { mists: 0 })}
-        <h3 class="showcase__name">${esc(p.name)}</h3>
-        <p class="showcase__desc">${esc(p.shortDescription)}</p>
-        <a class="btn btn--small" href="/product/${p.slug}">View Nº ${p.number}</a>
-      </div>`
-    )
-    .join('');
-
+function sixSection() {
   return `
-  <section class="showcase" aria-label="Six scents, one by one">
-    <div class="showcase__pin" data-showcase-pin>
-      <div class="showcase__head">
-        <span class="stamp">The Six · In Order</span>
-      </div>
-      <div class="showcase__slides" data-showcase-slides>${slides}</div>
-      <div class="showcase__progress" aria-hidden="true" data-showcase-progress>
-        ${products.map(() => `<span class="showcase__tick"></span>`).join('')}
-      </div>
+  <section class="six six--rail" data-six aria-labelledby="six-title">
+    <div class="container six__head">
+      <p class="sechead2__kicker" data-reveal>The Six</p>
+      <h2 id="six-title" data-reveal>Turn each one over.</h2>
     </div>
-    <div class="showcase__scroller">
-      <div class="plate-head">
-        <div class="plate-head__rules" data-reveal><span class="stamp">The Six · In Order</span></div>
-        <h2 data-reveal>One by one</h2>
-      </div>
-      <div class="showcase__rail">${railCards}</div>
-    </div>
-  </section>`;
-}
 
-/* ————— Archive preview ————— */
-function archivePreviewSection() {
-  return `
-  <section class="section" aria-labelledby="archprev-title">
-    <div class="container">
-      <div class="plate-head">
-        <div class="plate-head__rules" data-reveal><span class="stamp">Vol. I – VI · Placeholder years</span></div>
-        <h2 id="archprev-title" data-reveal>The MEMÓRIA <em>Archive</em></h2>
-        <p class="serif-lede" data-reveal>Twenty years of labels, letters and light — kept, not curated.</p>
+    <!-- desktop: pinned, scroll turns the bottles -->
+    <div class="six__stage" data-six-stage aria-hidden="true">
+      <span class="six__bigno" data-six-no aria-hidden="true">01</span>
+      <div class="six__bottles">
+        ${products.map((p, i) => `<div class="six__bottle" data-six-b="${i}">${bottleImg(p, { w: 720 })}</div>`).join('')}
       </div>
-      <div class="archprev__rail" data-reveal tabindex="0" aria-label="Archive timeline preview — scroll horizontally">
-        ${archiveEras
+      <div class="six__panels">
+        ${products
           .map(
-            (era) => `
-          <a class="archprev__year" href="/archive">
-            <span class="year">${era.year}</span>
-            <span class="stamp">${esc(era.tag)}</span>
-            <p>${esc(era.title)}</p>
-          </a>`
+            (p, i) => `
+          <div class="six__panel" data-six-p="${i}">
+            <span class="six__meta">Nº ${p.number} · ${p.gender === 'her' ? 'For Her' : 'For Him'} · ${esc(p.fragranceFamily)}</span>
+            <h3>${esc(p.name)}</h3>
+            <p class="six__notes">${esc([...p.topNotes.slice(0, 1), ...p.heartNotes.slice(0, 2), ...p.baseNotes.slice(0, 1)].join(' · '))}</p>
+            <p class="six__ad">${esc(p.ad)}</p>
+            <div class="six__buy">
+              <span class="six__price">${money(p.sizes[p.sizes.length - 1].price)}</span>
+              <button class="btn btn--small" data-add="${p.slug}" data-ml="${p.sizes[p.sizes.length - 1].ml}">Add to Bag</button>
+              <a class="link-line" href="/product/${p.slug}">Full record</a>
+            </div>
+          </div>`
           )
           .join('')}
       </div>
-      <div class="homecoll__foot" data-reveal>
-        <a class="btn" href="/archive">Open the Archive</a>
+      <div class="six__dots" aria-hidden="true">${products.map((_, i) => `<i data-six-dot="${i}"></i>`).join('')}</div>
+    </div>
+
+    <!-- mobile / reduced motion: swipe rail -->
+    <div class="six__rail" data-six-rail>
+      ${products.map(sixSlide).join('')}
+    </div>
+  </section>`;
+}
+
+/* ————— the spray moment ————— */
+
+function spraySection() {
+  const p = getProduct('nile-cedar');
+  return `
+  <section class="spray" data-spray style="--world:${p.world.color}">
+    <div class="spray__stage" data-spray-stage>
+      <div class="spray__intro" data-spray-intro>
+        <p class="spray__kicker">The Memória Test</p>
+        <h2>Spray the memory.<br/><em>Enter it.</em></h2>
+        <p class="spray__hint" aria-hidden="true">keep scrolling — this is the fun part</p>
+      </div>
+      <div class="spray__bottle" data-spray-bottle>${bottleImg(p, { w: 720 })}</div>
+      <div class="spray__mist" aria-hidden="true">
+        ${Array.from({ length: 7 }, (_, i) => `<i class="spray__puff" data-puff="${i}"></i>`).join('')}
+      </div>
+      <div class="spray__world" data-spray-world>
+        <p class="spray__nowline">You are now remembering:</p>
+        <h3 class="spray__place">Nº 04 — ${esc(p.memoryPlace)}.</h3>
+        <p class="spray__wcopy">${esc(p.shortDescription)}</p>
+        <div class="spray__cta">
+          <button class="btn btn--primary" data-add="${p.slug}" data-ml="100">Add Nº 04 · ${money(p.sizes[1].price)}</button>
+          <a class="link-line link-line--cream" href="/product/${p.slug}">Read the full record</a>
+        </div>
+        <p class="spray__fpo">Campaign still: developing<sup>*</sup> <span><sup>*</sup>this frame becomes photography after the shoot</span></p>
       </div>
     </div>
   </section>`;
 }
 
-function finderBandSection() {
+/* ————— standalone ads ————— */
+
+function adSection(slug, flip = false) {
+  const p = getProduct(slug);
   return `
-  <section class="finderband" aria-labelledby="finder-title">
-    <div class="container finderband__inner">
-      <span class="stamp" data-reveal>Not sure where to begin?</span>
-      <h2 id="finder-title" data-reveal>Find <em>your</em> memory</h2>
-      <p data-reveal>Three small questions — a mood, a person, an hour — and we’ll match you to the scents that remember the same things you do.</p>
-      <button class="btn btn--ghost-light" data-open-finder data-reveal>Begin — it takes a minute</button>
+  <section class="adband${flip ? ' adband--flip' : ''}" style="--world:${p.world.color}; --tint:${p.tint}" aria-labelledby="ad-${p.slug}">
+    <div class="container adband__grid">
+      <div class="adband__copy">
+        <p class="adband__meta" data-reveal>Nº ${p.number} · ${p.gender === 'her' ? 'For Her' : 'For Him'}</p>
+        <h2 id="ad-${p.slug}" data-reveal>${esc(p.ad)}</h2>
+        <p class="adband__desc" data-reveal>${esc(p.shortDescription)}</p>
+        <div class="adband__ctas" data-reveal>
+          <button class="btn btn--primary" data-add="${p.slug}" data-ml="${p.sizes[p.sizes.length - 1].ml}">Add to Bag · ${money(p.sizes[p.sizes.length - 1].price)}</button>
+          <a class="link-line link-line--cream" href="/product/${p.slug}">Nº ${p.number} in full</a>
+        </div>
+      </div>
+      <div class="adband__art" data-reveal>
+        <div class="adband__tiltcard">${bottleImg(p, { w: 720 })}</div>
+      </div>
     </div>
   </section>`;
 }
 
-function valuesSection() {
+/* ————— the archive ————— */
+
+function archiveSection() {
+  const records = [
+    { yr: '2006', no: '04', name: 'Nile Cedar', note: 'The first entry in the ledger. Allegedly.' },
+    { yr: '2014', no: '02', name: 'Rose Vellum', note: 'Filed under letters never sent.' },
+    { yr: '2026', no: '06', name: 'Vetiver Arcade', note: 'The newest memory. Still settling.' },
+  ];
   return `
-  <section class="values" aria-label="From our hands to yours">
+  <section class="archband" aria-labelledby="arch-title">
     <div class="container">
-      <div class="values__grid">
-        <div class="value" data-reveal>
-          ${icons.truck()}
-          <h3>Careful Delivery</h3>
-          <p>Every bottle wrapped by hand and delivered to your door.</p>
-        </div>
-        <div class="value" data-reveal style="--reveal-delay:100ms">
-          ${icons.seal()}
-          <h3>House Original</h3>
-          <p>Blended and bottled by MEMÓRIA — every scent is our own.</p>
-        </div>
-        <div class="value" data-reveal style="--reveal-delay:200ms">
-          ${icons.returns()}
-          <h3>Easy Exchanges</h3>
-          <p>Unopened bottles may be exchanged — details at checkout.</p>
+      <header class="sechead2 sechead2--center">
+        <p class="sechead2__kicker" data-reveal>The Memória Archive · Est. 2006<sup>*</sup></p>
+        <h2 id="arch-title" data-reveal>Twenty years of scents.<br/><em>Six survived the edit.</em></h2>
+      </header>
+      <div class="archband__grid">
+        ${records
+          .map(
+            (r, i) => `
+          <a class="archband__card" href="/archive" data-reveal style="--reveal-delay:${i * 110}ms">
+            <span class="archband__yr">${r.yr}</span>
+            <span class="archband__entry">Record Nº ${r.no}</span>
+            <strong>${r.name}</strong>
+            <span class="archband__note">${r.note}</span>
+            <span class="archband__stamp">FILED</span>
+          </a>`
+          )
+          .join('')}
+        <div class="archband__card archband__card--roll" data-reveal style="--reveal-delay:330ms">
+          <span class="archband__yr">19—?</span>
+          <span class="archband__entry">Undeveloped roll</span>
+          <strong>Campaign film</strong>
+          <span class="archband__note">Photography arrives with the shoot. The Department apologises for the suspense.</span>
+          <span class="archband__stamp archband__stamp--teal">DEVELOPING</span>
         </div>
       </div>
+      <p class="archband__foot" data-reveal>
+        <a class="link-line" href="/archive">Browse the archive →</a>
+        <span><sup>*</sup>Placeholder dates — awaiting the house's real records.</span>
+      </p>
     </div>
   </section>`;
 }
+
+/* ————— finder + hotline ————— */
+
+function finderSection() {
+  const options = [
+    'Dinner we shouldn’t be late for.',
+    'Somewhere with a dress code.',
+    'Nowhere. That’s the point.',
+    'I haven’t decided yet.',
+  ];
+  return `
+  <section class="finderband2" aria-labelledby="finder-title">
+    <div class="container finderband2__inner">
+      <p class="sechead2__kicker sechead2__kicker--cream" data-reveal>The Scent Finder</p>
+      <h2 id="finder-title" data-reveal>Where are we going?</h2>
+      <div class="finderband2__opts" data-reveal>
+        ${options.map((o) => `<button class="finderband2__opt" data-open-finder-3>${esc(o)}</button>`).join('')}
+      </div>
+      <p class="finderband2__note" data-reveal>Three questions. One recommendation. The Memory Department is rarely wrong twice.</p>
+    </div>
+  </section>`;
+}
+
+function hotlineSection() {
+  return `
+  <section class="hotline" aria-labelledby="hotline-title">
+    <div class="container hotline__inner">
+      <div>
+        <p class="hotline__badge" data-reveal>The Memória Hotline</p>
+        <h2 id="hotline-title" data-reveal>What are you remembering?</h2>
+        <p class="hotline__sub" data-reveal>Write to the Memory Department. Every submission is read, filed, and occasionally answered with a sample.</p>
+      </div>
+      <form class="hotline__form" data-hotline data-reveal>
+        <label class="sr-only" for="hotline-email">Email address</label>
+        <input id="hotline-email" type="email" required placeholder="you@somewhere.com" autocomplete="email" />
+        <button class="btn btn--primary" type="submit">Report a memory</button>
+        <p class="hotline__note">Demo form — nothing is sent yet.</p>
+      </form>
+    </div>
+  </section>`;
+}
+
+/* ————————————————————————————————————————— */
 
 export default {
   title: 'MEMÓRIA — Every Scent Holds a Memory',
+
   render() {
-    return `
-      ${heroSection()}
-      ${collectionSection()}
-      ${cineSection()}
-      ${memstripSection()}
-      ${showcaseSection()}
-      ${archivePreviewSection()}
-      ${finderBandSection()}
-      ${valuesSection()}
-    `;
+    return [
+      heroSection(),
+      collectionSection(),
+      forecastSection(),
+      sixSection(),
+      spraySection(),
+      adSection('rose-vellum'),
+      adSection('oud-memoir', true),
+      archiveSection(),
+      finderSection(),
+      hotlineSection(),
+    ].join('');
   },
 
   mount(root) {
-    /* ——— Collection filter ——— */
+    /* — commerce wiring (each container owns its buttons) — */
     const grid = root.querySelector('[data-collection-grid]');
-    const tabs = root.querySelectorAll('.filter-tab');
-    let disposeCards = mountProductCards(root);
-    tabs.forEach((tab) =>
+    let disposeGrid = mountProductCards(grid);
+    mountProductCards(root.querySelector('[data-six]'));
+    mountProductCards(root.querySelector('[data-spray]'));
+    root.querySelectorAll('.adband').forEach((band) => mountProductCards(band));
+
+    /* — collection filters — */
+    root.querySelectorAll('.filter-tab').forEach((tab) =>
       tab.addEventListener('click', () => {
-        tabs.forEach((t) => t.setAttribute('aria-pressed', String(t === tab)));
-        const f = tab.dataset.filter;
-        const list = f === 'all' ? products : products.filter((p) => p.gender === f);
-        disposeCards();
-        grid.innerHTML = renderProductGrid(list);
-        grid.querySelectorAll('[data-reveal]').forEach((n) => n.classList.add('is-in'));
-        disposeCards = mountProductCards(grid);
+        root.querySelectorAll('.filter-tab').forEach((t) => t.setAttribute('aria-pressed', String(t === tab)));
+        disposeGrid();
+        grid.innerHTML = renderProductGrid(getByGender(tab.dataset.filter));
+        disposeGrid = mountProductCards(grid);
+        scanReveals(grid);
       })
     );
 
-    root.querySelector('[data-open-finder]').addEventListener('click', openFinder);
+    /* — finder openers — */
+    root.querySelectorAll('[data-open-finder-2],[data-open-finder-3]').forEach((b) => b.addEventListener('click', openFinder));
 
-    /* ——— HERO: the desk assembles, then breathes ——— */
-    const hero = root.querySelector('.hero');
-    const deskItems = hero.querySelectorAll('[data-desk]');
-    const heroBottleWrap = hero.querySelector('[data-hero-bottle]');
-    const heroStage = heroBottleWrap.querySelector('.bottle-stage');
+    /* — hotline — */
+    root.querySelector('[data-hotline]').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = e.target.querySelector('input');
+      if (!input.value) return;
+      input.value = '';
+      toast('Filed. The Memory Department thanks you.');
+    });
 
-    onPageCleanup(floatBottle(heroStage, { y: 9, dur: 5.5 }));
-    onPageCleanup(sweepBottle(heroStage, { every: 4 }));
-    onPageCleanup(driftMist(hero.querySelector('.hero__fig'), { opacity: 0.6 }));
-    onPageCleanup(attachTilt(hero.querySelector('.hero__fig'), { max: 9 }));
+    const ok = motionOK();
+    const wide = window.matchMedia('(min-width: 880px)').matches;
 
-    if (motionOK()) {
-      /* entrance: artifacts are laid on the desk one by one */
-      const tl = gsap.timeline();
-      tl.from(deskItems, {
-        y: 44,
-        opacity: 0,
-        rotation: (i, el) => (parseFloat(getComputedStyle(el).getPropertyValue('--r')) || 0) * 2.4,
-        duration: 0.9,
-        stagger: 0.07,
-        ease: 'power3.out',
-        clearProps: 'opacity',
+    /* — hero motion — */
+    if (ok) {
+      const tl = gsap.from('[data-hero-arch]', { opacity: 0, scale: 0.94, y: 24, duration: 0.9, delay: 0.1, ease: 'power2.out' });
+      const float = gsap.to('.hero2__bottle', { y: -10, duration: 4.4, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+      onPageCleanup(() => {
+        tl.kill();
+        float.kill();
       });
-
-      /* physical presence: continuous slow sway on the stage (tilt rides on the svg) */
-      gsap.set(heroBottleWrap, { transformPerspective: 800 });
-      gsap.to(heroBottleWrap, {
-        rotationY: 7,
-        duration: 6.5,
-        ease: 'sine.inOut',
-        yoyo: true,
-        repeat: -1,
-      });
-
-      /* lattice light drifts like sun through a screen */
-      gsap.to(hero.querySelector('[data-hero-lattice]'), {
-        backgroundPosition: '120px 60px',
-        duration: 60,
-        ease: 'none',
-        repeat: -1,
-      });
-
-      /* slow ambient push-in + depth parallax while scrolling away */
-      gsap.fromTo(
-        hero.querySelector('[data-hero-bg]'),
-        { scale: 1 },
-        { scale: 1.07, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.6 } }
-      );
-      deskItems.forEach((item) => {
-        const depth = parseFloat(item.dataset.depth || 0.4);
-        gsap.to(item, {
-          yPercent: -34 * depth,
-          ease: 'none',
-          scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.8 },
-        });
-      });
-
-      /* mouse parallax across the desk */
-      if (!isTouch()) {
-        const quicks = [...deskItems].map((item) => ({
-          depth: parseFloat(item.dataset.depth || 0.4),
-          x: gsap.quickTo(item, 'x', { duration: 1.1, ease: 'power3.out' }),
-          yq: gsap.quickTo(item, 'y', { duration: 1.1, ease: 'power3.out' }),
-        }));
-        const onMove = (e) => {
-          const nx = e.clientX / window.innerWidth - 0.5;
-          const ny = e.clientY / window.innerHeight - 0.5;
-          quicks.forEach((q) => {
-            q.x(nx * 26 * q.depth);
-            q.yq(ny * 16 * q.depth);
-          });
-        };
-        hero.addEventListener('pointermove', onMove);
-        onPageCleanup(() => hero.removeEventListener('pointermove', onMove));
-      }
     }
 
-    /* ——— CINE: zoom → fragrance escapes → becomes a memory ——— */
-    const cine = root.querySelector('[data-cine]');
-    const useCinePin = motionOK() && !isNarrow();
-    if (!useCinePin) {
-      cine.classList.add('cine--static');
-      const stage = cine.querySelector('[data-cine-bottle] .bottle-stage');
-      if (motionOK()) onPageCleanup(floatBottle(stage, { y: 6 }));
-    } else {
-      const stageEl = cine.querySelector('[data-cine-stage]');
-      const bottle = cine.querySelector('[data-cine-bottle]');
-      const intro = cine.querySelector('[data-cine-intro]');
-      const outro = cine.querySelector('[data-cine-outro]');
-      const vignette = cine.querySelector('[data-cine-vignette]');
-      const photo = cine.querySelector('[data-cine-photo]');
-      const sides = cine.querySelectorAll('[data-cine-side]');
-      const final = cine.querySelector('[data-cine-final]');
-      const mistcol = cine.querySelector('[data-cine-mistcol]');
+    /* — the six: pinned turntable on desktop, swipe rail otherwise — */
+    const six = root.querySelector('[data-six]');
+    if (ok && wide) {
+      six.classList.remove('six--rail');
+      const stage = six.querySelector('[data-six-stage]');
+      stage.removeAttribute('aria-hidden');
+      const bottles = [...stage.querySelectorAll('[data-six-b]')];
+      const panels = [...stage.querySelectorAll('[data-six-p]')];
+      const dots = [...stage.querySelectorAll('[data-six-dot]')];
+      const bigno = stage.querySelector('[data-six-no]');
 
-      /* build the fragrance column: mist blobs + fine particles at the neck */
-      const mistC = featured.mist;
-      const blobs = [];
-      for (let i = 0; i < 5; i++) {
-        const s = 90 + i * 55;
-        const b = document.createElement('span');
-        b.className = 'mist';
-        b.style.cssText = `width:${s}px;height:${s}px;left:${-s / 2}px;top:${-s / 2}px;background:radial-gradient(circle, ${mistC}66, ${mistC}00 70%);`;
-        mistcol.appendChild(b);
-        blobs.push(b);
-      }
-      const particles = [];
-      for (let i = 0; i < 9; i++) {
-        const d = document.createElement('span');
-        d.className = 'cine__particle';
-        d.style.background = i % 3 === 0 ? 'var(--terracotta)' : mistC;
-        d.style.left = `${-40 + Math.random() * 80}px`;
-        d.style.top = `0px`;
-        mistcol.appendChild(d);
-        particles.push(d);
-      }
-
-      gsap.set(bottle, { scale: 0.9, yPercent: 6 });
-      gsap.set(photo, { opacity: 0, scale: 0.62, y: 60, rotation: 5, filter: 'blur(22px)' });
-      gsap.set(sides, { opacity: 0, y: 70 });
+      gsap.set(bottles, { autoAlpha: 0, xPercent: 24, rotationY: -26, transformPerspective: 900 });
+      gsap.set(panels, { autoAlpha: 0, y: 22 });
+      gsap.set(bottles[0], { autoAlpha: 1, xPercent: 0, rotationY: 0 });
+      gsap.set(panels[0], { autoAlpha: 1, y: 0 });
+      gsap.set(stage, { backgroundColor: products[0].tint });
+      dots[0].classList.add('is-on');
 
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: stageEl,
+          trigger: stage,
           start: 'top top',
-          end: '+=330%',
-          scrub: 0.8,
-          pin: true,
-          anticipatePin: 1,
-        },
-      });
-
-      /* Act I — approach: the camera closes in */
-      tl.to(intro, { opacity: 0, y: -40, duration: 0.1, ease: 'power1.in' }, 0.02)
-        .to(bottle, { scale: 2.3, yPercent: 14, duration: 0.34, ease: 'power1.inOut' }, 0.04)
-        .to(bottle.querySelector('.bottle'), { rotationY: 12, rotationX: -4, duration: 0.34, ease: 'sine.inOut' }, 0.04)
-        .to(vignette, { opacity: 1, duration: 0.3 }, 0.12)
-
-        /* Act II — the fragrance escapes: a column of mist rises from the neck */
-        .to(blobs, {
-          opacity: 0.85,
-          y: (i) => -120 - i * 62,
-          x: (i) => (i % 2 ? 34 : -30) * (1 + i * 0.12),
-          scale: 1.35,
-          stagger: 0.03,
-          duration: 0.2,
-          ease: 'sine.out',
-        }, 0.3)
-        .to(particles, {
-          opacity: 0.9,
-          y: () => -140 - Math.random() * 240,
-          x: (i) => -60 + Math.random() * 120,
-          duration: 0.26,
-          stagger: 0.012,
-          ease: 'sine.out',
-        }, 0.32)
-
-        /* Act III — transformation: the mist gathers into a photograph */
-        .to(blobs, {
-          y: -230,
-          x: 0,
-          scale: 2.1,
-          opacity: 0.55,
-          duration: 0.14,
-          ease: 'power1.inOut',
-        }, 0.5)
-        .to(bottle, { scale: 1.05, yPercent: 34, xPercent: -46, duration: 0.24, ease: 'power2.inOut' }, 0.5)
-        .to(bottle.querySelector('.bottle'), { rotationY: -8, duration: 0.24 }, 0.5)
-        .to(photo, {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          rotation: -3,
-          filter: 'blur(0px)',
-          duration: 0.22,
-          ease: 'power2.out',
-        }, 0.56)
-        .to(blobs, { opacity: 0, scale: 2.6, duration: 0.12, ease: 'sine.in' }, 0.62)
-        .to(particles, { opacity: 0, duration: 0.1 }, 0.62)
-
-        /* Act IV — the memory settles; companions join it */
-        .to(sides, { opacity: 0.95, y: 0, stagger: 0.06, duration: 0.16, ease: 'power2.out' }, 0.68)
-        .to(outro, { opacity: 1, y: 6, duration: 0.12 }, 0.7)
-        .to(final, { opacity: 1, y: -8, duration: 0.14 }, 0.84);
-    }
-
-    /* ——— Showcase pin (desktop) ——— */
-    const usePin = motionOK() && !isNarrow();
-    if (usePin) {
-      const pin = root.querySelector('[data-showcase-pin]');
-      const slides = pin.querySelectorAll('.showcase__slide');
-      const ticks = pin.querySelectorAll('.showcase__tick');
-      const per = 1 / slides.length;
-
-      gsap.set(slides, { autoAlpha: 0 });
-      gsap.set(slides[0], { autoAlpha: 1 });
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: pin,
-          start: 'top top',
-          end: `+=${slides.length * 90}%`,
-          scrub: 0.7,
-          pin: true,
-          anticipatePin: 1,
+          end: '+=420%',
+          scrub: 0.6,
+          pin: stage,
           onUpdate(self) {
-            const idx = Math.min(slides.length - 1, Math.floor(self.progress / per));
-            ticks.forEach((t, i) => t.classList.toggle('is-active', i <= idx));
+            const i = Math.min(5, Math.round(self.progress * 5));
+            dots.forEach((d, j) => d.classList.toggle('is-on', j === i));
           },
         },
       });
-
-      slides.forEach((slide, i) => {
-        const at = i * per;
-        const stay = per * 0.62;
-        const fade = per * 0.16;
-        tl.fromTo(slide, { autoAlpha: i === 0 ? 1 : 0 }, { autoAlpha: 1, duration: fade, ease: 'none' }, at)
+      for (let i = 0; i < 5; i++) {
+        const at = i;
+        tl.to(bottles[i], { autoAlpha: 0, xPercent: -24, rotationY: 26, duration: 0.45 }, at)
+          .to(panels[i], { autoAlpha: 0, y: -18, duration: 0.35 }, at)
           .fromTo(
-            slide.querySelector('.bottle-stage'),
-            { y: 60, rotation: -2 },
-            { y: 0, rotation: 0, duration: fade * 1.4, ease: 'power2.out' },
-            at
+            bottles[i + 1],
+            { autoAlpha: 0, xPercent: 24, rotationY: -26 },
+            { autoAlpha: 1, xPercent: 0, rotationY: 0, duration: 0.5 },
+            at + 0.3
           )
-          .fromTo(
-            slide.querySelector('.showcase__slidememory'),
-            { y: 40, opacity: 0, rotation: -10 },
-            { y: 0, opacity: 0.85, rotation: -5, duration: fade * 1.5, ease: 'power2.out' },
-            at + fade * 0.3
-          )
-          .fromTo(
-            slide.querySelectorAll('.showcase__left > *, .showcase__right > *'),
-            { y: 26, autoAlpha: 0 },
-            { y: 0, autoAlpha: 1, stagger: 0.012, duration: fade, ease: 'power2.out' },
-            at + fade * 0.4
-          );
-        if (i < slides.length - 1) {
-          tl.to(slide, { autoAlpha: 0, y: -30, duration: fade, ease: 'none' }, at + stay + fade);
-          tl.set(slide, { y: 0 }, at + stay + fade * 2);
-        }
-      });
+          .to(panels[i + 1], { autoAlpha: 1, y: 0, duration: 0.4 }, at + 0.45)
+          .to(stage, { backgroundColor: products[i + 1].tint, duration: 0.5 }, at + 0.2)
+          .call(() => (bigno.textContent = products[Math.min(5, i + 1)].number), [], at + 0.4);
+      }
+      onPageCleanup(() => tl.kill());
     }
 
-    /* ——— Memory-stack drift ——— */
-    if (motionOK()) {
-      const stack = root.querySelector('[data-memstack]');
-      stack.querySelectorAll('.acard').forEach((card, i) => {
-        gsap.to(card, {
-          y: (i - 1) * -22,
-          ease: 'none',
-          scrollTrigger: { trigger: stack, start: 'top bottom', end: 'bottom top', scrub: 1.2 },
-        });
-      });
-    }
+    /* — the spray moment — */
+    const spray = root.querySelector('[data-spray]');
+    if (ok && wide) {
+      const stage = spray.querySelector('[data-spray-stage]');
+      const intro = spray.querySelector('[data-spray-intro]');
+      const bottle = spray.querySelector('[data-spray-bottle]');
+      const world = spray.querySelector('[data-spray-world]');
+      const puffs = [...spray.querySelectorAll('[data-puff]')];
 
-    /* re-render when crossing the pin/carousel breakpoint */
-    const mq = window.matchMedia('(max-width: 820px)');
-    const onMq = () => renderRoute({ scroll: false });
-    mq.addEventListener('change', onMq);
-    onPageCleanup(() => mq.removeEventListener('change', onMq));
+      gsap.set(bottle, { yPercent: 34, scale: 0.9, rotationY: -14, transformPerspective: 900 });
+      gsap.set(world, { autoAlpha: 0, y: 30 });
+      gsap.set(puffs, { scale: 0, opacity: 0 });
+
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: spray, start: 'top top', end: '+=300%', scrub: 0.6, pin: true },
+      });
+      tl.to(intro, { autoAlpha: 0, y: -36, duration: 0.5 }, 0.15)
+        .to(bottle, { yPercent: 6, scale: 1.42, rotationY: 0, duration: 0.9 }, 0.2)
+        .to(
+          puffs,
+          {
+            scale: (i) => 2.4 + i * 0.7,
+            opacity: 0.85,
+            x: (i) => -60 - i * 90,
+            y: (i) => -30 - (i % 3) * 34,
+            duration: 0.7,
+            stagger: 0.05,
+          },
+          1.1
+        )
+        .to(stage, { backgroundColor: getProduct('nile-cedar').world.color, duration: 0.6 }, 1.35)
+        .to(puffs, { opacity: 0, duration: 0.5 }, 1.8)
+        .to(bottle, { xPercent: 30, scale: 1.06, duration: 0.7 }, 1.7)
+        .to(world, { autoAlpha: 1, y: 0, duration: 0.6 }, 1.9);
+      onPageCleanup(() => tl.kill());
+    } else {
+      spray.classList.add('spray--static');
+    }
   },
 };

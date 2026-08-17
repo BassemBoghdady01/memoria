@@ -3,14 +3,13 @@
  */
 import { esc, money, toast } from '../utils.js';
 import { getProduct, getRelated, genderLabel } from '../data/products.js';
-import { renderBottle, renderBottleStage } from '../components/bottle.js';
-import { renderMotif, renderNoteIcon } from '../components/artwork.js';
+import { bottleImg } from '../components/render.js';
 import { renderProductCard, mountProductCards } from '../components/productCard.js';
 import { icons } from '../components/icons.js';
 import { cart } from '../store/cart.js';
 import { openCartDrawer } from '../components/cartDrawer.js';
 import { navigate } from '../router.js';
-import { attachTilt, floatBottle, sweepBottle, driftMist, onPageCleanup, motionOK, gsap } from '../motion.js';
+import { attachTilt, onPageCleanup, motionOK, gsap } from '../motion.js';
 
 function notesBlock(p) {
   return `
@@ -39,7 +38,6 @@ export default {
       </section>`;
     }
 
-    const motifs = p.motifs || ['sketch', 'city'];
     const allNotes = [...p.topNotes, ...p.heartNotes, ...p.baseNotes];
     const related = getRelated(p, 2);
     const genderCrumb = p.gender === 'her' ? { href: '/women', label: 'Women' } : { href: '/men', label: 'Men' };
@@ -50,17 +48,12 @@ export default {
         <div class="pdp__layout">
 
           <div class="pdp__gallery">
-            <div class="pdp__stage" data-pdp-stage>
+            <div class="pdp__stage" data-pdp-stage style="--tint:${p.tint}">
               <span class="stamp">Nº ${p.number} · Cairo</span>
               <span class="stamp stamp--r">${esc(p.concentration)}</span>
-              ${renderBottleStage(p, { mists: 3, reflection: true })}
+              ${bottleImg(p, { w: 720, cls: 'pdp__render', eager: true })}
             </div>
             <p class="pdp__hint">Move over the bottle — it turns toward you</p>
-            <div class="pdp__views" aria-hidden="true">
-              <div class="pdp__view">${renderBottle(p, { label: true })}</div>
-              <div class="pdp__view">${renderBottle(p, { label: false })}</div>
-              <div class="pdp__view" style="color:var(--brown)"><span style="width:62%;display:block">${renderNoteIcon(p.noteIcons[0])}</span></div>
-            </div>
           </div>
 
           <div class="pdp__buy">
@@ -123,23 +116,20 @@ export default {
         </div>
       </div>
 
-      <!-- ——— Storytelling ——— -->
+      <!-- ——— The memory (world plate + campaign slot) ——— -->
       <section class="pdp-story" aria-labelledby="memory-title">
         <div class="container pdp-story__inner">
           <div class="pdp-story__art">
-            <div class="acard" style="--tilt:-3deg" data-reveal>
-              <div class="acard__img">${renderMotif(motifs[0], { title: esc(p.memoryPlace) })}</div>
-              <div class="acard__caption"><span class="hand">${esc(p.memoryPlace.toLowerCase())}</span><span class="stamp">FIG. ${p.number}</span></div>
-            </div>
-            <div class="acard" style="--tilt:2deg; --reveal-delay:140ms" data-reveal>
-              <div class="acard__img">${renderMotif(motifs[1], { title: 'A kept moment' })}</div>
-              <div class="acard__caption"><span class="hand">kept, since ${p.archiveYear}*</span><span class="stamp">ARCHIVE</span></div>
+            <div class="worldplate" style="--world:${p.world.color}" data-reveal>
+              <span class="worldplate__now">You are remembering:</span>
+              <strong class="worldplate__place">${esc(p.memoryPlace)}</strong>
+              <span class="worldplate__meta">Record Nº ${p.number} · kept since ${p.archiveYear}*</span>
+              <span class="worldplate__fpo">Campaign still: developing — photography arrives with the shoot</span>
             </div>
           </div>
           <div class="pdp-story__copy">
             <span class="stamp" data-reveal>The Memory Behind Nº ${p.number}</span>
             <h2 id="memory-title" data-reveal>${esc(p.memoryPlace)}</h2>
-            <span class="hand" data-reveal>“${esc(p.smellsLike.join(', ').toLowerCase())}…”</span>
             <p data-reveal>${esc(p.memoryStory)}</p>
             <p class="stamp" style="margin-top:1rem" data-reveal>* archive year is a placeholder</p>
           </div>
@@ -170,7 +160,7 @@ export default {
               .map(
                 (tier, i) => `
               <div class="plate" data-reveal style="--reveal-delay:${i * 120}ms">
-                ${renderNoteIcon(p.noteIcons[i] || p.noteIcons[0])}
+                <span class="plate__tier" aria-hidden="true">${['I', 'II', 'III'][i]}</span>
                 <span class="label">${tier} Notes</span>
                 <p>${esc([p.topNotes, p.heartNotes, p.baseNotes][i].join(' · '))}</p>
               </div>`
@@ -261,11 +251,11 @@ export default {
 
     /* — motion — */
     const stage = root.querySelector('[data-pdp-stage]');
-    const bottleStage = stage.querySelector('.bottle-stage');
     onPageCleanup(attachTilt(stage, { max: 10, scale: 1.03 }));
-    onPageCleanup(floatBottle(bottleStage, { y: 6, dur: 6 }));
-    onPageCleanup(sweepBottle(bottleStage, { every: 4.5 }));
-    onPageCleanup(driftMist(stage, { opacity: 0.5 }));
+    if (motionOK()) {
+      const float = gsap.to(stage.querySelector('.pdp__render'), { y: -8, duration: 5.2, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+      onPageCleanup(() => float.kill());
+    }
 
     if (motionOK()) {
       gsap.from(stage, { opacity: 0, y: 24, duration: 0.9, ease: 'power2.out' });

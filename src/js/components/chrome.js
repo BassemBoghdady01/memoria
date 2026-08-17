@@ -12,8 +12,15 @@ import { openSearch } from './searchOverlay.js';
 const LOGO = '/brand/logo-brown-320.png';
 const LOGO_CREAM = '/brand/logo-cream-320.png';
 
-/* Tagline supplied on the brand palette sheet — used verbatim. */
-const TAGLINE = ['Rooted in memory', 'Inspired by Cairo', 'Made to be remembered', 'Twenty years of scents'];
+/* House voice — dry, confident, slightly strange. The supplied tagline
+   stays verbatim in the footer; the ribbon carries the lore. */
+const TAGLINE = [
+  'Memory-enhancing compositions',
+  'Three for her · Three for him',
+  'Currently remembering: Nº 03',
+  'Est. 2006 — earlier records incomplete*',
+  'Made to be remembered',
+];
 
 export function renderRibbon() {
   const items = TAGLINE.map(

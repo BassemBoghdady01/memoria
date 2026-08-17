@@ -8,7 +8,7 @@ import { openFinder } from '../components/finder.js';
 const COPY = {
   all: {
     title: 'The Collection',
-    lede: 'Six perfumes, twenty years in the making — three for her, three for him.',
+    lede: 'Three for her. Three for him. All six for people who change their mind.',
     crumb: 'Shop',
   },
   her: {
@@ -47,8 +47,8 @@ function makePage(gender) {
           <span class="shop__count">${list.length} scent${list.length === 1 ? '' : 's'} · Eau de Parfum</span>
         </div>
         ${renderProductGrid(list)}
-        <div class="homecoll__foot" data-reveal>
-          <button class="btn" data-open-finder>Not sure? Find your memory</button>
+        <div style="text-align:center; margin-top:2.4rem" data-reveal>
+          <button class="btn" data-open-finder>Ask the Memory Department</button>
         </div>
       </section>`;
     },

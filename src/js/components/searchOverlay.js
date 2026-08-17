@@ -4,7 +4,7 @@
 import { el, esc, money, trapFocus, lockScroll, unlockScroll } from '../utils.js';
 import { icons } from './icons.js';
 import { searchProducts, genderLabel, minPrice } from '../data/products.js';
-import { renderBottle } from './bottle.js';
+import { bottleImg } from './render.js';
 import { navigate } from '../router.js';
 
 let overlay = null;
@@ -50,7 +50,7 @@ function ensure() {
   const renderHint = () => {
     resultsEl.innerHTML = `
       <div class="search__hint">
-        <span class="hand">try “jasmine”, “Nº 04”, “oud”…</span>
+        <span class="stamp">try “jasmine”, “Nº 04”, “oud”…</span>
         Search by name, number, notes or fragrance family.
       </div>`;
     results = [];
@@ -64,7 +64,7 @@ function ensure() {
     if (!results.length) {
       resultsEl.innerHTML = `
         <div class="search__hint">
-          <span class="hand">nothing in the archive for “${esc(q)}”</span>
+          <span class="stamp">nothing in the archive for “${esc(q)}”</span>
           Six scents live here — try a note like rose, cedar, amber or musk.
         </div>`;
       return;
@@ -73,7 +73,7 @@ function ensure() {
       .map(
         (p, i) => `
         <button class="search__item ${i === activeIndex ? 'is-active' : ''}" data-slug="${p.slug}">
-          <span class="cartline__thumb">${renderBottle(p, { label: false })}</span>
+          <span class="cartline__thumb">${bottleImg(p, { w: 360 })}</span>
           <span>
             <span class="search__itemname">Nº ${p.number} · ${esc(p.name)}</span><br/>
             <span class="search__itemmeta">${genderLabel(p.gender)} · ${esc(p.fragranceFamily)}</span>

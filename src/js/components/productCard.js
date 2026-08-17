@@ -1,39 +1,40 @@
 /**
- * MEMÓRIA · Product card + grid.
+ * MEMÓRIA · Product card — a catalogue plate, rebuilt for 2026.
+ * Photoreal render on a tinted plate; hover turns the bottle slightly,
+ * floods the plate with the scent's world colour and reveals the notes.
+ * Shopping stays one tap away at all times.
  */
 import { esc, money } from '../utils.js';
 import { genderLabel } from '../data/products.js';
-import { renderBottleStage } from './bottle.js';
-import { renderMotif } from './artwork.js';
+import { bottleImg } from './render.js';
 import { cart } from '../store/cart.js';
-import { toast } from '../utils.js';
 import { openCartDrawer } from './cartDrawer.js';
-import { attachTilt, sweepBottle, onPageCleanup } from '../motion.js';
+import { onPageCleanup } from '../motion.js';
 
 export function renderProductCard(p, { revealDelay = 0 } = {}) {
   const defaultSize = p.sizes[p.sizes.length - 1];
-  const motif = (p.motifs && p.motifs[0]) || 'sketch';
+  const notesLine = [...p.topNotes.slice(0, 1), ...p.heartNotes.slice(0, 2), ...p.baseNotes.slice(0, 1)].join(' · ');
   return `
-  <article class="pcard" data-reveal style="--reveal-delay:${revealDelay}ms; --mist-c:${p.mist}" data-pcard="${p.slug}">
-    <a class="pcard__link" href="/product/${p.slug}" aria-label="Nº ${p.number} — ${esc(p.name)}, ${genderLabel(p.gender)}"></a>
-    <div class="pcard__stage">
-      <span class="pcard__no">Nº ${p.number}</span>
-      <span class="pcard__fam">${esc(p.fragranceFamily)}</span>
-      <figure class="pcard__memory" aria-hidden="true">
-        ${renderMotif(motif, { title: '' })}
-        <span class="hand">${esc(p.memoryPlace.toLowerCase())}</span>
-      </figure>
-      <span class="pcard__ghost" aria-hidden="true">${p.number}</span>
-      ${renderBottleStage(p, { label: true, reflection: true })}
-      <span class="pcard__notes">${esc([...p.topNotes.slice(0, 1), ...p.heartNotes.slice(0, 2), ...p.baseNotes.slice(0, 1)].join(' · '))}</span>
+  <article class="pcard" data-reveal style="--reveal-delay:${revealDelay}ms; --tint:${p.tint}; --world:${p.world.color}" data-pcard="${p.slug}">
+    <a class="pcard__link" href="/product/${p.slug}" aria-label="Nº ${p.number} — ${esc(p.name)}, ${genderLabel(p.gender)}, from ${money(p.sizes[0].price)}"></a>
+    <div class="pcard__plate">
+      <span class="pcard__no" aria-hidden="true">Nº ${p.number}</span>
+      <span class="pcard__for">${p.gender === 'her' ? 'For Her' : 'For Him'}</span>
+      ${bottleImg(p, { w: 720, cls: 'pcard__img' })}
+      <div class="pcard__world" aria-hidden="true">
+        <p class="pcard__ad">${esc(p.ad)}</p>
+        <p class="pcard__notes">${esc(notesLine)}</p>
+      </div>
     </div>
-    <div class="pcard__body">
-      <span class="pcard__gender">${genderLabel(p.gender)}</span>
-      <h3 class="pcard__name">${esc(p.name)}</h3>
-      <span class="pcard__size">${esc(p.concentration)} · ${defaultSize.ml} ml</span>
+    <div class="pcard__info">
+      <div class="pcard__namerow">
+        <h3 class="pcard__name">${esc(p.name)}</h3>
+        <span class="pcard__numchip" aria-hidden="true">${p.number}</span>
+      </div>
+      <span class="pcard__fam">${esc(p.fragranceFamily)} · ${esc(p.concentration)}</span>
       <div class="pcard__row">
         <span class="pcard__price">${money(defaultSize.price)}</span>
-        <button class="btn btn--small" data-add="${p.slug}" data-ml="${defaultSize.ml}">Add to Bag</button>
+        <button class="btn btn--small btn--quickadd" data-add="${p.slug}" data-ml="${defaultSize.ml}">Quick Add</button>
       </div>
     </div>
   </article>`;
@@ -44,28 +45,25 @@ export function renderProductGrid(list, opts = {}) {
 }
 
 /**
- * Wire up add-to-bag buttons + bottle tilt inside a container.
- * Returns a disposer — call it before replacing the container's HTML
- * (filter tabs, live search) so infinite tweens don't outlive their cards.
+ * Wire up quick-add buttons inside a container. Hover/turn behaviour is
+ * pure CSS now. Returns a disposer — call before replacing the container's
+ * HTML (filter tabs, live search) to drop listeners cleanly.
  */
 export function mountProductCards(root) {
-  const offs = [];
+  if (!root) return () => {};
+  const handlers = [];
   root.querySelectorAll('[data-add]').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
+    const fn = (e) => {
       e.preventDefault();
       cart.add(btn.dataset.add, Number(btn.dataset.ml), 1);
       openCartDrawer();
-    });
-  });
-  root.querySelectorAll('[data-pcard]').forEach((card) => {
-    /* Tilt listens on the whole card: the full-card link overlay sits above
-       the stage, so pointer events must be caught at card level. */
-    offs.push(attachTilt(card, { max: 10, scale: 1.02 }));
-    offs.push(sweepBottle(card, { every: 5 + Math.random() * 4 }));
+    };
+    btn.addEventListener('click', fn);
+    handlers.push([btn, fn]);
   });
   const dispose = () => {
-    offs.forEach((fn) => fn?.());
-    offs.length = 0;
+    handlers.forEach(([btn, fn]) => btn.removeEventListener('click', fn));
+    handlers.length = 0;
   };
   onPageCleanup(dispose);
   return dispose;

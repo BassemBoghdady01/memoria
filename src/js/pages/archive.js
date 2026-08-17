@@ -4,9 +4,11 @@
  */
 import { el, esc, trapFocus, lockScroll, unlockScroll } from '../utils.js';
 import { archiveEras } from '../data/archive.js';
-import { renderMotif } from '../components/artwork.js';
 import { icons } from '../components/icons.js';
 import { onPageCleanup } from '../motion.js';
+
+/* one colour world per era — the palette, not props */
+const ERA_WORLDS = ['#B66A4B', '#2F6670', '#9A5240', '#5E8289', '#3E281B', '#6E6B52'];
 
 let lightbox = null;
 let lbOpen = false;
@@ -36,10 +38,15 @@ function ensureLightbox() {
   return lightbox;
 }
 
-function openLightbox({ motif, caption, stamp, era }) {
+function openLightbox({ caption, stamp, era, world }) {
   ensureLightbox();
   lastFocus = document.activeElement;
-  lightbox.querySelector('[data-lb-img]').innerHTML = renderMotif(motif, { title: caption });
+  lightbox.querySelector('[data-lb-img]').innerHTML = `
+    <div class="worldplate worldplate--lb" style="--world:${world}">
+      <span class="worldplate__now">${esc(era.year)} · ${esc(era.tag)}</span>
+      <strong class="worldplate__place">${esc(caption)}</strong>
+      <span class="worldplate__fpo">Record photography arrives with the house's real archive</span>
+    </div>`;
   lightbox.querySelector('[data-lb-stamp]').textContent = `${stamp} · ${era.year} — ${era.tag}`;
   lightbox.querySelector('[data-lb-title]').textContent = caption;
   lightbox.querySelector('[data-lb-text]').textContent = era.text;
@@ -72,8 +79,8 @@ export default {
         </nav>
         <h1 data-reveal>The MEMÓRIA Archive</h1>
         <p class="serif-lede" data-reveal>
-          Twenty years of labels, letters, sketches and light — an album, not a museum.
-          Open any card; every artifact keeps a note from its year.
+          Twenty years of records, opened to the public. Six scents survived the edit;
+          the paperwork survived everything. Open any record for its note.
         </p>
         <p class="stamp" data-reveal>All years shown are placeholders until the house history is confirmed.</p>
       </div>
@@ -95,13 +102,11 @@ export default {
               ${era.artifacts
                 .map(
                   (a, ai) => `
-                <button class="acard" style="--tilt:${a.tilt}deg; --reveal-delay:${ai * 120}ms" data-reveal
+                <button class="archrec" style="--world:${ERA_WORLDS[ei % ERA_WORLDS.length]}; --reveal-delay:${ai * 120}ms" data-reveal
                         data-artifact="${ei}:${ai}" aria-haspopup="dialog">
-                  <span class="acard__img">${renderMotif(a.motif, { title: esc(a.caption) })}</span>
-                  <span class="acard__caption">
-                    <span class="hand">${esc(a.caption)}</span>
-                    <span class="stamp">${esc(a.stamp)}</span>
-                  </span>
+                  <span class="archrec__band" aria-hidden="true"></span>
+                  <strong class="archrec__caption">${esc(a.caption)}</strong>
+                  <span class="stamp">${esc(a.stamp)}</span>
                 </button>`
                 )
                 .join('')}
@@ -113,7 +118,7 @@ export default {
 
       <div class="archive__note">
         <p class="serif-lede" data-reveal>The next chapter is being written — perhaps by you.</p>
-        <div class="hero__ctas" style="justify-content:center; margin-top:1.4rem" data-reveal>
+        <div class="hero2__ctas" style="justify-content:center" data-reveal>
           <a class="btn btn--primary" href="/shop">Shop the Collection</a>
           <a class="btn" href="/our-story">Read Our Story</a>
         </div>
@@ -125,7 +130,7 @@ export default {
       btn.addEventListener('click', () => {
         const [ei, ai] = btn.dataset.artifact.split(':').map(Number);
         const era = archiveEras[ei];
-        openLightbox({ ...era.artifacts[ai], era });
+        openLightbox({ ...era.artifacts[ai], era, world: ERA_WORLDS[ei % ERA_WORLDS.length] });
       })
     );
     onPageCleanup(() => closeLightbox());
