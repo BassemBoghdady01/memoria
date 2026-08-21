@@ -1,7 +1,7 @@
-/**
- * MEMÓRIA · Archive timeline data.
+﻿/**
+ * MEMÃ“RIA Â· Archive timeline data.
  *
- * ⚠ ALL YEARS, TITLES AND STORIES BELOW ARE PLACEHOLDERS as instructed —
+ * âš  ALL YEARS, TITLES AND STORIES BELOW ARE PLACEHOLDERS as instructed â€”
  * no real company history has been supplied yet. Replace each entry with
  * the true milestones when the client provides them. The layout will
  * accept any number of eras and artifacts unchanged.
@@ -10,19 +10,19 @@
 export const archiveEras = [
   {
     year: '2006',
-    tag: 'Vol. I · The First Bottle',
+    tag: 'Vol. I Â· The First Bottle',
     title: 'Where it began',
-    text: 'Placeholder — the founding chapter. A small atelier, a first accord, and the idea that a scent could hold a memory in place. Real history to be supplied.',
+    text: 'Placeholder â€” the founding chapter. A small atelier, a first accord, and the idea that a scent could hold a memory in place.',
     artifacts: [
-      { motif: 'atelier', caption: 'the first atelier', stamp: 'FIG. 01 · CAIRO', tilt: -2.4 },
+      { motif: 'atelier', caption: 'the first atelier', stamp: 'FIG. 01 Â· CAIRO', tilt: -2.4 },
       { motif: 'sketch', caption: 'the first label proofs', stamp: 'FIG. 02', tilt: 1.8 },
     ],
   },
   {
     year: '2010',
-    tag: 'Vol. II · The Balcony Years',
+    tag: 'Vol. II Â· The Balcony Years',
     title: 'A scent finds its city',
-    text: 'Placeholder — the years the house found its signature. Jasmine on balconies, orders written by hand, bottles wrapped in brown paper and string.',
+    text: 'Placeholder â€” the years the house found its signature. Jasmine on balconies, orders written by hand, bottles wrapped in brown paper and string.',
     artifacts: [
       { motif: 'balcony', caption: 'jasmine on the rail', stamp: 'FIG. 03', tilt: 2.2 },
       { motif: 'label', caption: 'a first printed label', stamp: 'FIG. 04', tilt: -1.6 },
@@ -30,29 +30,29 @@ export const archiveEras = [
   },
   {
     year: '2014',
-    tag: 'Vol. III · Letters',
+    tag: 'Vol. III Â· Letters',
     title: 'Words from those who wore it',
-    text: 'Placeholder — a decade of letters and notes from customers, kept in a drawer that no longer closes. Their words shaped the next scents.',
+    text: 'Placeholder â€” a decade of letters and notes from customers, kept in a drawer that no longer closes. Their words shaped the next scents.',
     artifacts: [
       { motif: 'letter', caption: 'kept correspondence', stamp: 'FIG. 05', tilt: -2 },
-      { motif: 'postcard', caption: 'a card from abroad', stamp: 'FIG. 06 · POST', tilt: 2.6 },
+      { motif: 'postcard', caption: 'a card from abroad', stamp: 'FIG. 06 Â· POST', tilt: 2.6 },
     ],
   },
   {
     year: '2018',
-    tag: 'Vol. IV · The Workshop',
+    tag: 'Vol. IV Â· The Workshop',
     title: 'Craft, slowed down',
-    text: 'Placeholder — new blends, longer macerations, fewer shortcuts. The collection was cut back to only the scents worth remembering.',
+    text: 'Placeholder â€” new blends, longer macerations, fewer shortcuts. The collection was cut back to only the scents worth remembering.',
     artifacts: [
       { motif: 'flask', caption: 'maceration trials', stamp: 'FIG. 07', tilt: 1.4 },
-      { motif: 'notes', caption: 'the perfumer’s notebook', stamp: 'FIG. 08', tilt: -2.8 },
+      { motif: 'notes', caption: 'the perfumerâ€™s notebook', stamp: 'FIG. 08', tilt: -2.8 },
     ],
   },
   {
     year: '2022',
-    tag: 'Vol. V · The Archive Room',
+    tag: 'Vol. V Â· The Archive Room',
     title: 'Keeping what mattered',
-    text: 'Placeholder — every formula, label and photograph gathered into one room: the beginning of the MEMÓRIA archive this site is named for.',
+    text: 'Placeholder â€” every formula, label and photograph gathered into one room: the beginning of the MEMÃ“RIA archive this site is named for.',
     artifacts: [
       { motif: 'shelf', caption: 'the archive shelves', stamp: 'FIG. 09', tilt: -1.8 },
       { motif: 'film', caption: 'campaign contact sheet', stamp: 'FIG. 10', tilt: 2.2 },
@@ -60,12 +60,12 @@ export const archiveEras = [
   },
   {
     year: '2026',
-    tag: 'Vol. VI · Twenty Years',
+    tag: 'Vol. VI Â· Twenty Years',
     title: 'Six scents, kept',
-    text: 'Placeholder — twenty years distilled into six perfumes: three for her, three for him. The collection this website carries today.',
+    text: 'Placeholder â€” twenty years distilled into six perfumes: three for her, three for him. The collection this website carries today.',
     artifacts: [
       { motif: 'collection', caption: 'the collection, complete', stamp: 'FIG. 11', tilt: 1.6 },
-      { motif: 'city', caption: 'home, from the roof', stamp: 'FIG. 12 · CAIRO', tilt: -2.2 },
+      { motif: 'city', caption: 'home, from the roof', stamp: 'FIG. 12 Â· CAIRO', tilt: -2.2 },
     ],
   },
 ];

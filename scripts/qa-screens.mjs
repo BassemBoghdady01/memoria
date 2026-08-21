@@ -15,7 +15,7 @@ const routes = [
   ['women', '/women'],
   ['men', '/men'],
   ['product', '/product/jasmine-dusk'],
-  ['product-oud', '/product/oud-memoir'],
+  ['product-oud', '/product/oud-mosaic'],
   ['story', '/our-story'],
   ['archive', '/archive'],
   ['cart', '/cart'],

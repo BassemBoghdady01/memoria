@@ -32,10 +32,10 @@ body {
   background-color: var(--bg);
   /* aged-paper atmosphere, matched to the supplied palette sheet:
      sun-warmed centre, deeper toasted edges — depth, not flatness */
+  /* clean parchment with the faintest tonal lift — no visible motif */
   background-image:
-    radial-gradient(115% 85% at 50% 30%, rgba(241, 233, 216, 0.55), transparent 62%),
-    radial-gradient(130% 100% at 50% 110%, rgba(184, 156, 118, 0.34), transparent 60%),
-    linear-gradient(180deg, rgba(216, 195, 163, 0.25), rgba(216, 195, 163, 0) 30%);
+    radial-gradient(115% 85% at 50% 30%, rgba(241, 233, 216, 0.35), transparent 62%),
+    radial-gradient(130% 100% at 50% 110%, rgba(184, 156, 118, 0.14), transparent 60%);
   color: var(--ink);
   font-family: var(--font-ui);
   font-size: var(--fs-body);
@@ -54,9 +54,9 @@ body::before {
   z-index: 2147482999;
   background: radial-gradient(
     135% 110% at 50% 45%,
-    transparent 58%,
-    rgba(90, 53, 34, 0.05) 78%,
-    rgba(62, 40, 27, 0.16) 100%
+    transparent 66%,
+    rgba(90, 53, 34, 0.03) 82%,
+    rgba(62, 40, 27, 0.08) 100%
   );
 }
 
@@ -68,7 +68,7 @@ body::before {
   height: 200%;
   pointer-events: none;
   z-index: 2147483000;
-  opacity: 0.4;
+  opacity: 0.26;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.24 0 0 0 0 0.16 0 0 0 0 0.1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 300px 300px;
 }

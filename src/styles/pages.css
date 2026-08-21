@@ -1090,3 +1090,55 @@
 .worldplate--lb {
   min-height: 12rem;
 }
+
+/* PDP collection line + help page */
+.pdp__coll {
+  font-family: var(--font-ui);
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.pdp__coll::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent, var(--brown));
+  margin-right: 0.4rem;
+  vertical-align: 0.5px;
+}
+.helplist {
+  max-width: 44rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+}
+.helplist__row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.35fr) minmax(0, 1fr);
+  gap: 1rem 2.5rem;
+  padding-block: 1.4rem;
+  border-top: 1px solid var(--line-faint);
+  scroll-margin-top: 6rem;
+}
+.helplist__row:last-child {
+  border-bottom: 1px solid var(--line-faint);
+}
+.helplist dt {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+.helplist dd {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+@media (max-width: 560px) {
+  .helplist__row {
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
+  }
+}

@@ -12,7 +12,7 @@ import { products, getByGender, getProduct } from '../data/products.js';
 import { bottleImg } from '../components/render.js';
 import { renderProductGrid, mountProductCards } from '../components/productCard.js';
 import { openFinder } from '../components/finder.js';
-import { gsap, motionOK, onPageCleanup, scanReveals } from '../motion.js';
+import { gsap, ScrollTrigger, motionOK, onPageCleanup, scanReveals } from '../motion.js';
 
 /* ————— hero ————— */
 
@@ -22,14 +22,13 @@ function heroSection() {
   <section class="hero2">
     <div class="container hero2__grid">
       <div class="hero2__copy">
-        <p class="hero2__eyebrow" data-reveal>Memory-Enhancing Compositions · Est. 2006<sup>*</sup></p>
+        <p class="hero2__eyebrow" data-reveal>Memory-Enhancing Compositions · Est. 2006</p>
         <h1 class="hero2__title" data-reveal>Every scent<br/>holds a <em>memory.</em></h1>
         <p class="hero2__sub" data-reveal>Six scents. Twenty years. No bad memories included.</p>
         <div class="hero2__ctas" data-reveal>
           <a class="btn btn--primary btn--big" href="/shop">Shop the Collection</a>
           <a class="btn btn--ghost" href="/our-story">Discover Memória</a>
         </div>
-        <p class="hero2__foot" data-reveal><sup>*</sup>Placeholder date. Records before 2006 remain suspiciously incomplete.</p>
       </div>
       <div class="hero2__plate" data-hero-plate>
         <div class="hero2__arch" data-hero-arch>
@@ -151,7 +150,9 @@ function sixSection() {
           )
           .join('')}
       </div>
-      <div class="six__dots" aria-hidden="true">${products.map((_, i) => `<i data-six-dot="${i}"></i>`).join('')}</div>
+      <div class="six__dots">${products
+        .map((p, i) => `<button type="button" data-six-dot="${i}" aria-label="Show Nº ${p.number} — ${esc(p.name)}"></button>`)
+        .join('')}</div>
     </div>
 
     <!-- mobile / reduced motion: swipe rail -->
@@ -164,7 +165,7 @@ function sixSection() {
 /* ————— the spray moment ————— */
 
 function spraySection() {
-  const p = getProduct('nile-cedar');
+  const p = getProduct('midnight-fig');
   return `
   <section class="spray" data-spray style="--world:${p.world.color}">
     <div class="spray__stage" data-spray-stage>
@@ -173,6 +174,8 @@ function spraySection() {
         <h2>Spray the memory.<br/><em>Enter it.</em></h2>
         <p class="spray__hint" aria-hidden="true">keep scrolling — this is the fun part</p>
       </div>
+      <!-- media layer: intentionally empty — future scent/world imagery mounts here -->
+      <div class="spray__media" data-world-media aria-hidden="true"></div>
       <div class="spray__bottle" data-spray-bottle>${bottleImg(p, { w: 720 })}</div>
       <div class="spray__mist" aria-hidden="true">
         ${Array.from({ length: 7 }, (_, i) => `<i class="spray__puff" data-puff="${i}"></i>`).join('')}
@@ -185,7 +188,6 @@ function spraySection() {
           <button class="btn btn--primary" data-add="${p.slug}" data-ml="100">Add Nº 04 · ${money(p.sizes[1].price)}</button>
           <a class="link-line link-line--cream" href="/product/${p.slug}">Read the full record</a>
         </div>
-        <p class="spray__fpo">Campaign still: developing<sup>*</sup> <span><sup>*</sup>this frame becomes photography after the shoot</span></p>
       </div>
     </div>
   </section>`;
@@ -218,23 +220,23 @@ function adSection(slug, flip = false) {
 
 function archiveSection() {
   const records = [
-    { yr: '2006', no: '04', name: 'Nile Cedar', note: 'The first entry in the ledger. Allegedly.' },
-    { yr: '2014', no: '02', name: 'Rose Vellum', note: 'Filed under letters never sent.' },
-    { yr: '2026', no: '06', name: 'Vetiver Arcade', note: 'The newest memory. Still settling.' },
+    { vol: 'Vol. I', no: '01', name: 'Jasmine Dusk', note: 'The first entry in the ledger. Allegedly.' },
+    { vol: 'Vol. III', no: '02', name: 'Rose Vellum', note: 'Filed under letters never sent.' },
+    { vol: 'Vol. VI', no: '06', name: 'Oud Mosaic', note: 'The newest memory. Still settling.' },
   ];
   return `
   <section class="archband" aria-labelledby="arch-title">
     <div class="container">
       <header class="sechead2 sechead2--center">
-        <p class="sechead2__kicker" data-reveal>The Memória Archive · Est. 2006<sup>*</sup></p>
+        <p class="sechead2__kicker" data-reveal>The Memória Archive · Est. 2006</p>
         <h2 id="arch-title" data-reveal>Twenty years of scents.<br/><em>Six survived the edit.</em></h2>
       </header>
-      <div class="archband__grid">
+      <div class="archband__grid archband__grid--three">
         ${records
           .map(
             (r, i) => `
           <a class="archband__card" href="/archive" data-reveal style="--reveal-delay:${i * 110}ms">
-            <span class="archband__yr">${r.yr}</span>
+            <span class="archband__yr">${r.vol}</span>
             <span class="archband__entry">Record Nº ${r.no}</span>
             <strong>${r.name}</strong>
             <span class="archband__note">${r.note}</span>
@@ -242,17 +244,9 @@ function archiveSection() {
           </a>`
           )
           .join('')}
-        <div class="archband__card archband__card--roll" data-reveal style="--reveal-delay:330ms">
-          <span class="archband__yr">19—?</span>
-          <span class="archband__entry">Undeveloped roll</span>
-          <strong>Campaign film</strong>
-          <span class="archband__note">Photography arrives with the shoot. The Department apologises for the suspense.</span>
-          <span class="archband__stamp archband__stamp--teal">DEVELOPING</span>
-        </div>
       </div>
-      <p class="archband__foot" data-reveal>
+      <p class="archband__foot archband__foot--center" data-reveal>
         <a class="link-line" href="/archive">Browse the archive →</a>
-        <span><sup>*</sup>Placeholder dates — awaiting the house's real records.</span>
       </p>
     </div>
   </section>`;
@@ -293,7 +287,6 @@ function hotlineSection() {
         <label class="sr-only" for="hotline-email">Email address</label>
         <input id="hotline-email" type="email" required placeholder="you@somewhere.com" autocomplete="email" />
         <button class="btn btn--primary" type="submit">Report a memory</button>
-        <p class="hotline__note">Demo form — nothing is sent yet.</p>
       </form>
     </div>
   </section>`;
@@ -312,7 +305,7 @@ export default {
       sixSection(),
       spraySection(),
       adSection('rose-vellum'),
-      adSection('oud-memoir', true),
+      adSection('ambered-wood', true),
       archiveSection(),
       finderSection(),
       hotlineSection(),
@@ -327,19 +320,34 @@ export default {
     mountProductCards(root.querySelector('[data-spray]'));
     root.querySelectorAll('.adband').forEach((band) => mountProductCards(band));
 
-    /* — collection filters — */
+    /* — collection filters: crossfade the grid, no layout jump — */
     root.querySelectorAll('.filter-tab').forEach((tab) =>
       tab.addEventListener('click', () => {
         root.querySelectorAll('.filter-tab').forEach((t) => t.setAttribute('aria-pressed', String(t === tab)));
-        disposeGrid();
-        grid.innerHTML = renderProductGrid(getByGender(tab.dataset.filter));
-        disposeGrid = mountProductCards(grid);
-        scanReveals(grid);
+        const h = grid.offsetHeight;
+        grid.style.minHeight = h + 'px';
+        grid.classList.add('is-swapping');
+        setTimeout(() => {
+          disposeGrid();
+          grid.innerHTML = renderProductGrid(getByGender(tab.dataset.filter));
+          disposeGrid = mountProductCards(grid);
+          scanReveals(grid);
+          grid.classList.remove('is-swapping');
+          setTimeout(() => (grid.style.minHeight = ''), 400);
+        }, 170);
       })
     );
 
     /* — finder openers — */
     root.querySelectorAll('[data-open-finder-2],[data-open-finder-3]').forEach((b) => b.addEventListener('click', openFinder));
+
+    /* — pause the forecast loop while it's offscreen — */
+    const forecast = root.querySelector('.forecast');
+    if (forecast) {
+      const io = new IntersectionObserver(([e]) => forecast.classList.toggle('is-offscreen', !e.isIntersecting));
+      io.observe(forecast);
+      onPageCleanup(() => io.disconnect());
+    }
 
     /* — hotline — */
     root.querySelector('[data-hotline]').addEventListener('submit', (e) => {
@@ -363,7 +371,10 @@ export default {
       });
     }
 
-    /* — the six: pinned turntable on desktop, swipe rail otherwise — */
+    /* — the six: a controlled carousel. Scroll (or the dots) selects the
+       fragrance; each change plays one smooth 600–800ms transition —
+       product slides + scales subtly, text moves independently, the
+       ground tint shifts, the ghost number updates. No scrubbing. — */
     const six = root.querySelector('[data-six]');
     if (ok && wide) {
       six.classList.remove('six--rail');
@@ -374,41 +385,69 @@ export default {
       const dots = [...stage.querySelectorAll('[data-six-dot]')];
       const bigno = stage.querySelector('[data-six-no]');
 
-      gsap.set(bottles, { autoAlpha: 0, xPercent: 24, rotationY: -26, transformPerspective: 900 });
-      gsap.set(panels, { autoAlpha: 0, y: 22 });
-      gsap.set(bottles[0], { autoAlpha: 1, xPercent: 0, rotationY: 0 });
-      gsap.set(panels[0], { autoAlpha: 1, y: 0 });
+      gsap.set(bottles.slice(1), { autoAlpha: 0, xPercent: 9, scale: 0.97, transformPerspective: 900 });
+      gsap.set(panels.slice(1), { autoAlpha: 0, y: 16 });
       gsap.set(stage, { backgroundColor: products[0].tint });
       dots[0].classList.add('is-on');
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: stage,
-          start: 'top top',
-          end: '+=420%',
-          scrub: 0.6,
-          pin: stage,
-          onUpdate(self) {
-            const i = Math.min(5, Math.round(self.progress * 5));
-            dots.forEach((d, j) => d.classList.toggle('is-on', j === i));
+      let current = 0;
+      let animating = false;
+      let pending = null;
+
+      const goTo = (target) => {
+        if (target === current || target < 0 || target > 5) return;
+        if (animating) {
+          pending = target;
+          return;
+        }
+        animating = true;
+        const dir = target > current ? 1 : -1;
+        const from = current;
+        current = target;
+        dots.forEach((d, j) => d.classList.toggle('is-on', j === target));
+        const tl = gsap.timeline({
+          defaults: { ease: 'power2.inOut' },
+          onComplete: () => {
+            animating = false;
+            if (pending !== null) {
+              const next = pending;
+              pending = null;
+              goTo(next);
+            }
           },
+        });
+        tl.to(bottles[from], { autoAlpha: 0, xPercent: -9 * dir, scale: 0.97, duration: 0.4 }, 0)
+          .to(panels[from], { autoAlpha: 0, y: -14 * dir, duration: 0.3 }, 0)
+          .fromTo(
+            bottles[target],
+            { autoAlpha: 0, xPercent: 9 * dir, scale: 0.97 },
+            { autoAlpha: 1, xPercent: 0, scale: 1, duration: 0.5 },
+            0.18
+          )
+          .fromTo(panels[target], { autoAlpha: 0, y: 16 * dir }, { autoAlpha: 1, y: 0, duration: 0.4 }, 0.28)
+          .to(stage, { backgroundColor: products[target].tint, duration: 0.5 }, 0.1)
+          .call(() => (bigno.textContent = products[target].number), [], 0.24);
+        onPageCleanup(() => tl.kill());
+      };
+
+      const st = ScrollTrigger.create({
+        trigger: stage,
+        start: 'top top',
+        end: '+=250%',
+        pin: stage,
+        onUpdate(self) {
+          goTo(Math.min(5, Math.floor(self.progress * 6)));
         },
       });
-      for (let i = 0; i < 5; i++) {
-        const at = i;
-        tl.to(bottles[i], { autoAlpha: 0, xPercent: -24, rotationY: 26, duration: 0.45 }, at)
-          .to(panels[i], { autoAlpha: 0, y: -18, duration: 0.35 }, at)
-          .fromTo(
-            bottles[i + 1],
-            { autoAlpha: 0, xPercent: 24, rotationY: -26 },
-            { autoAlpha: 1, xPercent: 0, rotationY: 0, duration: 0.5 },
-            at + 0.3
-          )
-          .to(panels[i + 1], { autoAlpha: 1, y: 0, duration: 0.4 }, at + 0.45)
-          .to(stage, { backgroundColor: products[i + 1].tint, duration: 0.5 }, at + 0.2)
-          .call(() => (bigno.textContent = products[Math.min(5, i + 1)].number), [], at + 0.4);
-      }
-      onPageCleanup(() => tl.kill());
+      onPageCleanup(() => st.kill());
+
+      dots.forEach((d, i) =>
+        d.addEventListener('click', () => {
+          const y = st.start + ((st.end - st.start) * (i + 0.5)) / 6;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+          goTo(i);
+        })
+      );
     }
 
     /* — the spray moment — */
@@ -441,7 +480,7 @@ export default {
           },
           1.1
         )
-        .to(stage, { backgroundColor: getProduct('nile-cedar').world.color, duration: 0.6 }, 1.35)
+        .to(stage, { backgroundColor: getProduct('midnight-fig').world.color, duration: 0.6 }, 1.35)
         .to(puffs, { opacity: 0, duration: 0.5 }, 1.8)
         .to(bottle, { xPercent: 30, scale: 1.06, duration: 0.7 }, 1.7)
         .to(world, { autoAlpha: 1, y: 0, duration: 0.6 }, 1.9);

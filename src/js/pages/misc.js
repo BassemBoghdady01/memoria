@@ -82,6 +82,42 @@ export const accountPage = {
   },
 };
 
+export const helpPage = {
+  title: 'Help — MEMÓRIA',
+  render() {
+    const rows = [
+      ['shipping', 'Shipping', 'Delivery options and times will be published here once confirmed.'],
+      ['returns', 'Returns', 'The exchange and return policy will be published here once confirmed.'],
+      ['contact', 'Contact', 'A direct line to the house is being set up. For now, the hotline on the homepage reaches us.'],
+      ['faq', 'FAQ', 'Common questions and their answers will be collected here.'],
+    ];
+    return `
+    <section class="container helppage">
+      <div class="pagehead">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="/">Memória</a><span aria-hidden="true">/</span><span>Help</span>
+        </nav>
+        <h1 data-reveal>Customer Care</h1>
+        <p class="serif-lede" data-reveal>The practical part of the house. Details below are being finalised.</p>
+      </div>
+      <dl class="helplist">
+        ${rows
+          .map(
+            ([id, t, d]) => `
+          <div class="helplist__row" id="${id}" data-reveal>
+            <dt>${t}</dt>
+            <dd>${d}</dd>
+          </div>`
+          )
+          .join('')}
+      </dl>
+      <div style="text-align:center; margin-top:2.4rem" data-reveal>
+        <a class="btn btn--primary" href="/shop">Shop the Collection</a>
+      </div>
+    </section>`;
+  },
+};
+
 export const notFoundPage = {
   title: 'Page not found — MEMÓRIA',
   render() {
@@ -90,7 +126,7 @@ export const notFoundPage = {
       <span class="stamp">404 · Not in the Catalogue</span>
       <h1>Some pages fade like old ink.</h1>
       <p>The page you’re after isn’t in our records — but the perfumes are all here.</p>
-      <div class="hero__ctas">
+      <div class="hero2__ctas" style="justify-content:center">
         <a class="btn btn--primary" href="/">Return Home</a>
         <a class="btn" href="/shop">Shop the Collection</a>
       </div>

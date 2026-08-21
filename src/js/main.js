@@ -25,7 +25,7 @@ import storyPage from './pages/story.js';
 import archivePage from './pages/archive.js';
 import cartPage from './pages/cart.js';
 import checkoutPage from './pages/checkout.js';
-import { searchPage, accountPage, notFoundPage } from './pages/misc.js';
+import { searchPage, accountPage, helpPage, notFoundPage } from './pages/misc.js';
 
 /* — chrome — */
 renderRibbon();
@@ -44,6 +44,7 @@ register('/cart', cartPage);
 register('/checkout', checkoutPage);
 register('/search', searchPage);
 register('/account', accountPage);
+register('/help', helpPage);
 setNotFound(notFoundPage);
 
 /* — go — */

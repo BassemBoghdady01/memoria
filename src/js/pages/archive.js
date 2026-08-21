@@ -43,9 +43,8 @@ function openLightbox({ caption, stamp, era, world }) {
   lastFocus = document.activeElement;
   lightbox.querySelector('[data-lb-img]').innerHTML = `
     <div class="worldplate worldplate--lb" style="--world:${world}">
-      <span class="worldplate__now">${esc(era.year)} · ${esc(era.tag)}</span>
+      <span class="worldplate__now">${esc(era.tag)}</span>
       <strong class="worldplate__place">${esc(caption)}</strong>
-      <span class="worldplate__fpo">Record photography arrives with the house's real archive</span>
     </div>`;
   lightbox.querySelector('[data-lb-stamp]').textContent = `${stamp} · ${era.year} — ${era.tag}`;
   lightbox.querySelector('[data-lb-title]').textContent = caption;
@@ -82,7 +81,6 @@ export default {
           Twenty years of records, opened to the public. Six scents survived the edit;
           the paperwork survived everything. Open any record for its note.
         </p>
-        <p class="stamp" data-reveal>All years shown are placeholders until the house history is confirmed.</p>
       </div>
 
       <div class="archive__timeline">
@@ -93,8 +91,8 @@ export default {
           <div class="archive__era">
             <span class="archive__dot" aria-hidden="true"></span>
             <div class="archive__meta">
-              <span class="year" data-reveal>${era.year}</span>
-              <span class="stamp" data-reveal>${esc(era.tag)}</span>
+              <span class="year" data-reveal>${esc(era.tag.split('·')[0].trim())}</span>
+              <span class="stamp" data-reveal>${esc((era.tag.split('·')[1] || '').trim())}</span>
               <h2 data-reveal>${esc(era.title)}</h2>
               <p data-reveal>${esc(era.text)}</p>
             </div>

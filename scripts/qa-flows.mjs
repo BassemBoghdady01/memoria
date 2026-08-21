@@ -18,9 +18,9 @@ try {
   /* 1 — shop → product */
   await page.goto(BASE + '/shop', { waitUntil: 'networkidle' });
   await page.waitForTimeout(600);
-  await page.click('.pcard [href="/product/nile-cedar"]');
+  await page.click('.pcard [href="/product/midnight-fig"]');
   await page.waitForTimeout(900);
-  if (!(await page.textContent('h1')).includes('Nile Cedar')) problems.push('PDP navigation failed');
+  if (!(await page.textContent('h1')).includes('Midnight Fig')) problems.push('PDP navigation failed');
   await shot('01-pdp');
 
   /* 2 — size switch updates price */

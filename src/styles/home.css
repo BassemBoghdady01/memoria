@@ -948,3 +948,101 @@ a.archband__card:hover {
     padding: 0.65rem 1.2rem;
   }
 }
+
+/* ═══════════ Refinement pass (baseline polish) ═══════════ */
+
+/* collection heading reads like an advertisement, not a template */
+.collection2 .sechead2 h2 {
+  font-size: clamp(2.3rem, 4.4vw, 3.8rem);
+  line-height: 1.06;
+}
+
+/* filter reflow: crossfade, no jump */
+[data-collection-grid] {
+  transition: opacity 0.18s ease;
+}
+[data-collection-grid].is-swapping {
+  opacity: 0.12;
+}
+
+/* six dots are controls now */
+.six__dots button {
+  width: 11px;
+  height: 11px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) ease, transform var(--dur-fast) ease;
+}
+.six__dots button:hover {
+  transform: scale(1.25);
+}
+.six__dots button.is-on {
+  background: var(--terracotta);
+  border-color: var(--terracotta);
+}
+.six__dots button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 3px;
+}
+
+/* spray media layer — reserved for future photography/scent visuals */
+.spray__media {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* forecast loop pauses offscreen */
+.forecast.is-offscreen .forecast__track {
+  animation-play-state: paused;
+}
+.forecast__track {
+  will-change: transform;
+}
+
+/* archive band, three records, centered close */
+.archband__grid--three {
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 62rem;
+  margin-inline: auto;
+}
+.archband__foot--center {
+  justify-content: center;
+}
+
+/* tighter mobile rhythm */
+@media (max-width: 880px) {
+  section {
+    scroll-margin-top: 4rem;
+  }
+  .collection2 {
+    padding-block: 2.6rem;
+  }
+  .six {
+    padding-top: 2.6rem;
+  }
+  .archband {
+    padding-block: 2.8rem;
+  }
+  .archband__grid--three {
+    grid-template-columns: 1fr;
+  }
+  .finderband2__inner {
+    padding-block: 3rem;
+  }
+  .hotline__inner {
+    padding-block: 2.6rem;
+  }
+  .hero2 {
+    padding-top: 1.2rem;
+  }
+  .hero2__sub {
+    margin-top: 0.9rem;
+  }
+  .hero2__ctas {
+    margin-top: 1.5rem;
+  }
+}

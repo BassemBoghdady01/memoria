@@ -2,7 +2,7 @@
  * MEMÓRIA · Product page — buy first, story after. Sticky bag bar on mobile.
  */
 import { esc, money, toast } from '../utils.js';
-import { getProduct, getRelated, genderLabel } from '../data/products.js';
+import { getProduct, getRelated, genderLabel, collectionLabel } from '../data/products.js';
 import { bottleImg } from '../components/render.js';
 import { renderProductCard, mountProductCards } from '../components/productCard.js';
 import { icons } from '../components/icons.js';
@@ -69,6 +69,7 @@ export default {
             <div class="pdp__gender-row">
               <span class="pdp__fam">${esc(p.fragranceFamily)}</span>
               <span class="label label--faint">${esc(p.concentration)}</span>
+              <span class="pdp__coll" style="--accent:${p.accent}">${collectionLabel(p)}</span>
             </div>
             <p class="pdp__short">${esc(p.description)}</p>
 
@@ -94,7 +95,6 @@ export default {
 
             <div class="pdp__price">
               <span data-price-display aria-live="polite">${money(p.sizes[p.sizes.length - 1].price)}</span>
-              <small>VAT included · placeholder pricing</small>
             </div>
 
             <div class="pdp__ctarow">
@@ -123,15 +123,13 @@ export default {
             <div class="worldplate" style="--world:${p.world.color}" data-reveal>
               <span class="worldplate__now">You are remembering:</span>
               <strong class="worldplate__place">${esc(p.memoryPlace)}</strong>
-              <span class="worldplate__meta">Record Nº ${p.number} · kept since ${p.archiveYear}*</span>
-              <span class="worldplate__fpo">Campaign still: developing — photography arrives with the shoot</span>
+              <span class="worldplate__meta">Record Nº ${p.number}</span>
             </div>
           </div>
           <div class="pdp-story__copy">
             <span class="stamp" data-reveal>The Memory Behind Nº ${p.number}</span>
             <h2 id="memory-title" data-reveal>${esc(p.memoryPlace)}</h2>
             <p data-reveal>${esc(p.memoryStory)}</p>
-            <p class="stamp" style="margin-top:1rem" data-reveal>* archive year is a placeholder</p>
           </div>
         </div>
       </section>

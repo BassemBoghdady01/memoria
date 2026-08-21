@@ -12,14 +12,14 @@ import { openSearch } from './searchOverlay.js';
 const LOGO = '/brand/logo-brown-320.png';
 const LOGO_CREAM = '/brand/logo-cream-320.png';
 
-/* House voice — dry, confident, slightly strange. The supplied tagline
+/* House voice — short, dry, confident. The supplied tagline
    stays verbatim in the footer; the ribbon carries the lore. */
 const TAGLINE = [
-  'Memory-enhancing compositions',
-  'Three for her · Three for him',
   'Currently remembering: Nº 03',
-  'Est. 2006 — earlier records incomplete*',
   'Made to be remembered',
+  'Memory-enhancing compositions',
+  'Six scents',
+  'For her / For him',
 ];
 
 export function renderRibbon() {
@@ -31,6 +31,10 @@ export function renderRibbon() {
     <div class="ribbon" aria-hidden="true">
       <div class="ribbon__track">${items}${items}${items}${items}</div>
     </div>`;
+
+  /* pause the loop while the ribbon is out of view */
+  const ribbon = $('#ribbon');
+  new IntersectionObserver(([e]) => ribbon.classList.toggle('is-offscreen', !e.isIntersecting)).observe(ribbon);
 }
 
 export function renderHeader() {
@@ -141,19 +145,28 @@ export function renderFooter() {
         <div class="footer__col">
           <h3>Shop</h3>
           <ul>
-            <li><a href="/shop">The Collection</a></li>
             <li><a href="/women">Women · Nº 01–03</a></li>
             <li><a href="/men">Men · Nº 04–06</a></li>
+            <li><a href="/shop">All Perfumes</a></li>
             <li><a href="/cart">Your Bag</a></li>
           </ul>
         </div>
         <div class="footer__col">
-          <h3>The House</h3>
+          <h3>Memória</h3>
           <ul>
             <li><a href="/our-story">Our Story</a></li>
             <li><a href="/archive">The Archive</a></li>
             <li><a href="/search">Search</a></li>
             <li><a href="https://instagram.com" target="_blank" rel="noopener">Instagram ↗</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h3>Help</h3>
+          <ul>
+            <li><a href="/help#shipping">Shipping</a></li>
+            <li><a href="/help#returns">Returns</a></li>
+            <li><a href="/help#contact">Contact</a></li>
+            <li><a href="/help#faq">FAQ</a></li>
           </ul>
         </div>
         <div class="footer__col footer__news">
@@ -169,7 +182,7 @@ export function renderFooter() {
       </div>
       <div class="container footer__close">
         <p class="footer__closing">Every scent leaves something behind.</p>
-        <p class="footer__legal">MEMÓRIA © — Catalogue Vol. VI · All six scents</p>
+        <p class="footer__legal">MEMÓRIA © · Est. 2006 · All six scents</p>
       </div>
     </div>`;
 
