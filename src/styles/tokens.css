@@ -37,10 +37,13 @@
   --focus-ring: 2px solid var(--teal);
 
   /* — Type — */
-  --font-serif: 'Cormorant Garamond', 'Cormorant Garamond Fallback', Georgia, 'Times New Roman', serif;
+  /* Type system — retro display serif with personality (Fraunces),
+     brush brand accent related to the logo (Kaushan Script, used
+     sparingly), clean modern commerce UI (Jost), ledger mono. */
+  --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-brand: 'Kaushan Script', 'Segoe Script', cursive;
   --font-ui: 'Jost', 'Jost Fallback', 'Century Gothic', 'Futura', system-ui, sans-serif;
   --font-mono: 'Courier Prime', 'Courier New', monospace;
-  --font-hand: 'Caveat', 'Segoe Script', cursive;
 
   /* Fluid type scale — editorial display runs big, UI stays quiet */
   --fs-display: clamp(2.9rem, 1.1rem + 7vw, 7.2rem);

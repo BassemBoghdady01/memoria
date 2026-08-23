@@ -47,9 +47,10 @@ const SCENTS = [
 function bottleSVG(s) {
   const c = COLLECTIONS[s.col];
   const [liqHi, liqMid, liqDeep] = s.liquid;
-  /* geometry — one silhouette, never changes */
-  const bodyX = 178, bodyW = 244, bodyTop = 340, bodyBot = 838, shoulderR = 30;
-  const capX = 252, capW = 96, capTop = 128, capH = 168;
+  /* geometry — one silhouette, never changes. Rounded, substantial
+     proportions per the client's reference (classic flacon character). */
+  const bodyX = 156, bodyW = 288, bodyTop = 352, bodyBot = 838, shoulderR = 64;
+  const capX = 244, capW = 112, capTop = 150, capH = 140;
   const ringY = capTop + capH, ringH = 14;
   const neckY = ringY + ringH;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="920" viewBox="0 0 600 920">
@@ -124,8 +125,8 @@ function bottleSVG(s) {
 
   <!-- label: cream, collection dot, sheet layout -->
   <g>
-    <rect x="212" y="470" width="176" height="230" rx="3" fill="#F1E8D4"/>
-    <rect x="212" y="470" width="176" height="230" rx="3" fill="none" stroke="rgba(60,40,24,.18)" stroke-width="1"/>
+    <rect x="206" y="470" width="188" height="230" rx="3" fill="#F1E8D4"/>
+    <rect x="206" y="470" width="188" height="230" rx="3" fill="none" stroke="rgba(60,40,24,.18)" stroke-width="1"/>
     <text x="300" y="508" text-anchor="middle" font-family="Arial" font-size="14" letter-spacing="4.4" fill="#2E2118">MEMÓRIA</text>
     <text x="300" y="576" text-anchor="middle" font-family="Georgia" font-size="44" fill="#241A10">N&#186; 0${s.n}</text>
     <text x="300" y="608" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" letter-spacing="2.4" fill="#4A3524">${s.name}</text>

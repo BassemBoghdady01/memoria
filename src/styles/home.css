@@ -1046,3 +1046,156 @@ a.archband__card:hover {
     margin-top: 1.5rem;
   }
 }
+
+/* ═══════════ Typography with the logo's personality ═══════════ */
+
+/* brand brush accent — used sparingly, feels special when it appears */
+.brandword {
+  font-family: var(--font-brand);
+  font-weight: 400;
+  font-style: normal;
+  display: inline-block;
+  transform: rotate(-2.5deg);
+  color: var(--terracotta-deep);
+  line-height: 1.15;
+  padding: 0 0.1em 0.08em 0.04em;
+}
+.brandword--onDark {
+  color: var(--sand);
+}
+
+/* Fraunces carries more weight than the old serif — recalibrated scale */
+.hero2__title {
+  font-size: clamp(2.5rem, 5.4vw, 4.7rem);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+}
+.sechead2 h2 {
+  font-size: clamp(1.7rem, 3.1vw, 2.6rem);
+}
+.collection2 .sechead2 h2 {
+  font-size: clamp(2rem, 3.9vw, 3.3rem);
+}
+.six__panel h3,
+.six__slideinfo h3 {
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  font-weight: 500;
+}
+.spray__intro h2 {
+  font-size: clamp(2.3rem, 4.7vw, 4rem);
+}
+.spray__place {
+  font-size: clamp(1.8rem, 3.3vw, 2.8rem);
+}
+.adband__copy h2 {
+  font-size: clamp(1.9rem, 3.7vw, 3.2rem);
+}
+.finderband2 h2 {
+  font-size: clamp(2.1rem, 4vw, 3.5rem);
+}
+
+/* the memory moment — one brush line per scent */
+.six__moment {
+  font-family: var(--font-brand);
+  font-size: clamp(1.1rem, 1.7vw, 1.35rem);
+  color: var(--terracotta-deep);
+  transform: rotate(-1.5deg);
+  transform-origin: left center;
+}
+
+/* ═══════════ HERO — golden hour, not flat beige ═══════════ */
+.hero2__arch {
+  background:
+    radial-gradient(95% 60% at 26% 22%, rgba(243, 200, 122, 0.6), transparent 64%),
+    linear-gradient(
+      112deg,
+      transparent 32%,
+      rgba(250, 226, 174, 0.4) 39%,
+      rgba(250, 226, 174, 0.58) 46%,
+      transparent 53%,
+      transparent 59%,
+      rgba(250, 226, 174, 0.26) 64%,
+      transparent 69%
+    ),
+    linear-gradient(168deg, #ecd2a2 0%, #dcb072 52%, #b8834c 100%);
+}
+/* curtain shadow drifting across the light */
+.hero2__arch::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      94deg,
+      transparent 10%,
+      rgba(90, 53, 34, 0.11) 17%,
+      transparent 26%,
+      transparent 42%,
+      rgba(90, 53, 34, 0.13) 50%,
+      transparent 60%
+    ),
+    radial-gradient(130% 70% at 50% 112%, rgba(62, 40, 27, 0.22), transparent 58%);
+  animation: curtain-sway 11s ease-in-out infinite alternate;
+}
+@keyframes curtain-sway {
+  from {
+    transform: translateX(-7px);
+    opacity: 0.85;
+  }
+  to {
+    transform: translateX(9px);
+    opacity: 1;
+  }
+}
+/* dust in the beam */
+.hero2__dust {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  background-image:
+    radial-gradient(2.5px 2.5px at 30% 30%, rgba(255, 244, 220, 0.9), transparent 100%),
+    radial-gradient(1.8px 1.8px at 44% 22%, rgba(255, 244, 220, 0.7), transparent 100%),
+    radial-gradient(2px 2px at 58% 38%, rgba(255, 244, 220, 0.75), transparent 100%),
+    radial-gradient(1.5px 1.5px at 38% 48%, rgba(255, 244, 220, 0.55), transparent 100%),
+    radial-gradient(2.2px 2.2px at 66% 26%, rgba(255, 244, 220, 0.6), transparent 100%),
+    radial-gradient(1.6px 1.6px at 52% 56%, rgba(255, 244, 220, 0.5), transparent 100%);
+  animation: dust-drift 14s ease-in-out infinite alternate;
+}
+@keyframes dust-drift {
+  from {
+    transform: translateY(4px);
+  }
+  to {
+    transform: translateY(-8px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero2__arch::after,
+  .hero2__dust {
+    animation: none;
+  }
+}
+/* bottle sits in the light, label catches it */
+.hero2__bottle {
+  filter: drop-shadow(0 18px 26px rgba(62, 40, 27, 0.28));
+}
+
+/* worldplate memory moment */
+.worldplate__moment {
+  font-family: var(--font-brand);
+  font-size: 1.25rem;
+  color: color-mix(in srgb, var(--parchment) 92%, transparent);
+  transform: rotate(-1.5deg);
+  transform-origin: left center;
+}
+
+/* PDP smells-like words become brush words */
+.smells__word {
+  font-family: var(--font-brand);
+  font-style: normal;
+  font-size: clamp(1.8rem, 1rem + 3.6vw, 3.6rem);
+}

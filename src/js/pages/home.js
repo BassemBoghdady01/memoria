@@ -23,7 +23,7 @@ function heroSection() {
     <div class="container hero2__grid">
       <div class="hero2__copy">
         <p class="hero2__eyebrow" data-reveal>Memory-Enhancing Compositions · Est. 2006</p>
-        <h1 class="hero2__title" data-reveal>Every scent<br/>holds a <em>memory.</em></h1>
+        <h1 class="hero2__title" data-reveal>Every scent<br/>holds a <span class="brandword">memory.</span></h1>
         <p class="hero2__sub" data-reveal>Six scents. Twenty years. No bad memories included.</p>
         <div class="hero2__ctas" data-reveal>
           <a class="btn btn--primary btn--big" href="/shop">Shop the Collection</a>
@@ -32,6 +32,7 @@ function heroSection() {
       </div>
       <div class="hero2__plate" data-hero-plate>
         <div class="hero2__arch" data-hero-arch>
+          <i class="hero2__dust" aria-hidden="true"></i>
           ${bottleImg(hero, { w: 720, cls: 'hero2__bottle', eager: true })}
           <svg class="hero2__stamp" viewBox="0 0 120 120" aria-hidden="true">
             <defs><path id="stampcircle" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs>
@@ -108,7 +109,7 @@ function sixSlide(p) {
     <div class="six__slideinfo">
       <span class="six__meta">Nº ${p.number} · ${p.gender === 'her' ? 'For Her' : 'For Him'} · ${esc(p.fragranceFamily)}</span>
       <h3>${esc(p.name)}</h3>
-      <p class="six__notes">${esc([...p.topNotes.slice(0, 1), ...p.heartNotes.slice(0, 2), ...p.baseNotes.slice(0, 1)].join(' · '))}</p>
+      <p class="six__notes">${esc([...new Set([...p.topNotes.slice(0, 1), ...p.heartNotes.slice(0, 2), ...p.baseNotes.slice(0, 1)])].join(' · '))}</p>
       <div class="six__buy">
         <span class="six__price">${money(p.sizes[p.sizes.length - 1].price)}</span>
         <button class="btn btn--small" data-add="${p.slug}" data-ml="${p.sizes[p.sizes.length - 1].ml}">Add to Bag</button>
@@ -139,8 +140,8 @@ function sixSection() {
           <div class="six__panel" data-six-p="${i}">
             <span class="six__meta">Nº ${p.number} · ${p.gender === 'her' ? 'For Her' : 'For Him'} · ${esc(p.fragranceFamily)}</span>
             <h3>${esc(p.name)}</h3>
-            <p class="six__notes">${esc([...p.topNotes.slice(0, 1), ...p.heartNotes.slice(0, 2), ...p.baseNotes.slice(0, 1)].join(' · '))}</p>
-            <p class="six__ad">${esc(p.ad)}</p>
+            <p class="six__notes">${esc([...new Set([...p.topNotes.slice(0, 1), ...p.heartNotes.slice(0, 2), ...p.baseNotes.slice(0, 1)])].join(' · '))}</p>
+            <p class="six__moment">${esc(p.memoryMoment)}</p>
             <div class="six__buy">
               <span class="six__price">${money(p.sizes[p.sizes.length - 1].price)}</span>
               <button class="btn btn--small" data-add="${p.slug}" data-ml="${p.sizes[p.sizes.length - 1].ml}">Add to Bag</button>
@@ -171,7 +172,7 @@ function spraySection() {
     <div class="spray__stage" data-spray-stage>
       <div class="spray__intro" data-spray-intro>
         <p class="spray__kicker">The Memória Test</p>
-        <h2>Spray the memory.<br/><em>Enter it.</em></h2>
+        <h2>Spray the memory.<br/><span class="brandword brandword--onDark">Enter it.</span></h2>
         <p class="spray__hint" aria-hidden="true">keep scrolling — this is the fun part</p>
       </div>
       <!-- media layer: intentionally empty — future scent/world imagery mounts here -->

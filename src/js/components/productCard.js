@@ -13,7 +13,7 @@ import { onPageCleanup } from '../motion.js';
 
 export function renderProductCard(p, { revealDelay = 0 } = {}) {
   const defaultSize = p.sizes[p.sizes.length - 1];
-  const notesLine = [...p.topNotes.slice(0, 1), ...p.heartNotes.slice(0, 2), ...p.baseNotes.slice(0, 1)].join(' · ');
+  const notesLine = [...new Set([...p.topNotes.slice(0, 1), ...p.heartNotes.slice(0, 2), ...p.baseNotes.slice(0, 1)])].join(' · ');
   return `
   <article class="pcard" data-reveal style="--reveal-delay:${revealDelay}ms; --tint:${p.tint}; --world:${p.world.color}; --accent:${p.accent}" data-pcard="${p.slug}">
     <a class="pcard__link" href="/product/${p.slug}" aria-label="Nº ${p.number} — ${esc(p.name)}, ${genderLabel(p.gender)}, from ${money(p.sizes[0].price)}"></a>

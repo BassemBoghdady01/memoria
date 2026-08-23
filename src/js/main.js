@@ -1,17 +1,16 @@
 /**
  * MEMÓRIA · Bootstrap.
  */
-import '@fontsource/cormorant-garamond/400.css';
-import '@fontsource/cormorant-garamond/400-italic.css';
-import '@fontsource/cormorant-garamond/500.css';
-import '@fontsource/cormorant-garamond/500-italic.css';
-import '@fontsource/cormorant-garamond/600.css';
-import '@fontsource/cormorant-garamond/600-italic.css';
+import '@fontsource/fraunces/400.css';
+import '@fontsource/fraunces/400-italic.css';
+import '@fontsource/fraunces/500.css';
+import '@fontsource/fraunces/500-italic.css';
+import '@fontsource/fraunces/600.css';
+import '@fontsource/kaushan-script/400.css'; /* brand brush accent — used sparingly */
 import '@fontsource/jost/400.css';
 import '@fontsource/jost/500.css';
 import '@fontsource/jost/600.css';
 import '@fontsource/courier-prime/400.css';
-/* handwriting face retired with the 2026 creative reset */
 import '../styles/main.css';
 
 import { initSmoothScroll } from './motion.js';

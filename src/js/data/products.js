@@ -14,6 +14,7 @@ export const products = [
   {
     id: 'p01',
     slug: 'jasmine-dusk',
+    memoryMoment: '6:40 PM. The jasmine reached the third floor.',
     number: '01',
     name: 'Jasmine Dusk',
     gender: 'her', // 'her' | 'him'
@@ -48,6 +49,7 @@ export const products = [
   {
     id: 'p02',
     slug: 'rose-vellum',
+    memoryMoment: 'Thursday. The letter stayed in the coat pocket.',
     number: '02',
     name: 'Rose Vellum',
     gender: 'her',
@@ -82,6 +84,7 @@ export const products = [
   {
     id: 'p03',
     slug: 'sunday-linen',
+    memoryMoment: 'Sunday, 4:17 PM. The curtains were still moving.',
     number: '03',
     name: 'Sunday Linen',
     gender: 'her',
@@ -116,6 +119,7 @@ export const products = [
   {
     id: 'p04',
     slug: 'midnight-fig',
+    memoryMoment: 'Past midnight. One light on in the kitchen.',
     number: '04',
     name: 'Midnight Fig',
     gender: 'him',
@@ -150,6 +154,7 @@ export const products = [
   {
     id: 'p05',
     slug: 'ambered-wood',
+    memoryMoment: 'The wall kept the sun until eight.',
     number: '05',
     name: 'Ambered Wood',
     gender: 'him',
@@ -184,6 +189,7 @@ export const products = [
   {
     id: 'p06',
     slug: 'oud-mosaic',
+    memoryMoment: 'The radio was playing from the next room.',
     number: '06',
     name: 'Oud Mosaic',
     gender: 'him',

@@ -123,6 +123,7 @@ export default {
             <div class="worldplate" style="--world:${p.world.color}" data-reveal>
               <span class="worldplate__now">You are remembering:</span>
               <strong class="worldplate__place">${esc(p.memoryPlace)}</strong>
+              <span class="worldplate__moment">${esc(p.memoryMoment)}</span>
               <span class="worldplate__meta">Record Nº ${p.number}</span>
             </div>
           </div>
