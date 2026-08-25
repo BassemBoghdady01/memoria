@@ -180,6 +180,18 @@ export function renderFooter() {
           <p class="footer__newsnote">Postmarked Cairo · Sent seldom</p>
         </div>
       </div>
+      <div class="container footer__egyptrow">
+        <svg class="footer__postmark" viewBox="0 0 120 120" aria-hidden="true">
+          <defs><path id="pmcircle" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
+          <circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 5"/>
+          <circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" stroke-width="1"/>
+          <text font-size="10.5" letter-spacing="2" fill="currentColor">
+            <textPath href="#pmcircle">MADE OF MEMORIES · MEMÓRIA · CAIRO ·</textPath>
+          </text>
+          <text x="60" y="64" text-anchor="middle" font-size="13" fill="currentColor" font-family="Georgia" font-style="italic">Est. 2006</text>
+        </svg>
+        <p class="footer__egypt">Made in Egypt, for people who carry memories<br/><span dir="rtl" lang="ar">صُنع في مصر — لمن يحملون الذكريات</span></p>
+      </div>
       <div class="container footer__close">
         <p class="footer__closing">Every scent leaves something behind.</p>
         <p class="footer__legal">MEMÓRIA © · Est. 2006 · All six scents</p>

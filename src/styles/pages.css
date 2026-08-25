@@ -1142,3 +1142,12 @@
     gap: 0.3rem;
   }
 }
+
+/* scent journey phase line on note plates */
+.plate__phase {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  margin-top: -0.3rem;
+}

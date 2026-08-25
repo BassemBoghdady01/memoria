@@ -153,16 +153,21 @@ export default {
         <div class="container">
           <div class="sechead">
             <span class="stamp" data-reveal>Composition</span>
-            <h2 id="plates-title" data-reveal>The Notes</h2>
+            <h2 id="plates-title" data-reveal>The Scent Journey</h2>
           </div>
           <div class="plates">
-            ${['Top', 'Heart', 'Base']
+            ${[
+              ['I', 'First recall', 'Top Notes', p.topNotes],
+              ['II', 'The memory settles', 'Heart Notes', p.heartNotes],
+              ['III', 'What remains', 'Base Notes', p.baseNotes],
+            ]
               .map(
-                (tier, i) => `
+                ([num, phase, tier, notes], i) => `
               <div class="plate" data-reveal style="--reveal-delay:${i * 120}ms">
-                <span class="plate__tier" aria-hidden="true">${['I', 'II', 'III'][i]}</span>
-                <span class="label">${tier} Notes</span>
-                <p>${esc([p.topNotes, p.heartNotes, p.baseNotes][i].join(' · '))}</p>
+                <span class="plate__tier" aria-hidden="true">${num}</span>
+                <em class="plate__phase">${phase}</em>
+                <span class="label">${tier}</span>
+                <p>${esc(notes.join(' · '))}</p>
               </div>`
               )
               .join('')}

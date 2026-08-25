@@ -181,11 +181,54 @@ const blotter = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="820
   <path d="M104 52 L196 58 L182 768 L118 764 Z" filter="url(#grain)" opacity=".4" fill="#F0E4C4"/>
 </svg>`;
 
+/* ——— torn typewriter paper (blank — text set in HTML for crispness) ——— */
+const tornEdgeTop = 'M28 46 L84 34 L140 44 L206 30 L268 42 L334 32 L398 44 L462 30 L524 40 L590 32 L652 44 L718 34 L772 46';
+const tornEdgeBot = 'L768 512 L706 524 L644 512 L578 526 L512 514 L448 526 L382 512 L318 524 L252 514 L188 526 L124 512 L62 524 L32 510';
+const tornnote = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="560" viewBox="0 0 800 560">
+  <defs>
+    <linearGradient id="tpaper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F3EBD6"/>
+      <stop offset=".6" stop-color="#EDE2C6"/>
+      <stop offset="1" stop-color="#E0D0AA"/>
+    </linearGradient>
+    ${GRAIN}
+  </defs>
+  <path d="${tornEdgeTop} ${tornEdgeBot} Z" transform="translate(14 22)" fill="rgba(40,22,10,.28)" filter="blur(12px)"/>
+  <g>
+    <path d="${tornEdgeTop} ${tornEdgeBot} Z" fill="url(#tpaper)"/>
+    <path d="${tornEdgeTop}" fill="none" stroke="rgba(255,252,242,.6)" stroke-width="2"/>
+    <path d="M32 510 ${tornEdgeBot.replace('L768 512', 'M768 512')}" fill="none" stroke="rgba(120,84,48,.25)" stroke-width="2"/>
+  </g>
+  <path d="${tornEdgeTop} ${tornEdgeBot} Z" filter="url(#grain)" opacity=".5" fill="#EDE2C6"/>
+</svg>`;
+
+/* ——— ring-notebook page, torn out (blank) ——— */
+const ringpage = `<svg xmlns="http://www.w3.org/2000/svg" width="760" height="600" viewBox="0 0 760 600">
+  <defs>
+    <linearGradient id="rpaper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F5EEDC"/>
+      <stop offset="1" stop-color="#E7DABA"/>
+    </linearGradient>
+    ${GRAIN}
+  </defs>
+  <path d="M60 60 L96 46 L134 60 L172 44 L210 58 L248 46 L286 60 L324 46 L362 58 L400 46 L438 60 L476 46 L514 58 L552 46 L590 60 L628 46 L666 58 L700 48 L712 54 L716 552 L64 556 Z"
+        transform="translate(12 20)" fill="rgba(40,22,10,.28)" filter="blur(12px)"/>
+  <g>
+    <path d="M60 60 L96 46 L134 60 L172 44 L210 58 L248 46 L286 60 L324 46 L362 58 L400 46 L438 60 L476 46 L514 58 L552 46 L590 60 L628 46 L666 58 L700 48 L712 54 L716 552 L64 556 Z" fill="url(#rpaper)"/>
+    ${[110, 190, 270, 350, 430, 510].map((y) => `<circle cx="92" cy="${y}" r="13" fill="rgba(70,48,28,.16)"/><circle cx="90" cy="${y - 2}" r="12" fill="#DCCBA4"/>`).join('')}
+    ${[170, 240, 310, 380, 450].map((y) => `<line x1="140" y1="${y}" x2="680" y2="${y}" stroke="rgba(110,80,50,.16)" stroke-width="2"/>`).join('')}
+    <line x1="126" y1="70" x2="126" y2="540" stroke="rgba(182,106,75,.35)" stroke-width="2.5"/>
+  </g>
+  <path d="M60 60 L716 54 L716 552 L64 556 Z" filter="url(#grain)" opacity=".45" fill="#EDE2C6"/>
+</svg>`;
+
 const OBJECTS = [
   { name: 'ticket', svg: ticket, w: 920 },
   { name: 'envelope', svg: envelope, w: 900 },
   { name: 'cassette', svg: cassette, w: 860 },
   { name: 'blotter', svg: blotter, w: 300 },
+  { name: 'tornnote', svg: tornnote, w: 800 },
+  { name: 'ringpage', svg: ringpage, w: 760 },
 ];
 
 for (const o of OBJECTS) {

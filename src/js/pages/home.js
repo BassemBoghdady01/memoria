@@ -80,6 +80,9 @@ function collectionSection() {
           <button class="filter-tab" data-filter="him" aria-pressed="false">For him</button>
         </div>
       </header>
+      <div class="tornnote tornnote--wayback" aria-hidden="true">
+        <p>Not just a perfume.<br/>A way back.</p>
+      </div>
       <div data-collection-grid>${renderProductGrid(products)}</div>
       <p class="collection2__more" data-reveal><a class="link-line" href="/shop">Browse the full catalogue →</a></p>
     </div>
@@ -171,6 +174,7 @@ function spraySection() {
   return `
   <section class="spray" data-spray style="--world:${p.world.color}">
     <div class="spray__stage" data-spray-stage>
+      <i class="spray__fan" aria-hidden="true"></i>
       <div class="spray__intro" data-spray-intro>
         <p class="spray__kicker">The Memória Test</p>
         <h2>Spray the memory.<br/><span class="brandword brandword--onDark">Enter it.</span></h2>
@@ -248,6 +252,10 @@ function archiveSection() {
           )
           .join('')}
       </div>
+      <div class="tornnote tornnote--typed" aria-hidden="true">
+        <p>A scent is how we keep<br/>what matters.</p>
+        <span>— the Memory Department</span>
+      </div>
       <p class="archband__foot archband__foot--center" data-reveal>
         <a class="link-line" href="/archive">Browse the archive →</a>
       </p>
@@ -285,6 +293,10 @@ function hotlineSection() {
         <p class="hotline__badge" data-reveal>The Memória Hotline</p>
         <h2 id="hotline-title" data-reveal>What are you remembering?</h2>
         <p class="hotline__sub" data-reveal>Write to the Memory Department. Every submission is read, filed, and occasionally answered with a sample.</p>
+        <figure class="ringcard" data-reveal>
+          <blockquote>“The fan was turning, and everyone was still awake.”</blockquote>
+          <figcaption>Cairo · summer · shared anonymously</figcaption>
+        </figure>
       </div>
       <img class="hotline__envelope" src="/objects/envelope.png" alt="" aria-hidden="true" loading="lazy" />
       <form class="hotline__form" data-hotline data-reveal>
