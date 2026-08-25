@@ -33,6 +33,7 @@ function heroSection() {
       <div class="hero2__plate" data-hero-plate>
         <div class="hero2__arch" data-hero-arch>
           <i class="hero2__dust" aria-hidden="true"></i>
+          <img class="hero2__ticket" src="/objects/ticket.png" alt="" aria-hidden="true" loading="eager" />
           ${bottleImg(hero, { w: 720, cls: 'hero2__bottle', eager: true })}
           <svg class="hero2__stamp" viewBox="0 0 120 120" aria-hidden="true">
             <defs><path id="stampcircle" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs>
@@ -221,9 +222,9 @@ function adSection(slug, flip = false) {
 
 function archiveSection() {
   const records = [
-    { vol: 'Vol. I', no: '01', name: 'Jasmine Dusk', note: 'The first entry in the ledger. Allegedly.' },
-    { vol: 'Vol. III', no: '02', name: 'Rose Vellum', note: 'Filed under letters never sent.' },
-    { vol: 'Vol. VI', no: '06', name: 'Oud Mosaic', note: 'The newest memory. Still settling.' },
+    { vol: 'Vol. I', no: '01', name: 'Jasmine Dusk', note: 'The first entry in the ledger. Allegedly.', obj: null },
+    { vol: 'Vol. III', no: '02', name: 'Rose Vellum', note: 'Filed under letters never sent.', obj: 'envelope' },
+    { vol: 'Vol. VI', no: '06', name: 'Oud Mosaic', note: 'The newest memory. Still settling.', obj: 'cassette' },
   ];
   return `
   <section class="archband" aria-labelledby="arch-title">
@@ -242,6 +243,7 @@ function archiveSection() {
             <strong>${r.name}</strong>
             <span class="archband__note">${r.note}</span>
             <span class="archband__stamp">FILED</span>
+            ${r.obj ? `<img class="archband__obj archband__obj--${r.obj}" src="/objects/${r.obj}.png" alt="" aria-hidden="true" loading="lazy"/>` : ''}
           </a>`
           )
           .join('')}
@@ -284,6 +286,7 @@ function hotlineSection() {
         <h2 id="hotline-title" data-reveal>What are you remembering?</h2>
         <p class="hotline__sub" data-reveal>Write to the Memory Department. Every submission is read, filed, and occasionally answered with a sample.</p>
       </div>
+      <img class="hotline__envelope" src="/objects/envelope.png" alt="" aria-hidden="true" loading="lazy" />
       <form class="hotline__form" data-hotline data-reveal>
         <label class="sr-only" for="hotline-email">Email address</label>
         <input id="hotline-email" type="email" required placeholder="you@somewhere.com" autocomplete="email" />

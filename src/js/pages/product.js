@@ -125,6 +125,7 @@ export default {
               <strong class="worldplate__place">${esc(p.memoryPlace)}</strong>
               <span class="worldplate__moment">${esc(p.memoryMoment)}</span>
               <span class="worldplate__meta">Record Nº ${p.number}</span>
+              <img class="worldplate__blotter" src="/objects/blotter.png" alt="" aria-hidden="true" loading="lazy" />
             </div>
           </div>
           <div class="pdp-story__copy">
