@@ -14,7 +14,7 @@ export const products = [
   {
     id: 'p01',
     slug: 'jasmine-dusk',
-    memoryMoment: '6:40 PM. The jasmine reached the third floor.',
+    memoryMoment: '6:43 PM. The balcony door is open. Someone downstairs is playing a song you know.',
     number: '01',
     name: 'Jasmine Dusk',
     gender: 'her', // 'her' | 'him'
@@ -49,7 +49,7 @@ export const products = [
   {
     id: 'p02',
     slug: 'rose-vellum',
-    memoryMoment: 'Thursday. The letter stayed in the coat pocket.',
+    memoryMoment: 'A letter that still smells faintly of her drawer.',
     number: '02',
     name: 'Rose Vellum',
     gender: 'her',
@@ -84,7 +84,7 @@ export const products = [
   {
     id: 'p03',
     slug: 'sunday-linen',
-    memoryMoment: 'Sunday, 4:17 PM. The curtains were still moving.',
+    memoryMoment: 'Sunday morning. Fresh sheets. The curtains moving before the room gets warm.',
     number: '03',
     name: 'Sunday Linen',
     gender: 'her',
@@ -119,7 +119,7 @@ export const products = [
   {
     id: 'p04',
     slug: 'midnight-fig',
-    memoryMoment: 'Past midnight. One light on in the kitchen.',
+    memoryMoment: 'The drive home after everyone else had gone.',
     number: '04',
     name: 'Midnight Fig',
     gender: 'him',
@@ -154,7 +154,7 @@ export const products = [
   {
     id: 'p05',
     slug: 'ambered-wood',
-    memoryMoment: 'The wall kept the sun until eight.',
+    memoryMoment: 'The old cabinet your father never replaced.',
     number: '05',
     name: 'Ambered Wood',
     gender: 'him',
@@ -189,7 +189,7 @@ export const products = [
   {
     id: 'p06',
     slug: 'oud-mosaic',
-    memoryMoment: 'The radio was playing from the next room.',
+    memoryMoment: 'A room you haven’t entered in years — somehow still remembered perfectly.',
     number: '06',
     name: 'Oud Mosaic',
     gender: 'him',

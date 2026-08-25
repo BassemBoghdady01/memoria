@@ -222,6 +222,191 @@ const ringpage = `<svg xmlns="http://www.w3.org/2000/svg" width="760" height="60
   <path d="M60 60 L716 54 L716 552 L64 556 Z" filter="url(#grain)" opacity=".45" fill="#EDE2C6"/>
 </svg>`;
 
+/* ——— vintage radio — a song you haven't heard in twenty years ——— */
+const radio = `<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="760" viewBox="0 0 1100 760">
+  <defs>
+    <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5A3A22"/>
+      <stop offset=".08" stop-color="#7A5230"/>
+      <stop offset=".5" stop-color="#4A2C18"/>
+      <stop offset=".92" stop-color="#331C0E"/>
+      <stop offset="1" stop-color="#241206"/>
+    </linearGradient>
+    <linearGradient id="woodside" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="rgba(20,10,4,.7)"/>
+      <stop offset=".05" stop-color="rgba(150,100,55,.35)"/>
+      <stop offset=".12" stop-color="rgba(20,10,4,0)"/>
+      <stop offset=".88" stop-color="rgba(20,10,4,0)"/>
+      <stop offset=".95" stop-color="rgba(150,100,55,.3)"/>
+      <stop offset="1" stop-color="rgba(20,10,4,.75)"/>
+    </linearGradient>
+    <linearGradient id="grille" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#C9AE7E"/>
+      <stop offset="1" stop-color="#9A7E52"/>
+    </linearGradient>
+    <radialGradient id="dialface" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#F0E2BE"/>
+      <stop offset=".8" stop-color="#D9C494"/>
+      <stop offset="1" stop-color="#A8895C"/>
+    </radialGradient>
+    <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8A6A38"/>
+      <stop offset=".4" stop-color="#D9BC7E"/>
+      <stop offset=".7" stop-color="#8A6A38"/>
+      <stop offset="1" stop-color="#5E4522"/>
+    </linearGradient>
+    <pattern id="mesh" width="9" height="9" patternUnits="userSpaceOnUse">
+      <rect width="9" height="9" fill="#8A7048"/>
+      <circle cx="4.5" cy="4.5" r="3" fill="#6E5836"/>
+      <circle cx="4.5" cy="4.5" r="1.4" fill="#4A3A20"/>
+    </pattern>
+    ${GRAIN}
+  </defs>
+  <!-- shadow -->
+  <ellipse cx="550" cy="712" rx="470" ry="34" fill="rgba(24,12,4,.4)" filter="blur(18px)"/>
+  <g>
+    <!-- cabinet -->
+    <rect x="70" y="70" width="960" height="620" rx="42" fill="url(#wood)"/>
+    <rect x="70" y="70" width="960" height="620" rx="42" fill="url(#woodside)"/>
+    <rect x="82" y="80" width="936" height="16" rx="8" fill="rgba(255,232,190,.22)" filter="blur(3px)"/>
+    <!-- brass trim -->
+    <rect x="108" y="112" width="884" height="540" rx="30" fill="none" stroke="url(#brass)" stroke-width="5"/>
+    <!-- speaker grille -->
+    <rect x="140" y="146" width="560" height="360" rx="24" fill="url(#grille)"/>
+    <rect x="140" y="146" width="560" height="360" rx="24" fill="url(#mesh)" opacity=".85"/>
+    ${[0, 1, 2, 3].map((i) => `<rect x="${172 + i * 132}" y="146" width="10" height="360" rx="5" fill="url(#brass)"/>`).join('')}
+    <rect x="140" y="146" width="560" height="120" rx="24" fill="rgba(255,240,210,.10)"/>
+    <!-- dial -->
+    <circle cx="856" cy="300" r="118" fill="#241406"/>
+    <circle cx="856" cy="300" r="106" fill="url(#dialface)"/>
+    ${Array.from({ length: 24 }, (_, i) => `<rect x="854" y="204" width="4" height="16" rx="2" fill="#5A3A1C" transform="rotate(${i * 15} 856 300)"/>`).join('')}
+    <circle cx="856" cy="300" r="10" fill="#3A2410"/>
+    <rect x="852" y="216" width="8" height="88" rx="4" fill="#A83A22" transform="rotate(42 856 300)"/>
+    <circle cx="856" cy="300" r="106" fill="none" stroke="url(#brass)" stroke-width="6"/>
+    <!-- tuning window -->
+    <rect x="140" y="540" width="560" height="70" rx="12" fill="#1E1206"/>
+    <rect x="150" y="548" width="540" height="54" rx="8" fill="rgba(240,220,175,.16)"/>
+    ${[0, 1, 2, 3, 4, 5, 6, 7].map((i) => `<rect x="${182 + i * 62}" y="556" width="3" height="38" fill="rgba(240,220,175,.5)"/>`).join('')}
+    <rect x="366" y="552" width="5" height="46" fill="#C93A1E"/>
+    <!-- knobs -->
+    <circle cx="782" cy="574" r="34" fill="url(#brass)"/>
+    <circle cx="782" cy="574" r="24" fill="#3A2410"/>
+    <circle cx="932" cy="574" r="34" fill="url(#brass)"/>
+    <circle cx="932" cy="574" r="24" fill="#3A2410"/>
+    <!-- feet -->
+    <rect x="140" y="690" width="70" height="22" rx="8" fill="#241206"/>
+    <rect x="890" y="690" width="70" height="22" rx="8" fill="#241206"/>
+  </g>
+  <rect x="70" y="70" width="960" height="620" rx="42" filter="url(#grain)" opacity=".45" fill="#4A2C18"/>
+</svg>`;
+
+/* ——— brass key tag — ROOM 206, a place you used to enter ——— */
+const keytag = `<svg xmlns="http://www.w3.org/2000/svg" width="360" height="640" viewBox="0 0 360 640">
+  <defs>
+    <linearGradient id="tagbrass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6E5226"/>
+      <stop offset=".35" stop-color="#C9AE6E"/>
+      <stop offset=".6" stop-color="#8A6A38"/>
+      <stop offset="1" stop-color="#4A3418"/>
+    </linearGradient>
+    ${GRAIN}
+  </defs>
+  <ellipse cx="184" cy="600" rx="120" ry="18" fill="rgba(30,16,6,.32)" filter="blur(10px)"/>
+  <g>
+    <!-- ring -->
+    <circle cx="180" cy="86" r="52" fill="none" stroke="url(#tagbrass)" stroke-width="14"/>
+    <!-- oval tag -->
+    <ellipse cx="180" cy="380" rx="140" ry="210" fill="url(#tagbrass)"/>
+    <ellipse cx="180" cy="380" rx="122" ry="192" fill="none" stroke="rgba(60,40,14,.5)" stroke-width="3"/>
+    <circle cx="180" cy="216" r="16" fill="#241606"/>
+    <text x="180" y="352" text-anchor="middle" font-family="Georgia" font-size="40" letter-spacing="6" fill="#3A2810">ROOM</text>
+    <text x="180" y="446" text-anchor="middle" font-family="Georgia" font-size="76" letter-spacing="4" fill="#2E1E0A">206</text>
+    <text x="180" y="510" text-anchor="middle" font-family="Arial" font-size="15" letter-spacing="4" fill="rgba(58,40,16,.75)">CAIRO</text>
+    <ellipse cx="128" cy="270" rx="34" ry="80" fill="rgba(255,244,215,.28)" filter="blur(10px)" transform="rotate(-18 128 270)"/>
+  </g>
+  <ellipse cx="180" cy="380" rx="140" ry="210" filter="url(#grain)" opacity=".4" fill="#8A6A38"/>
+</svg>`;
+
+/* ——— photograph, face down — one handwritten line on the back (text set in HTML) ——— */
+const photoback = `<svg xmlns="http://www.w3.org/2000/svg" width="720" height="560" viewBox="0 0 720 560">
+  <defs>
+    <linearGradient id="pback" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F2ECDC"/>
+      <stop offset=".6" stop-color="#EAE0C6"/>
+      <stop offset="1" stop-color="#D9C9A4"/>
+    </linearGradient>
+    ${GRAIN}
+  </defs>
+  <rect x="52" y="60" width="632" height="464" rx="4" fill="rgba(40,22,10,.30)" filter="blur(13px)"/>
+  <g>
+    <rect x="36" y="36" width="648" height="480" rx="3" fill="url(#pback)"/>
+    <!-- foxing / age spots -->
+    <circle cx="120" cy="120" r="26" fill="rgba(150,110,60,.10)" filter="blur(6px)"/>
+    <circle cx="600" cy="420" r="40" fill="rgba(150,110,60,.12)" filter="blur(9px)"/>
+    <circle cx="520" cy="100" r="18" fill="rgba(150,110,60,.09)" filter="blur(5px)"/>
+    <rect x="36" y="36" width="648" height="70" fill="rgba(255,250,240,.3)"/>
+    <!-- faint photo-paper stamp -->
+    <text x="600" y="500" text-anchor="end" font-family="Arial" font-size="14" letter-spacing="3" fill="rgba(120,90,50,.35)">KODAK · PAPER</text>
+  </g>
+  <rect x="36" y="36" width="648" height="480" rx="3" filter="url(#grain)" opacity=".4" fill="#EAE0C6"/>
+</svg>`;
+
+/* ——— hero backdrop — plaster wall, warm light, wooden table ——— */
+const backdrop = `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <filter id="plaster">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="4" seed="7" result="n"/>
+      <feDiffuseLighting in="n" lighting-color="#F2E0BC" surfaceScale="1.6" diffuseConstant="1.05" result="l">
+        <feDistantLight azimuth="235" elevation="58"/>
+      </feDiffuseLighting>
+      <feComposite in="l" in2="SourceGraphic" operator="arithmetic" k1="1" k2="0" k3="0" k4="0"/>
+    </filter>
+    <filter id="woodgrain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.004 0.09" numOctaves="4" seed="12" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.32 0 0 0 0 0.19 0 0 0 0 0.08 0 0 0 0.55 0" result="g"/>
+      <feComposite in="g" in2="SourceGraphic" operator="over"/>
+    </filter>
+    <linearGradient id="wallwash" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="rgba(120,70,30,.35)"/>
+      <stop offset=".35" stop-color="rgba(224,178,112,.12)"/>
+      <stop offset=".62" stop-color="rgba(244,206,138,.42)"/>
+      <stop offset="1" stop-color="rgba(160,100,45,.4)"/>
+    </linearGradient>
+    <linearGradient id="tablewood" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8A5A2E"/>
+      <stop offset=".06" stop-color="#A87840"/>
+      <stop offset=".5" stop-color="#6E4220"/>
+      <stop offset="1" stop-color="#3E2410"/>
+    </linearGradient>
+  </defs>
+  <!-- wall -->
+  <rect width="1600" height="760" fill="#E2C89A"/>
+  <rect width="1600" height="760" fill="#E2C89A" filter="url(#plaster)" opacity=".55"/>
+  <rect width="1600" height="760" fill="url(#wallwash)"/>
+  <!-- warm beam from upper right -->
+  <path d="M1600 0 L900 0 L340 760 L1600 760 Z" fill="rgba(250,214,150,.30)" filter="blur(60px)"/>
+  <!-- leaf-dapple shadows, soft -->
+  <g fill="rgba(74,44,20,.32)" filter="blur(26px)">
+    <ellipse cx="300" cy="130" rx="150" ry="46" transform="rotate(-32 300 130)"/>
+    <ellipse cx="470" cy="90" rx="120" ry="34" transform="rotate(-18 470 90)"/>
+    <ellipse cx="180" cy="270" rx="180" ry="40" transform="rotate(-40 180 270)"/>
+    <ellipse cx="420" cy="330" rx="90" ry="26" transform="rotate(-24 420 330)"/>
+    <ellipse cx="1380" cy="600" rx="200" ry="60" transform="rotate(-30 1380 600)"/>
+  </g>
+  <!-- curtain-bar shadows falling across wall -->
+  <g fill="rgba(74,44,20,.16)" filter="blur(18px)">
+    <rect x="1020" y="0" width="70" height="760" transform="skewX(-9)"/>
+    <rect x="1220" y="0" width="46" height="760" transform="skewX(-9)"/>
+  </g>
+  <!-- table -->
+  <rect y="760" width="1600" height="240" fill="url(#tablewood)"/>
+  <rect y="760" width="1600" height="240" fill="url(#tablewood)" filter="url(#woodgrain)" opacity=".5"/>
+  <rect y="760" width="1600" height="10" fill="rgba(255,232,185,.5)" filter="blur(2px)"/>
+  <rect y="772" width="1600" height="34" fill="rgba(255,220,160,.14)" filter="blur(8px)"/>
+  <!-- vignette -->
+  <rect width="1600" height="1000" fill="url(#wallwash)" opacity=".12"/>
+</svg>`;
+
 const OBJECTS = [
   { name: 'ticket', svg: ticket, w: 920 },
   { name: 'envelope', svg: envelope, w: 900 },
@@ -229,6 +414,10 @@ const OBJECTS = [
   { name: 'blotter', svg: blotter, w: 300 },
   { name: 'tornnote', svg: tornnote, w: 800 },
   { name: 'ringpage', svg: ringpage, w: 760 },
+  { name: 'radio', svg: radio, w: 1100 },
+  { name: 'keytag', svg: keytag, w: 360 },
+  { name: 'photoback', svg: photoback, w: 720 },
+  { name: 'backdrop', svg: backdrop, w: 1600 },
 ];
 
 for (const o of OBJECTS) {
