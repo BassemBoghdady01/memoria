@@ -1,0 +1,324 @@
+[
+  {
+    "scent": "AFTER",
+    "slug": "after",
+    "name": "AFTER",
+    "images": [
+      {
+        "view": "01",
+        "label": "Front",
+        "source": "MEMORIA_AFTER_01_Front.png",
+        "src": "/products/after/01-960.webp",
+        "srcset": "/products/after/01-480.webp 480w, /products/after/01-960.webp 960w, /products/after/01-1600.webp 1600w",
+        "cutout": "/products/after/cutout-01-1200.webp",
+        "cutoutSrcset": "/products/after/cutout-01-600.webp 600w, /products/after/cutout-01-1200.webp 1200w"
+      },
+      {
+        "view": "02",
+        "label": "Three-quarter",
+        "source": "MEMORIA_AFTER_02_Three_Quarter.png",
+        "src": "/products/after/02-960.webp",
+        "srcset": "/products/after/02-480.webp 480w, /products/after/02-960.webp 960w, /products/after/02-1600.webp 1600w",
+        "cutout": "/products/after/cutout-02-1200.webp",
+        "cutoutSrcset": "/products/after/cutout-02-600.webp 600w, /products/after/cutout-02-1200.webp 1200w"
+      },
+      {
+        "view": "03",
+        "label": "Side",
+        "source": "MEMORIA_AFTER_03_Side.png",
+        "src": "/products/after/03-960.webp",
+        "srcset": "/products/after/03-480.webp 480w, /products/after/03-960.webp 960w, /products/after/03-1600.webp 1600w"
+      },
+      {
+        "view": "04",
+        "label": "Opposite three-quarter",
+        "source": "MEMORIA_AFTER_04_Opposite_Three_Quarter.png",
+        "src": "/products/after/04-960.webp",
+        "srcset": "/products/after/04-480.webp 480w, /products/after/04-960.webp 960w, /products/after/04-1600.webp 1600w"
+      },
+      {
+        "view": "05",
+        "label": "Elevated",
+        "source": "MEMORIA_AFTER_05_Elevated.png",
+        "src": "/products/after/05-960.webp",
+        "srcset": "/products/after/05-480.webp 480w, /products/after/05-960.webp 960w, /products/after/05-1600.webp 1600w"
+      }
+    ]
+  },
+  {
+    "scent": "ATHAR",
+    "slug": "athar",
+    "name": "ATHAR",
+    "images": [
+      {
+        "view": "01",
+        "label": "Front",
+        "source": "MEMORIA_ATHAR_01_Front.png",
+        "src": "/products/athar/01-960.webp",
+        "srcset": "/products/athar/01-480.webp 480w, /products/athar/01-960.webp 960w, /products/athar/01-1600.webp 1600w",
+        "cutout": "/products/athar/cutout-01-1200.webp",
+        "cutoutSrcset": "/products/athar/cutout-01-600.webp 600w, /products/athar/cutout-01-1200.webp 1200w"
+      },
+      {
+        "view": "02",
+        "label": "Three-quarter",
+        "source": "MEMORIA_ATHAR_02_Three_Quarter.png",
+        "src": "/products/athar/02-960.webp",
+        "srcset": "/products/athar/02-480.webp 480w, /products/athar/02-960.webp 960w, /products/athar/02-1600.webp 1600w",
+        "cutout": "/products/athar/cutout-02-1200.webp",
+        "cutoutSrcset": "/products/athar/cutout-02-600.webp 600w, /products/athar/cutout-02-1200.webp 1200w"
+      },
+      {
+        "view": "03",
+        "label": "Side",
+        "source": "MEMORIA_ATHAR_03_Side.png",
+        "src": "/products/athar/03-960.webp",
+        "srcset": "/products/athar/03-480.webp 480w, /products/athar/03-960.webp 960w, /products/athar/03-1600.webp 1600w"
+      },
+      {
+        "view": "04",
+        "label": "Opposite three-quarter",
+        "source": "MEMORIA_ATHAR_04_Opposite_Three_Quarter.png",
+        "src": "/products/athar/04-960.webp",
+        "srcset": "/products/athar/04-480.webp 480w, /products/athar/04-960.webp 960w, /products/athar/04-1600.webp 1600w"
+      },
+      {
+        "view": "05",
+        "label": "Elevated",
+        "source": "MEMORIA_ATHAR_05_Elevated.png",
+        "src": "/products/athar/05-960.webp",
+        "srcset": "/products/athar/05-480.webp 480w, /products/athar/05-960.webp 960w, /products/athar/05-1600.webp 1600w"
+      }
+    ]
+  },
+  {
+    "scent": "BEFORE",
+    "slug": "before",
+    "name": "BEFORE",
+    "images": [
+      {
+        "view": "01",
+        "label": "Front",
+        "source": "MEMORIA_BEFORE_01_Front.png",
+        "src": "/products/before/01-960.webp",
+        "srcset": "/products/before/01-480.webp 480w, /products/before/01-960.webp 960w, /products/before/01-1600.webp 1600w",
+        "cutout": "/products/before/cutout-01-1200.webp",
+        "cutoutSrcset": "/products/before/cutout-01-600.webp 600w, /products/before/cutout-01-1200.webp 1200w"
+      },
+      {
+        "view": "02",
+        "label": "Three-quarter",
+        "source": "MEMORIA_BEFORE_02_Three_Quarter.png",
+        "src": "/products/before/02-960.webp",
+        "srcset": "/products/before/02-480.webp 480w, /products/before/02-960.webp 960w, /products/before/02-1600.webp 1600w",
+        "cutout": "/products/before/cutout-02-1200.webp",
+        "cutoutSrcset": "/products/before/cutout-02-600.webp 600w, /products/before/cutout-02-1200.webp 1200w"
+      },
+      {
+        "view": "03",
+        "label": "Side",
+        "source": "MEMORIA_BEFORE_03_Side.png",
+        "src": "/products/before/03-960.webp",
+        "srcset": "/products/before/03-480.webp 480w, /products/before/03-960.webp 960w, /products/before/03-1600.webp 1600w"
+      },
+      {
+        "view": "04",
+        "label": "Opposite three-quarter",
+        "source": "MEMORIA_BEFORE_04_Opposite_Three_Quarter.png",
+        "src": "/products/before/04-960.webp",
+        "srcset": "/products/before/04-480.webp 480w, /products/before/04-960.webp 960w, /products/before/04-1600.webp 1600w"
+      },
+      {
+        "view": "05",
+        "label": "Elevated",
+        "source": "MEMORIA_BEFORE_05_Elevated.png",
+        "src": "/products/before/05-960.webp",
+        "srcset": "/products/before/05-480.webp 480w, /products/before/05-960.webp 960w, /products/before/05-1600.webp 1600w"
+      }
+    ]
+  },
+  {
+    "scent": "LIQAA",
+    "slug": "liqaa",
+    "name": "LIQAA",
+    "images": [
+      {
+        "view": "01",
+        "label": "Front",
+        "source": "MEMORIA_LIQAA_01_Front.png",
+        "src": "/products/liqaa/01-960.webp",
+        "srcset": "/products/liqaa/01-480.webp 480w, /products/liqaa/01-960.webp 960w, /products/liqaa/01-1600.webp 1600w",
+        "cutout": "/products/liqaa/cutout-01-1200.webp",
+        "cutoutSrcset": "/products/liqaa/cutout-01-600.webp 600w, /products/liqaa/cutout-01-1200.webp 1200w"
+      },
+      {
+        "view": "02",
+        "label": "Three-quarter",
+        "source": "MEMORIA_LIQAA_02_Three_Quarter.png",
+        "src": "/products/liqaa/02-960.webp",
+        "srcset": "/products/liqaa/02-480.webp 480w, /products/liqaa/02-960.webp 960w, /products/liqaa/02-1600.webp 1600w",
+        "cutout": "/products/liqaa/cutout-02-1200.webp",
+        "cutoutSrcset": "/products/liqaa/cutout-02-600.webp 600w, /products/liqaa/cutout-02-1200.webp 1200w"
+      },
+      {
+        "view": "03",
+        "label": "Side",
+        "source": "MEMORIA_LIQAA_03_Side.png",
+        "src": "/products/liqaa/03-960.webp",
+        "srcset": "/products/liqaa/03-480.webp 480w, /products/liqaa/03-960.webp 960w, /products/liqaa/03-1600.webp 1600w"
+      },
+      {
+        "view": "04",
+        "label": "Opposite three-quarter",
+        "source": "MEMORIA_LIQAA_04_Opposite_Three_Quarter.png",
+        "src": "/products/liqaa/04-960.webp",
+        "srcset": "/products/liqaa/04-480.webp 480w, /products/liqaa/04-960.webp 960w, /products/liqaa/04-1600.webp 1600w"
+      },
+      {
+        "view": "05",
+        "label": "Elevated",
+        "source": "MEMORIA_LIQAA_05_Elevated.png",
+        "src": "/products/liqaa/05-960.webp",
+        "srcset": "/products/liqaa/05-480.webp 480w, /products/liqaa/05-960.webp 960w, /products/liqaa/05-1600.webp 1600w"
+      }
+    ]
+  },
+  {
+    "scent": "SAFYA",
+    "slug": "safya",
+    "name": "SAFYA",
+    "images": [
+      {
+        "view": "01",
+        "label": "Front",
+        "source": "MEMORIA_SAFYA_01_Front.png",
+        "src": "/products/safya/01-960.webp",
+        "srcset": "/products/safya/01-480.webp 480w, /products/safya/01-960.webp 960w, /products/safya/01-1600.webp 1600w",
+        "cutout": "/products/safya/cutout-01-1200.webp",
+        "cutoutSrcset": "/products/safya/cutout-01-600.webp 600w, /products/safya/cutout-01-1200.webp 1200w"
+      },
+      {
+        "view": "02",
+        "label": "Three-quarter",
+        "source": "MEMORIA_SAFYA_02_Three_Quarter.png",
+        "src": "/products/safya/02-960.webp",
+        "srcset": "/products/safya/02-480.webp 480w, /products/safya/02-960.webp 960w, /products/safya/02-1600.webp 1600w",
+        "cutout": "/products/safya/cutout-02-1200.webp",
+        "cutoutSrcset": "/products/safya/cutout-02-600.webp 600w, /products/safya/cutout-02-1200.webp 1200w"
+      },
+      {
+        "view": "03",
+        "label": "Side",
+        "source": "MEMORIA_SAFYA_03_Side.png",
+        "src": "/products/safya/03-960.webp",
+        "srcset": "/products/safya/03-480.webp 480w, /products/safya/03-960.webp 960w, /products/safya/03-1600.webp 1600w"
+      },
+      {
+        "view": "04",
+        "label": "Opposite three-quarter",
+        "source": "MEMORIA_SAFYA_04_Opposite_Three_Quarter.png",
+        "src": "/products/safya/04-960.webp",
+        "srcset": "/products/safya/04-480.webp 480w, /products/safya/04-960.webp 960w, /products/safya/04-1600.webp 1600w"
+      },
+      {
+        "view": "05",
+        "label": "Elevated",
+        "source": "MEMORIA_SAFYA_05_Elevated.png",
+        "src": "/products/safya/05-960.webp",
+        "srcset": "/products/safya/05-480.webp 480w, /products/safya/05-960.webp 960w, /products/safya/05-1600.webp 1600w"
+      }
+    ]
+  },
+  {
+    "scent": "SHAWQ",
+    "slug": "shawq",
+    "name": "SHAWQ",
+    "images": [
+      {
+        "view": "01",
+        "label": "Front",
+        "source": "MEMORIA_SHAWQ_01_Front.png",
+        "src": "/products/shawq/01-960.webp",
+        "srcset": "/products/shawq/01-480.webp 480w, /products/shawq/01-960.webp 960w, /products/shawq/01-1600.webp 1600w",
+        "cutout": "/products/shawq/cutout-01-1200.webp",
+        "cutoutSrcset": "/products/shawq/cutout-01-600.webp 600w, /products/shawq/cutout-01-1200.webp 1200w"
+      },
+      {
+        "view": "02",
+        "label": "Three-quarter",
+        "source": "MEMORIA_SHAWQ_02_Three_Quarter.png",
+        "src": "/products/shawq/02-960.webp",
+        "srcset": "/products/shawq/02-480.webp 480w, /products/shawq/02-960.webp 960w, /products/shawq/02-1600.webp 1600w",
+        "cutout": "/products/shawq/cutout-02-1200.webp",
+        "cutoutSrcset": "/products/shawq/cutout-02-600.webp 600w, /products/shawq/cutout-02-1200.webp 1200w"
+      },
+      {
+        "view": "03",
+        "label": "Side",
+        "source": "MEMORIA_SHAWQ_03_Side.png",
+        "src": "/products/shawq/03-960.webp",
+        "srcset": "/products/shawq/03-480.webp 480w, /products/shawq/03-960.webp 960w, /products/shawq/03-1600.webp 1600w"
+      },
+      {
+        "view": "04",
+        "label": "Opposite three-quarter",
+        "source": "MEMORIA_SHAWQ_04_Opposite_Three_Quarter.png",
+        "src": "/products/shawq/04-960.webp",
+        "srcset": "/products/shawq/04-480.webp 480w, /products/shawq/04-960.webp 960w, /products/shawq/04-1600.webp 1600w"
+      },
+      {
+        "view": "05",
+        "label": "Elevated",
+        "source": "MEMORIA_SHAWQ_05_Elevated.png",
+        "src": "/products/shawq/05-960.webp",
+        "srcset": "/products/shawq/05-480.webp 480w, /products/shawq/05-960.webp 960w, /products/shawq/05-1600.webp 1600w"
+      }
+    ]
+  },
+  {
+    "scent": "WAAD",
+    "slug": "waad",
+    "name": "WAAD",
+    "images": [
+      {
+        "view": "01",
+        "label": "Front",
+        "source": "MEMORIA_WAAD_01_Front.png",
+        "src": "/products/waad/01-960.webp",
+        "srcset": "/products/waad/01-480.webp 480w, /products/waad/01-960.webp 960w, /products/waad/01-1600.webp 1600w",
+        "cutout": "/products/waad/cutout-01-1200.webp",
+        "cutoutSrcset": "/products/waad/cutout-01-600.webp 600w, /products/waad/cutout-01-1200.webp 1200w"
+      },
+      {
+        "view": "02",
+        "label": "Three-quarter",
+        "source": "MEMORIA_WAAD_02_Three_Quarter.png",
+        "src": "/products/waad/02-960.webp",
+        "srcset": "/products/waad/02-480.webp 480w, /products/waad/02-960.webp 960w, /products/waad/02-1600.webp 1600w",
+        "cutout": "/products/waad/cutout-02-1200.webp",
+        "cutoutSrcset": "/products/waad/cutout-02-600.webp 600w, /products/waad/cutout-02-1200.webp 1200w"
+      },
+      {
+        "view": "03",
+        "label": "Side",
+        "source": "MEMORIA_WAAD_03_Side.png",
+        "src": "/products/waad/03-960.webp",
+        "srcset": "/products/waad/03-480.webp 480w, /products/waad/03-960.webp 960w, /products/waad/03-1600.webp 1600w"
+      },
+      {
+        "view": "04",
+        "label": "Opposite three-quarter",
+        "source": "MEMORIA_WAAD_04_Opposite_Three_Quarter.png",
+        "src": "/products/waad/04-960.webp",
+        "srcset": "/products/waad/04-480.webp 480w, /products/waad/04-960.webp 960w, /products/waad/04-1600.webp 1600w"
+      },
+      {
+        "view": "05",
+        "label": "Elevated",
+        "source": "MEMORIA_WAAD_05_Elevated.png",
+        "src": "/products/waad/05-960.webp",
+        "srcset": "/products/waad/05-480.webp 480w, /products/waad/05-960.webp 960w, /products/waad/05-1600.webp 1600w"
+      }
+    ]
+  }
+]

@@ -1,0 +1,70 @@
+{
+  "_readme": "Owner-supplied catalogue facts. Fill in category, variants (size_ml, price in EGP), notes and descriptions as they are confirmed, then run: node scripts/build-seed.mjs. Anything left empty stays empty on the site; nothing is invented. After launch, edit products in the dashboard instead.",
+  "categories": [
+    { "slug": "women", "name": "For Her" },
+    { "slug": "men", "name": "For Him" },
+    { "slug": "unisex", "name": "Unisex" }
+  ],
+  "products": [
+    { "slug": "liqaa", "name": "LIQAA", "featured": true, "sort_order": 0 },
+    { "slug": "waad", "name": "WAAD", "sort_order": 1 },
+    { "slug": "shawq", "name": "SHAWQ", "sort_order": 2 },
+    { "slug": "athar", "name": "ATHAR", "sort_order": 3 },
+    { "slug": "safya", "name": "SAFYA", "sort_order": 4 },
+    { "slug": "before", "name": "BEFORE", "sort_order": 5 },
+    { "slug": "after", "name": "AFTER", "sort_order": 6 }
+  ],
+  "governorates": [
+    ["Cairo", "القاهرة"], ["Giza", "الجيزة"], ["Alexandria", "الإسكندرية"], ["Qalyubia", "القليوبية"],
+    ["Dakahlia", "الدقهلية"], ["Sharqia", "الشرقية"], ["Gharbia", "الغربية"], ["Monufia", "المنوفية"],
+    ["Beheira", "البحيرة"], ["Kafr El Sheikh", "كفر الشيخ"], ["Damietta", "دمياط"], ["Port Said", "بورسعيد"],
+    ["Ismailia", "الإسماعيلية"], ["Suez", "السويس"], ["Faiyum", "الفيوم"], ["Beni Suef", "بني سويف"],
+    ["Minya", "المنيا"], ["Asyut", "أسيوط"], ["Sohag", "سوهاج"], ["Qena", "قنا"], ["Luxor", "الأقصر"],
+    ["Aswan", "أسوان"], ["Red Sea", "البحر الأحمر"], ["New Valley", "الوادي الجديد"], ["Matrouh", "مطروح"],
+    ["North Sinai", "شمال سيناء"], ["South Sinai", "جنوب سيناء"]
+  ],
+  "settings": {
+    "whatsapp": { "public": true, "value": { "number": "201500007544", "display": "+20 150 000 7544", "enabled": true } },
+    "contact": { "public": true, "value": { "email": "", "phone": "", "address": "", "hours": "" } },
+    "social": { "public": true, "value": { "instagram": "", "facebook": "", "tiktok": "" } },
+    "shipping_info": { "public": true, "value": { "summary": "", "details": "" } },
+    "announcement": { "public": true, "value": { "enabled": false, "text": "", "link": "" } },
+    "home": {
+      "public": true,
+      "value": {
+        "hero": {
+          "eyebrow": "Perfume house · Cairo",
+          "headline": "Every scent holds a memory.",
+          "script": "memory",
+          "subline": "",
+          "image_url": "",
+          "mobile_image_url": "",
+          "product_slug": "liqaa"
+        },
+        "featured_slug": "liqaa",
+        "story": { "title": "", "body": "", "image_url": "" },
+        "campaign_images": [],
+        "sections": { "collection": true, "featured": true, "memories": true, "story": true, "whatsapp_band": true }
+      }
+    },
+    "payments": {
+      "public": true,
+      "value": {
+        "methods": [
+          { "id": "cod", "label": "Cash on delivery", "description": "Pay in cash when your order arrives.", "enabled": true },
+          { "id": "instapay", "label": "InstaPay transfer", "description": "We send transfer details after confirming your order.", "enabled": false },
+          { "id": "card", "label": "Card payment", "description": "Requires a configured payment gateway (Paymob / Fawry / Kashier).", "enabled": false, "requires_gateway": true }
+        ]
+      }
+    },
+    "company": {
+      "public": false,
+      "value": { "legal_name": "", "trade_name": "MEMÓRIA", "address": "", "phone": "", "email": "", "tax_registration_number": "", "commercial_register": "" }
+    },
+    "invoice": {
+      "public": false,
+      "value": { "prefix": "MEM-INV-", "next_number": 1, "padding": 5, "footer_note": "This document is a sales receipt. It is not an official e-invoice under the Egyptian Tax Authority system unless tax registration details are configured and verified." }
+    },
+    "inventory": { "public": false, "value": { "default_low_stock_threshold": 3 } }
+  }
+}
