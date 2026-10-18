@@ -3,3 +3,6 @@ dist/
 qa/
 vite-dev.log
 *.log
+.env
+.env.local
+.env.*.local
