@@ -1,62 +1,50 @@
 /**
  * MEMÓRIA · Site chrome — tagline ribbon, header, mobile nav, footer.
  */
-import { $, el, toast, trapFocus, lockScroll, unlockScroll } from '../utils.js';
+import { $, esc, trapFocus, lockScroll, unlockScroll } from '../utils.js';
 import { icons } from './icons.js';
 import { cart } from '../store/cart.js';
 import { openCartDrawer } from './cartDrawer.js';
 import { openSearch } from './searchOverlay.js';
+import { settings, usedCategories, products } from '../data/catalog.js';
 
 /* 320px variants — the chrome renders the mark at ~110px wide, so 320
    is already ~3× density; the 560/900/1400 sizes serve larger uses. */
 const LOGO = '/brand/logo-brown-320.png';
 const LOGO_CREAM = '/brand/logo-cream-320.png';
 
-/* House voice — short, dry, confident. The supplied tagline
-   stays verbatim in the footer; the ribbon carries the lore. */
-const TAGLINE = [
-  'Currently remembering: Nº 03',
-  'Made to be remembered',
-  'Memory-enhancing compositions',
-  'Six scents',
-  'For her / For him',
-];
-
+/* Announcement bar — owner-written in the dashboard (Content → Announcement). */
 export function renderRibbon() {
-  const items = TAGLINE.map(
-    (t) => `<span class="ribbon__item"><span>${t}</span><span class="ribbon__dot" aria-hidden="true"></span></span>`
-  ).join('');
-  /* an even number of copies keeps the -50% marquee loop seamless */
-  $('#ribbon').innerHTML = `
-    <div class="ribbon" aria-hidden="true">
-      <div class="ribbon__track">${items}${items}${items}${items}</div>
-    </div>`;
-
-  /* pause the loop while the ribbon is out of view */
-  const ribbon = $('#ribbon');
-  new IntersectionObserver(([e]) => ribbon.classList.toggle('is-offscreen', !e.isIntersecting)).observe(ribbon);
+  const a = settings.announcement || {};
+  const host = $('#ribbon');
+  if (!a.enabled || !a.text) {
+    host.innerHTML = '';
+    document.documentElement.style.setProperty('--ribbon-h', '0px');
+    return;
+  }
+  const text = esc(a.text);
+  host.innerHTML = `<div class="announce">${a.link ? `<a href="${esc(a.link)}">${text}</a>` : `<span>${text}</span>`}</div>`;
 }
 
 export function renderHeader() {
   const header = $('#header');
+  const cats = usedCategories().slice(0, 3);
   header.innerHTML = `
     <div class="header">
       <div class="container header__inner">
         <nav class="header__nav header__nav--left" aria-label="Shop">
           <button class="iconbtn header__burger" data-open-mobilenav aria-label="Open menu">${icons.menu()}</button>
           <a class="header__navlink" data-navlink href="/shop">Shop</a>
-          <a class="header__navlink" data-navlink href="/women">Women</a>
-          <a class="header__navlink" data-navlink href="/men">Men</a>
+          ${cats.map((c) => `<a class="header__navlink" data-navlink href="/shop?c=${esc(c.slug)}">${esc(c.name)}</a>`).join('')}
         </nav>
         <a class="header__logo" href="/" aria-label="MEMÓRIA — home">
           <img src="${LOGO}" alt="MEMÓRIA" width="320" height="81" />
         </a>
         <nav class="header__nav header__nav--right" aria-label="House">
           <a class="header__navlink" data-navlink href="/our-story">Our Story</a>
-          <a class="header__navlink" data-navlink href="/archive">The Archive</a>
+          <a class="header__navlink" data-navlink href="/help">Care</a>
           <div class="header__icons">
             <button class="iconbtn" data-open-search aria-label="Search">${icons.search()}</button>
-            <a class="iconbtn" href="/account" aria-label="Account">${icons.account()}</a>
             <button class="iconbtn" data-open-cart aria-label="Open bag">
               ${icons.bag()}
               <span class="iconbtn__count" data-cart-count hidden>0</span>
@@ -74,15 +62,13 @@ export function renderHeader() {
           <button class="iconbtn" data-close-mobilenav aria-label="Close menu">${icons.close()}</button>
         </div>
         <nav class="mobilenav__links" aria-label="Mobile">
-          <a class="mobilenav__link" href="/shop">Shop <span class="stamp">All six</span></a>
-          <a class="mobilenav__link" href="/women">Women <span class="stamp">Nº 01–03</span></a>
-          <a class="mobilenav__link" href="/men">Men <span class="stamp">Nº 04–06</span></a>
-          <a class="mobilenav__link" href="/our-story">Our Story <span class="stamp">Est. 20 yrs</span></a>
-          <a class="mobilenav__link" href="/archive">The Archive <span class="stamp">Vol. I–VI</span></a>
+          <a class="mobilenav__link" href="/shop">Shop <span class="stamp">${products.length} scents</span></a>
+          ${cats.map((c) => `<a class="mobilenav__link" href="/shop?c=${esc(c.slug)}">${esc(c.name)}</a>`).join('')}
+          <a class="mobilenav__link" href="/our-story">Our Story</a>
+          <a class="mobilenav__link" href="/help">Customer care</a>
         </nav>
         <div class="mobilenav__foot">
           <button class="btn btn--small" data-open-search-mobile>${icons.search()} Search</button>
-          <a class="btn btn--small" href="/account">${icons.account()} Account</a>
           <p class="stamp">Rooted in memory · Inspired by Cairo</p>
         </div>
       </div>
@@ -135,74 +121,54 @@ export function renderHeader() {
 }
 
 export function renderFooter() {
+  const c = settings.contact || {};
+  const so = settings.social || {};
+  const wa = settings.whatsapp || {};
+  const socials = [
+    ['instagram', 'Instagram'],
+    ['facebook', 'Facebook'],
+    ['tiktok', 'TikTok'],
+  ].filter(([k]) => /^https?:\/\//.test(so[k] || ''));
+  const cats = usedCategories();
   $('#footer').innerHTML = `
     <div class="footer">
       <div class="container footer__inner">
         <div class="footer__brand">
-          <img src="${LOGO_CREAM}" alt="MEMÓRIA" width="320" height="81" />
+          <img src="${LOGO_CREAM}" alt="MEMÓRIA" width="320" height="81" loading="lazy" />
           <p>Rooted in memory. Inspired by Cairo. Made to be remembered.</p>
         </div>
         <div class="footer__col">
           <h3>Shop</h3>
           <ul>
-            <li><a href="/women">Women · Nº 01–03</a></li>
-            <li><a href="/men">Men · Nº 04–06</a></li>
-            <li><a href="/shop">All Perfumes</a></li>
-            <li><a href="/cart">Your Bag</a></li>
+            <li><a href="/shop">All perfumes</a></li>
+            ${cats.map((x) => `<li><a href="/shop?c=${esc(x.slug)}">${esc(x.name)}</a></li>`).join('')}
+            <li><a href="/cart">Your bag</a></li>
           </ul>
         </div>
         <div class="footer__col">
-          <h3>Memória</h3>
+          <h3>MEMÓRIA</h3>
           <ul>
-            <li><a href="/our-story">Our Story</a></li>
-            <li><a href="/archive">The Archive</a></li>
+            <li><a href="/our-story">Our story</a></li>
             <li><a href="/search">Search</a></li>
-            <li><a href="https://instagram.com" target="_blank" rel="noopener">Instagram ↗</a></li>
+            ${socials.map(([k, label]) => `<li><a href="${esc(so[k])}" target="_blank" rel="noopener">${label} ↗</a></li>`).join('')}
           </ul>
         </div>
         <div class="footer__col">
           <h3>Help</h3>
           <ul>
-            <li><a href="/help#shipping">Shipping</a></li>
-            <li><a href="/help#returns">Returns</a></li>
+            <li><a href="/help#shipping">Delivery</a></li>
             <li><a href="/help#contact">Contact</a></li>
-            <li><a href="/help#faq">FAQ</a></li>
+            ${wa.display ? `<li>WhatsApp ${esc(wa.display)}</li>` : ''}
+            ${c.email ? `<li><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></li>` : ''}
           </ul>
-        </div>
-        <div class="footer__col footer__news">
-          <h3>Letters from the House</h3>
-          <p>New scents, old stories — an occasional letter, never noise.</p>
-          <form class="footer__newsform" data-newsletter>
-            <label class="sr-only" for="news-email" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Email address</label>
-            <input id="news-email" type="email" required placeholder="your@address.com" autocomplete="email" />
-            <button type="submit">Join</button>
-          </form>
-          <p class="footer__newsnote">Postmarked Cairo · Sent seldom</p>
         </div>
       </div>
       <div class="container footer__egyptrow">
-        <svg class="footer__postmark" viewBox="0 0 120 120" aria-hidden="true">
-          <defs><path id="pmcircle" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
-          <circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 5"/>
-          <circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" stroke-width="1"/>
-          <text font-size="10.5" letter-spacing="2" fill="currentColor">
-            <textPath href="#pmcircle">MADE OF MEMORIES · MEMÓRIA · CAIRO ·</textPath>
-          </text>
-          <text x="60" y="64" text-anchor="middle" font-size="13" fill="currentColor" font-family="Georgia" font-style="italic">Est. 2006</text>
-        </svg>
         <p class="footer__egypt">Made in Egypt, for people who carry memories<br/><span dir="rtl" lang="ar">صُنع في مصر — لمن يحملون الذكريات</span></p>
       </div>
       <div class="container footer__close">
         <p class="footer__closing">Every scent leaves something behind.</p>
-        <p class="footer__legal">MEMÓRIA © · Est. 2006 · All six scents</p>
+        <p class="footer__legal">MEMÓRIA © ${new Date().getFullYear()}</p>
       </div>
     </div>`;
-
-  $('#footer [data-newsletter]').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const input = e.target.querySelector('input');
-    if (!input.value) return;
-    input.value = '';
-    toast('Thank you — your letter is on its way.');
-  });
 }

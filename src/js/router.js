@@ -44,6 +44,10 @@ function match(path) {
   return null;
 }
 
+export function redirect(from, to) {
+  register(from, { title: 'MEMÓRIA', render: () => '', mount: () => navigate(to, { replace: true }) });
+}
+
 let notFoundPage = null;
 export function setNotFound(page) {
   notFoundPage = page;
@@ -66,7 +70,11 @@ export async function renderRoute({ scroll = true } = {}) {
 
   if (scroll) scrollToTop(true);
   updateActiveNav(path);
-  page.mount?.(main, params);
+  try {
+    await page.mount?.(main, params);
+  } catch (err) {
+    console.error('[MEMÓRIA] page error', err);
+  }
   scanReveals(main);
   requestAnimationFrame(() => refreshTriggers());
   if (currentPath !== null && currentPath !== path) {

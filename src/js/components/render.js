@@ -1,15 +1,21 @@
 /**
- * MEMÓRIA · Bottle render image — the photoreal PNG/WebP renders that
- * replaced the illustrated SVG bottles everywhere.
+ * MEMÓRIA · Product imagery — only the supplied product photography,
+ * served at responsive sizes. The bottle is never redrawn.
  */
 import { esc } from '../utils.js';
-import { renderSrc } from '../data/products.js';
+import { primaryImage, cutoutImage } from '../data/catalog.js';
 
-export function bottleImg(p, { w = 720, cls = '', alt, eager = false } = {}) {
-  const s = renderSrc(p, w);
-  const a = alt ?? `MEMÓRIA Nº ${p.number} — ${p.name}, glass flacon`;
-  return `<picture class="bimg${cls ? ' ' + cls : ''}">
-    <source srcset="${s.webp}" type="image/webp"/>
-    <img src="${s.png}" alt="${esc(a)}" loading="${eager ? 'eager' : 'lazy'}" decoding="async"/>
-  </picture>`;
+export function productImg(p, { image, cls = '', sizes = '(max-width: 700px) 50vw, 25vw', eager = false, alt } = {}) {
+  const im = image || primaryImage(p);
+  if (!im) return `<span class="pimg pimg--missing ${cls}" role="img" aria-label="${esc(p.name)} — photograph coming soon"><span>${esc(p.name)}</span></span>`;
+  return `<img class="pimg ${cls}" src="${esc(im.url)}" ${im.srcset ? `srcset="${esc(im.srcset)}" sizes="${esc(sizes)}"` : ''}
+    alt="${esc(alt ?? im.alt ?? p.name)}" loading="${eager ? 'eager' : 'lazy'}" decoding="async" ${eager ? 'fetchpriority="high"' : ''} width="960" height="960"/>`;
+}
+
+/** Transparent cut-out of the real bottle, for compositing over scenes. */
+export function productCutout(p, { view = 'Front', cls = '', sizes = '40vw', eager = false, alt } = {}) {
+  const im = cutoutImage(p, view);
+  if (!im) return productImg(p, { cls, sizes, eager, alt });
+  return `<img class="pcut ${cls}" src="${esc(im.url)}" ${im.srcset ? `srcset="${esc(im.srcset)}" sizes="${esc(sizes)}"` : ''}
+    alt="${esc(alt ?? im.alt ?? p.name)}" loading="${eager ? 'eager' : 'lazy'}" decoding="async" ${eager ? 'fetchpriority="high"' : ''}/>`;
 }

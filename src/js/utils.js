@@ -1,7 +1,7 @@
 /**
  * MEMÓRIA · Small shared utilities.
  */
-import { CURRENCY } from './data/products.js';
+import { CURRENCY } from './data/catalog.js';
 
 export const $ = (sel, root = document) => root.querySelector(sel);
 export const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];

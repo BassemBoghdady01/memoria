@@ -1,10 +1,11 @@
 /**
  * MEMÓRIA · Search overlay — fast, minimal, keyboard friendly.
  */
-import { el, esc, money, trapFocus, lockScroll, unlockScroll } from '../utils.js';
+import { el, esc, trapFocus, lockScroll, unlockScroll } from '../utils.js';
 import { icons } from './icons.js';
-import { searchProducts, genderLabel, minPrice } from '../data/products.js';
-import { bottleImg } from './render.js';
+import { searchProducts, products } from '../data/catalog.js';
+import { productImg } from './render.js';
+import { priceLabel } from './productCard.js';
 import { navigate } from '../router.js';
 
 let overlay = null;
@@ -32,7 +33,7 @@ function ensure() {
       <div class="overlay__panel" role="dialog" aria-modal="true" aria-label="Search perfumes">
         <div class="search__bar">
           ${icons.search()}
-          <input class="search__input" type="search" placeholder="a name, a number, a note…"
+          <input class="search__input" type="search" placeholder="Search scents…"
                  aria-label="Search perfumes" autocomplete="off" spellcheck="false" />
           <button class="iconbtn" data-close-search aria-label="Close search">${icons.close()}</button>
         </div>
@@ -51,7 +52,7 @@ function ensure() {
     resultsEl.innerHTML = `
       <div class="search__hint">
         <span class="stamp">try “jasmine”, “Nº 04”, “oud”…</span>
-        Search by name, number, notes or fragrance family.
+        Search by scent name, note or family.
       </div>`;
     results = [];
     activeIndex = -1;
@@ -64,21 +65,21 @@ function ensure() {
     if (!results.length) {
       resultsEl.innerHTML = `
         <div class="search__hint">
-          <span class="stamp">nothing in the archive for “${esc(q)}”</span>
-          Six scents live here — try a note like rose, cedar, amber or musk.
+          <span class="stamp">No match for “${esc(q)}”</span>
+          Try a scent name: ${products.map((p) => esc(p.name)).join(', ')}.
         </div>`;
       return;
     }
     resultsEl.innerHTML = results
       .map(
         (p, i) => `
-        <button class="search__item ${i === activeIndex ? 'is-active' : ''}" data-slug="${p.slug}">
-          <span class="cartline__thumb">${bottleImg(p, { w: 360 })}</span>
+        <button class="search__item ${i === activeIndex ? 'is-active' : ''}" data-slug="${esc(p.slug)}">
+          <span class="cartline__thumb">${productImg(p, { sizes: '64px', alt: '' })}</span>
           <span>
-            <span class="search__itemname">Nº ${p.number} · ${esc(p.name)}</span><br/>
-            <span class="search__itemmeta">${genderLabel(p.gender)} · ${esc(p.fragranceFamily)}</span>
+            <span class="search__itemname">${esc(p.name)}</span><br/>
+            <span class="search__itemmeta">${esc([p.category?.name, p.family].filter(Boolean).join(' · '))}</span>
           </span>
-          <span class="search__itemprice">${money(minPrice(p))}</span>
+          <span class="search__itemprice">${esc(priceLabel(p))}</span>
         </button>`
       )
       .join('');

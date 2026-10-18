@@ -5,7 +5,7 @@ export default defineConfig({
   server: { port: 5173, open: false },
   preview: { port: 4173 },
   build: {
-    target: 'es2019',
+    target: 'es2022',
     cssCodeSplit: false,
     assetsInlineLimit: 4096,
   },

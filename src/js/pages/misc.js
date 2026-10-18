@@ -3,7 +3,8 @@
  */
 import { esc } from '../utils.js';
 import { icons } from '../components/icons.js';
-import { searchProducts } from '../data/products.js';
+import { searchProducts, settings } from '../data/catalog.js';
+import { setSeo } from '../seo.js';
 import { renderProductGrid, mountProductCards } from '../components/productCard.js';
 
 export const searchPage = {
@@ -14,17 +15,18 @@ export const searchPage = {
     <section class="container">
       <div class="pagehead">
         <h1 data-reveal>Search the Collection</h1>
-        <p class="serif-lede" data-reveal>A name, a number, a note — anything you half-remember.</p>
+        <p class="serif-lede" data-reveal>A name, a note, anything you half-remember.</p>
       </div>
       <form class="searchpage__box" data-search-form role="search">
         ${icons.search()}
-        <input type="search" name="q" value="${esc(q)}" placeholder="jasmine, Nº 04, cedar…"
+        <input type="search" name="q" value="${esc(q)}" placeholder="Search scents…"
                aria-label="Search perfumes" autocomplete="off" />
       </form>
       <div class="searchpage__results" data-search-results aria-live="polite"></div>
     </section>`;
   },
   mount(root, params) {
+    setSeo({ title: 'Search — MEMÓRIA', noindex: true });
     const form = root.querySelector('[data-search-form]');
     const input = form.querySelector('input');
     const results = root.querySelector('[data-search-results]');
@@ -35,13 +37,13 @@ export const searchPage = {
       disposeCards();
       disposeCards = () => {};
       if (!q.trim()) {
-        results.innerHTML = `<div class="shop__empty"><p>Type to search the six scents of the collection.</p></div>`;
+        results.innerHTML = `<div class="shop__empty"><p>Type to search the collection.</p></div>`;
         return;
       }
       if (!found.length) {
         results.innerHTML = `
           <div class="shop__empty">
-            <p>Nothing in the archive for “${esc(q)}”.</p>
+            <p>Nothing matches “${esc(q)}”.</p>
             <a class="btn" href="/shop">Browse everything instead</a>
           </div>`;
         return;
@@ -83,38 +85,31 @@ export const accountPage = {
 };
 
 export const helpPage = {
-  title: 'Help — MEMÓRIA',
+  title: 'Customer care — MEMÓRIA',
   render() {
+    const c = settings.contact || {};
+    const ship = settings.shipping_info || {};
+    const social = settings.social || {};
+    const wa = settings.whatsapp || {};
     const rows = [
-      ['shipping', 'Shipping', 'Delivery options and times will be published here once confirmed.'],
-      ['returns', 'Returns', 'The exchange and return policy will be published here once confirmed.'],
-      ['contact', 'Contact', 'A direct line to the house is being set up. For now, the hotline on the homepage reaches us.'],
-      ['faq', 'FAQ', 'Common questions and their answers will be collected here.'],
-    ];
+      ['shipping', 'Delivery', ship.details || ship.summary || 'Delivery fees for your governorate are shown at checkout. Where a fee isn’t listed yet, we confirm it by phone before dispatch.'],
+      ['contact', 'Contact', [wa.display && `WhatsApp: ${wa.display}`, c.phone && `Phone: ${c.phone}`, c.email && `Email: ${c.email}`, c.address, c.hours].filter(Boolean).join('\n') || 'Message us on WhatsApp.'],
+      ['social', 'Follow', ['instagram', 'facebook', 'tiktok'].filter((k) => social[k]).map((k) => `${k[0].toUpperCase() + k.slice(1)}: ${social[k]}`).join('\n')],
+    ].filter(([, , d]) => d);
     return `
     <section class="container helppage">
       <div class="pagehead">
-        <nav class="crumbs" aria-label="Breadcrumb">
-          <a href="/">Memória</a><span aria-hidden="true">/</span><span>Help</span>
-        </nav>
-        <h1 data-reveal>Customer Care</h1>
-        <p class="serif-lede" data-reveal>The practical part of the house. Details below are being finalised.</p>
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Customer care</span></nav>
+        <h1 data-reveal>Customer care</h1>
       </div>
       <dl class="helplist">
-        ${rows
-          .map(
-            ([id, t, d]) => `
-          <div class="helplist__row" id="${id}" data-reveal>
-            <dt>${t}</dt>
-            <dd>${d}</dd>
-          </div>`
-          )
-          .join('')}
+        ${rows.map(([id, t, d]) => `<div class="helplist__row" id="${id}" data-reveal><dt>${t}</dt><dd>${esc(d).replace(/\n/g, '<br/>')}</dd></div>`).join('')}
       </dl>
-      <div style="text-align:center; margin-top:2.4rem" data-reveal>
-        <a class="btn btn--primary" href="/shop">Shop the Collection</a>
-      </div>
+      <div style="text-align:center; margin-top:2.4rem" data-reveal><a class="btn btn--primary" href="/shop">Shop the collection</a></div>
     </section>`;
+  },
+  mount() {
+    setSeo({ title: 'Customer care — MEMÓRIA', path: '/help' });
   },
 };
 
@@ -123,7 +118,7 @@ export const notFoundPage = {
   render() {
     return `
     <section class="container notfound">
-      <span class="stamp">404 · Not in the Catalogue</span>
+      <span class="stamp">404</span>
       <h1>Some pages fade like old ink.</h1>
       <p>The page you’re after isn’t in our records — but the perfumes are all here.</p>
       <div class="hero2__ctas" style="justify-content:center">

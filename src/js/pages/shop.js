@@ -1,64 +1,60 @@
 /**
- * MEMÓRIA · Shop — /shop /women /men (same page, preset filters).
+ * MEMÓRIA · Shop — /shop (?c=<category>), /women, /men.
+ * Filters are built from the categories products actually use.
  */
-import { products, getByGender } from '../data/products.js';
+import { esc } from '../utils.js';
+import { products, getByCategory, usedCategories, categories } from '../data/catalog.js';
 import { renderProductGrid, mountProductCards } from '../components/productCard.js';
-import { openFinder } from '../components/finder.js';
+import { setSeo } from '../seo.js';
 
-const COPY = {
-  all: {
-    title: 'The Collection',
-    lede: 'Three for her. Three for him. All six for people who change their mind.',
-    crumb: 'Shop',
-  },
-  her: {
-    title: 'For Her',
-    lede: 'Nº 01 – 03 · Jasmine at dusk, roses kept in letters, linen in morning sun.',
-    crumb: 'Women',
-  },
-  him: {
-    title: 'For Him',
-    lede: 'Nº 04 – 06 · River cedar, a study of oud, green stone after rain.',
-    crumb: 'Men',
-  },
-};
-
-function makePage(gender) {
-  const copy = COPY[gender];
+function makePage(fixed) {
+  const pick = (params) => fixed || params.query.get('c') || 'all';
   return {
-    title: `${copy.title} — MEMÓRIA`,
-    render() {
-      const list = getByGender(gender === 'all' ? 'all' : gender);
+    title: (params) => {
+      const c = categories.find((x) => x.slug === pick(params));
+      return `${c ? c.name : 'The Collection'} — MEMÓRIA`;
+    },
+    render(params) {
+      const slug = pick(params);
+      const cat = categories.find((x) => x.slug === slug);
+      const list = getByCategory(cat ? slug : 'all');
+      const tabs = usedCategories();
       return `
-      <section class="container">
+      <section class="container shop">
         <div class="pagehead">
           <nav class="crumbs" aria-label="Breadcrumb">
-            <a href="/">Memória</a><span aria-hidden="true">/</span><span>${copy.crumb}</span>
+            <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">${esc(cat ? cat.name : 'Collection')}</span>
           </nav>
-          <h1 data-reveal>${copy.title}</h1>
-          <p class="serif-lede" data-reveal>${copy.lede}</p>
+          <h1 data-reveal>${esc(cat ? cat.name : 'The Collection')}</h1>
+          <p class="serif-lede" data-reveal>${products.length} scents, one bottle, each holding a different memory.</p>
         </div>
         <div class="shop__bar">
-          <nav class="filters filters--left" aria-label="Filter by">
-            <a class="filter-tab" href="/shop" ${gender === 'all' ? 'aria-current="true"' : ''}>All</a>
-            <a class="filter-tab" href="/women" ${gender === 'her' ? 'aria-current="true"' : ''}>Women</a>
-            <a class="filter-tab" href="/men" ${gender === 'him' ? 'aria-current="true"' : ''}>Men</a>
-          </nav>
-          <span class="shop__count">${list.length} scent${list.length === 1 ? '' : 's'} · Eau de Parfum</span>
+          ${
+            tabs.length
+              ? `<nav class="filters filters--left" aria-label="Filter by category">
+            <a class="filter-tab" href="/shop" ${!cat ? 'aria-current="true"' : ''}>All</a>
+            ${tabs.map((t) => `<a class="filter-tab" href="/shop?c=${esc(t.slug)}" ${cat?.slug === t.slug ? 'aria-current="true"' : ''}>${esc(t.name)}</a>`).join('')}
+          </nav>`
+              : '<span></span>'
+          }
+          <span class="shop__count">${list.length} scent${list.length === 1 ? '' : 's'}</span>
         </div>
         ${renderProductGrid(list)}
-        <div style="text-align:center; margin-top:2.4rem" data-reveal>
-          <button class="btn" data-open-finder>Ask the Memory Department</button>
-        </div>
       </section>`;
     },
-    mount(root) {
+    mount(root, params) {
+      const slug = pick(params);
+      const cat = categories.find((x) => x.slug === slug);
+      setSeo({
+        title: `${cat ? cat.name : 'The Collection'} — MEMÓRIA`,
+        description: `Shop ${cat ? cat.name.toLowerCase() + ' ' : ''}perfumes by MEMÓRIA. Prices in EGP, delivery across Egypt.`,
+        path: cat ? `/shop?c=${cat.slug}` : '/shop',
+      });
       mountProductCards(root);
-      root.querySelector('[data-open-finder]')?.addEventListener('click', openFinder);
     },
   };
 }
 
-export const shopPage = makePage('all');
-export const womenPage = makePage('her');
-export const menPage = makePage('him');
+export const shopPage = makePage(null);
+export const womenPage = makePage('women');
+export const menPage = makePage('men');

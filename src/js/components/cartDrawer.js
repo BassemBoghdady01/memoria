@@ -1,12 +1,11 @@
 /**
  * MEMÓRIA · Slide-out bag drawer.
  */
-import { $, el, esc, money, trapFocus, lockScroll, unlockScroll } from '../utils.js';
+import { el, esc, money, trapFocus, lockScroll, unlockScroll } from '../utils.js';
 import { icons } from './icons.js';
 import { cart } from '../store/cart.js';
-import { bottleImg } from './render.js';
-import { genderLabel } from '../data/products.js';
-import { navigate } from '../router.js';
+import { productImg } from './render.js';
+import { waLink, cartMessage, waButton } from './whatsapp.js';
 
 let drawer = null;
 let untrap = null;
@@ -20,7 +19,7 @@ function ensureDrawer() {
       <div class="drawer__scrim" data-close-cart></div>
       <aside class="drawer__panel" role="dialog" aria-modal="true" aria-label="Your bag">
         <div class="drawer__head">
-          <span class="drawer__title">Your Bag <span data-drawer-count></span></span>
+          <span class="drawer__title">Your bag <span data-drawer-count></span></span>
           <button class="iconbtn" data-close-cart aria-label="Close bag">${icons.close()}</button>
         </div>
         <div class="drawer__body" data-drawer-body data-lenis-prevent></div>
@@ -29,17 +28,17 @@ function ensureDrawer() {
             <span class="label">Subtotal</span>
             <strong data-drawer-subtotal></strong>
           </div>
-          <a class="btn btn--primary btn--block" href="/checkout" data-drawer-checkout>Checkout</a>
-          <a class="link-line" style="align-self:center" href="/cart" data-drawer-viewbag>View bag</a>
-          <p class="drawer__note">Delivery confirmed by phone after checkout.</p>
+          <a class="btn btn--primary btn--block" href="/checkout" data-drawer-link>Checkout</a>
+          <div data-drawer-wa></div>
+          <a class="link-line" style="align-self:center" href="/cart" data-drawer-link>View bag &amp; apply a code</a>
+          <p class="drawer__note">Delivery and any discount are calculated at checkout.</p>
         </div>
       </aside>
     </div>`);
   document.querySelector('#overlays').appendChild(drawer);
 
   drawer.querySelectorAll('[data-close-cart]').forEach((b) => b.addEventListener('click', closeCartDrawer));
-  drawer.querySelector('[data-drawer-checkout]').addEventListener('click', () => closeCartDrawer());
-  drawer.querySelector('[data-drawer-viewbag]').addEventListener('click', () => closeCartDrawer());
+  drawer.querySelectorAll('[data-drawer-link]').forEach((a) => a.addEventListener('click', () => closeCartDrawer()));
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && isOpen) closeCartDrawer();
   });
@@ -56,22 +55,17 @@ function renderBody() {
   const items = cart.items;
   count.textContent = items.length ? `· ${cart.count}` : '';
 
-  /* remember which control the user was on, so a rebuild doesn't drop
-     keyboard focus back to <body> */
   const focused = document.activeElement;
   const focusMemo =
     body.contains(focused) && focused.closest('[data-line]')
-      ? {
-          line: focused.closest('[data-line]').dataset.line,
-          kind: focused.dataset.qty || (focused.dataset.remove !== undefined ? 'remove' : null),
-        }
+      ? { line: focused.closest('[data-line]').dataset.line, kind: focused.dataset.qty || (focused.dataset.remove !== undefined ? 'remove' : null) }
       : null;
 
   if (!items.length) {
     body.innerHTML = `
       <div class="drawer__empty">
-        <p>Your bag is empty —<br/>no memories chosen yet.</p>
-        <a class="btn" href="/shop" data-close-empty>Shop the Collection</a>
+        <p>Your bag is empty.</p>
+        <a class="btn" href="/shop" data-close-empty>Explore the collection</a>
       </div>`;
     body.querySelector('[data-close-empty]').addEventListener('click', () => closeCartDrawer());
     foot.hidden = true;
@@ -81,17 +75,17 @@ function renderBody() {
   body.innerHTML = items
     .map(
       (l) => `
-      <div class="cartline" data-line="${l.slug}:${l.ml}">
-        <a class="cartline__thumb" href="/product/${l.slug}" aria-hidden="true" tabindex="-1">
-          ${bottleImg(l.product, { w: 360 })}
+      <div class="cartline" data-line="${esc(l.variantId)}">
+        <a class="cartline__thumb" href="/product/${esc(l.product.slug)}" aria-hidden="true" tabindex="-1">
+          ${productImg(l.product, { sizes: '96px', alt: '' })}
         </a>
         <div class="cartline__info">
-          <a class="cartline__name" href="/product/${l.slug}">Nº ${l.product.number} · ${esc(l.product.name)}</a>
-          <span class="cartline__meta">${genderLabel(l.product.gender)} · ${l.ml} ml</span>
-          <div class="cartline__qty" aria-label="Quantity">
+          <a class="cartline__name" href="/product/${esc(l.product.slug)}">${esc(l.product.name)}</a>
+          <span class="cartline__meta">${esc(l.variant.label)} · ${money(l.unit)}</span>
+          <div class="cartline__qty" aria-label="Quantity for ${esc(l.product.name)}">
             <button data-qty="-1" aria-label="Decrease quantity">−</button>
             <span>${l.qty}</span>
-            <button data-qty="1" aria-label="Increase quantity">+</button>
+            <button data-qty="1" aria-label="Increase quantity" ${l.qty >= 10 ? 'disabled' : ''}>+</button>
           </div>
         </div>
         <div class="cartline__right">
@@ -103,27 +97,27 @@ function renderBody() {
     .join('');
 
   body.querySelectorAll('[data-line]').forEach((row) => {
-    const [slug, ml] = row.dataset.line.split(':');
+    const id = row.dataset.line;
     row.querySelectorAll('[data-qty]').forEach((b) =>
       b.addEventListener('click', () => {
-        const line = cart.items.find((l) => l.slug === slug && l.ml === Number(ml));
-        if (line) cart.setQty(slug, Number(ml), line.qty + Number(b.dataset.qty));
+        const line = cart.items.find((l) => l.variantId === id);
+        if (line) cart.setQty(id, line.qty + Number(b.dataset.qty));
       })
     );
-    row.querySelector('[data-remove]').addEventListener('click', () => cart.remove(slug, Number(ml)));
+    row.querySelector('[data-remove]').addEventListener('click', () => cart.remove(id));
     row.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => closeCartDrawer()));
   });
 
   foot.hidden = false;
   drawer.querySelector('[data-drawer-subtotal]').textContent = money(cart.subtotal);
+  const wa = waLink(cartMessage(null));
+  drawer.querySelector('[data-drawer-wa]').innerHTML = waButton(wa, 'Order via WhatsApp', 'btn--block');
 
   if (focusMemo) {
-    const row = body.querySelector(`[data-line="${focusMemo.line}"]`) || body.querySelector('[data-line]');
+    const row = body.querySelector(`[data-line="${CSS.escape(focusMemo.line)}"]`) || body.querySelector('[data-line]');
     if (row) {
       const target =
-        focusMemo.kind === 'remove'
-          ? row.querySelector('[data-remove]')
-          : row.querySelector(`[data-qty="${focusMemo.kind}"]`) || row.querySelector('[data-qty]');
+        focusMemo.kind === 'remove' ? row.querySelector('[data-remove]') : row.querySelector(`[data-qty="${focusMemo.kind}"]`) || row.querySelector('[data-qty]');
       target?.focus();
     }
   }
@@ -135,6 +129,7 @@ export function openCartDrawer() {
   lastFocus = document.activeElement;
   drawer.classList.add('is-open');
   drawer.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('has-drawer');
   lockScroll();
   isOpen = true;
   untrap = trapFocus(drawer.querySelector('.drawer__panel'), closeCartDrawer);
@@ -145,6 +140,7 @@ export function closeCartDrawer() {
   if (!drawer || !isOpen) return;
   drawer.classList.remove('is-open');
   drawer.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('has-drawer');
   unlockScroll();
   isOpen = false;
   untrap?.();
