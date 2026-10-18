@@ -299,7 +299,7 @@ create index audit_logs_entity_idx on public.audit_logs (entity, entity_id);
 
 -- ───────────────────────── triggers ─────────────────────────
 create or replace function public.touch_updated_at()
-returns trigger language plpgsql as $$
+returns trigger language plpgsql set search_path = public as $$
 begin
   new.updated_at := now();
   return new;

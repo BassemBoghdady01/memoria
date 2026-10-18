@@ -10,20 +10,24 @@ import { settings, usedCategories, products } from '../data/catalog.js';
 
 /* 320px variants — the chrome renders the mark at ~110px wide, so 320
    is already ~3× density; the 560/900/1400 sizes serve larger uses. */
-const LOGO = '/brand/logo-brown-320.png';
+const LOGO = '/brand/logo-black-560.png';
 const LOGO_CREAM = '/brand/logo-cream-320.png';
 
 /* Announcement bar — owner-written in the dashboard (Content → Announcement). */
+/* Black ticker. Owner announcement first (Dashboard → Website content), then house lines. */
+const HOUSE_LINES = ['Made to be remembered', 'Rooted in memory', 'Inspired by Cairo', 'Delivery across Egypt', 'Order on WhatsApp'];
+
 export function renderRibbon() {
   const a = settings.announcement || {};
+  const lines = [...(a.enabled && a.text ? [a.text] : []), ...HOUSE_LINES];
+  const items = lines
+    .map((t, i) => `<span class="ribbon__item"><span>${i === 0 && a.enabled && a.text ? `<em>${esc(t)}</em>` : esc(t)}</span><span class="ribbon__dot" aria-hidden="true"></span></span>`)
+    .join('');
   const host = $('#ribbon');
-  if (!a.enabled || !a.text) {
-    host.innerHTML = '';
-    document.documentElement.style.setProperty('--ribbon-h', '0px');
-    return;
-  }
-  const text = esc(a.text);
-  host.innerHTML = `<div class="announce">${a.link ? `<a href="${esc(a.link)}">${text}</a>` : `<span>${text}</span>`}</div>`;
+  host.innerHTML = `
+    ${a.enabled && a.text ? `<p class="sr-only">${esc(a.text)}</p>` : ''}
+    <div class="ribbon" aria-hidden="true"><div class="ribbon__track">${items}${items}${items}${items}</div></div>`;
+  new IntersectionObserver(([e]) => host.classList.toggle('is-offscreen', !e.isIntersecting)).observe(host);
 }
 
 export function renderHeader() {
@@ -38,7 +42,7 @@ export function renderHeader() {
           ${cats.map((c) => `<a class="header__navlink" data-navlink href="/shop?c=${esc(c.slug)}">${esc(c.name)}</a>`).join('')}
         </nav>
         <a class="header__logo" href="/" aria-label="MEMÓRIA — home">
-          <img src="${LOGO}" alt="MEMÓRIA" width="320" height="81" />
+          <img src="${LOGO}" alt="MEMÓRIA" width="560" height="141" />
         </a>
         <nav class="header__nav header__nav--right" aria-label="House">
           <a class="header__navlink" data-navlink href="/our-story">Our Story</a>

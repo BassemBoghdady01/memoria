@@ -7,7 +7,7 @@
 
 -- Egyptian phone → digits-only international form (20XXXXXXXXXX).
 create or replace function public.normalize_phone(p text)
-returns text language plpgsql immutable as $$
+returns text language plpgsql immutable set search_path = public as $$
 declare d text := regexp_replace(coalesce(p, ''), '\D', '', 'g');
 begin
   if d like '0020%' then d := substr(d, 3); end if;

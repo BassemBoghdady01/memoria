@@ -1,16 +1,19 @@
 /**
- * MEMÓRIA · Homepage.
+ * MEMÓRIA · Homepage — built to the owner's visual reference.
  *
- * Rhythm: CAMPAIGN HERO (real photograph + the real bottle) → THE
- * COLLECTION (every scent, buyable) → FEATURED SCENT (turn the bottle
- * through its photographed angles) → OBJECTS OF MEMORY (photographed
- * props, small interactions) → HOUSE STORY (owner-written) → WHATSAPP.
+ * HERO: a composited campaign photograph (leaf-shadow plaster wall, a
+ * real valve radio on its table, licensed photography) with the real
+ * bottle cut-out standing on the table, archival props at the edges,
+ * serif caps + handwritten "memory." → TORN-PAPER COLLECTION BAND with
+ * every scent in a row → FRAMED FEATURED-SCENT PANEL (scene + notes +
+ * price, carousel) → objects of memory → story → WhatsApp.
  *
- * Copy, hero imagery, featured scent and section visibility come from
- * store settings, editable in the dashboard.
+ * Copy, hero product, featured scent and section visibility come from
+ * store settings (Dashboard → Website content). Product data comes from
+ * the database.
  */
 import { esc, money } from '../utils.js';
-import { products, settings, getProduct, getFeatured, defaultVariant, unitPrice, isPurchasable, pricedVariants } from '../data/catalog.js';
+import { products, settings, getProduct, getFeatured, defaultVariant, unitPrice, isPurchasable, usedCategories, getByCategory } from '../data/catalog.js';
 import { productImg, productCutout } from '../components/render.js';
 import { mountProductCards, priceLabel } from '../components/productCard.js';
 import { gsap, motionOK, onPageCleanup } from '../motion.js';
@@ -18,10 +21,13 @@ import { cart } from '../store/cart.js';
 import { openCartDrawer } from '../components/cartDrawer.js';
 import { waLink, waButton, productMessage, enquiryMessage } from '../components/whatsapp.js';
 import { campaign, campaignImg } from '../data/campaign.js';
+import { roundStamp, rectStamp } from '../components/stamps.js';
 import { setSeo } from '../seo.js';
 
 const home = () => settings.home || {};
 const on = (key) => home().sections?.[key] !== false;
+const pad = (n) => String(n).padStart(2, '0');
+const numberOf = (p) => pad(products.indexOf(p) + 1);
 
 /* ————— hero ————— */
 
@@ -29,126 +35,167 @@ function heroSection() {
   const h = home().hero || {};
   const p = getProduct(h.product_slug) || getFeatured();
   const scene = h.image_url ? { src: h.image_url } : campaign.hero;
-  const sceneMobile = h.mobile_image_url ? { src: h.mobile_image_url } : campaign.heroMobile || scene;
+  const sceneMobile = h.mobile_image_url ? { src: h.mobile_image_url } : campaign.heroMobile;
   const headline = h.headline || 'Every scent holds a memory.';
-  const script = h.script || '';
-  const [before, after] = script && headline.includes(script) ? headline.split(script) : [headline, null];
+  const script = h.script && headline.includes(h.script) ? h.script : '';
+  const [before, after] = script ? headline.split(script) : [headline, ''];
+  const sub = h.subline || `${products.length === 7 ? 'Seven' : products.length} scents.\nNo bad memories included.`;
+  const props = campaign.props || {};
   return `
-  <section class="chero" aria-labelledby="hero-title" data-hero>
-    <div class="chero__scene ${scene ? '' : 'chero__scene--studio'}" aria-hidden="true">
+  <section class="hhero" aria-labelledby="hero-title" data-hero>
+    <div class="hhero__scene" aria-hidden="true">
       ${
         scene
           ? `<picture>
-              ${sceneMobile && sceneMobile !== scene ? `<source media="(max-width: 760px)" ${campaignImg(sceneMobile, { attrsOnly: true })}/>` : ''}
-              <img class="chero__photo" ${campaignImg(scene, { attrsOnly: true })} alt="" fetchpriority="high" decoding="async" data-hero-photo/>
+              ${sceneMobile ? `<source media="(max-width: 760px)" ${campaignImg(sceneMobile, { sizes: '100vw' })}/>` : ''}
+              <img class="hhero__photo" ${campaignImg(scene, { sizes: '100vw' })} alt="" fetchpriority="high" decoding="async" data-hero-photo/>
             </picture>`
           : ''
       }
-      <i class="chero__light" data-hero-light></i>
-      <i class="chero__grade"></i>
+      <i class="hhero__light" data-hero-light></i>
     </div>
+
+    ${props.photos ? `<figure class="hhero__prop hhero__prop--photo" aria-hidden="true" data-prop><img ${campaignImg(props.photos, { sizes: '18vw' })} alt="" loading="eager" decoding="async"/></figure>` : ''}
+    ${props.envelopes ? `<figure class="hhero__prop hhero__prop--letter" aria-hidden="true" data-prop><img ${campaignImg(props.envelopes, { sizes: '16vw' })} alt="" loading="eager" decoding="async"/></figure>` : ''}
+    ${props.letters ? `<figure class="hhero__prop hhero__prop--table" aria-hidden="true" data-prop><img ${campaignImg(props.letters, { sizes: '22vw' })} alt="" loading="eager" decoding="async"/></figure>` : ''}
+    ${roundStamp({ top: 'MEMÓRIA', bottom: 'CAIRO', center: 'PERFUME', cls: 'hhero__stamp' })}
+
     ${
       p
-        ? `<div class="chero__product" data-hero-bottle>
-            ${productCutout(p, { cls: 'chero__bottle', sizes: '(max-width: 760px) 58vw, 30vw', eager: true, alt: `${p.name} by MEMÓRIA` })}
-            <i class="chero__contact" aria-hidden="true"></i>
-          </div>`
+        ? `<a class="hhero__product" href="/product/${esc(p.slug)}" aria-label="${esc(p.name)}, ${esc(priceLabel(p))}" data-hero-bottle>
+            ${productCutout(p, { cls: 'hhero__bottle', sizes: '(max-width: 760px) 46vw, 24vw', eager: true, alt: `${p.name} by MEMÓRIA` })}
+            <i class="hhero__contact" aria-hidden="true"></i>
+            <i class="hhero__sheen" aria-hidden="true" data-hero-sheen></i>
+          </a>`
         : ''
     }
-    <div class="container chero__inner">
-      <div class="chero__copy">
-        ${h.eyebrow ? `<p class="chero__eyebrow">${esc(h.eyebrow)}</p>` : ''}
-        <h1 id="hero-title" class="chero__title">
-          ${after !== null ? `${esc(before)}<span class="brandword">${esc(script)}</span>${esc(after)}` : esc(headline)}
+
+    <div class="container hhero__inner">
+      <div class="hhero__copy">
+        <h1 id="hero-title" class="hhero__title">
+          <span class="hhero__caps">${esc(before.trim())}</span>
+          ${script ? `<span class="hhero__script">${esc(script)}${esc(after.trim())}<i class="hhero__stroke" aria-hidden="true"></i></span>` : ''}
         </h1>
-        ${h.subline ? `<p class="chero__sub">${esc(h.subline)}</p>` : ''}
-        <div class="chero__ctas">
-          <a class="btn btn--light" href="/shop">Shop the collection</a>
-          <a class="btn btn--ghost-light" href="/our-story">Our story</a>
+        <p class="hhero__sub">${esc(sub).replace(/\n/g, '<br/>')}</p>
+        <div class="hhero__ctas">
+          <a class="btn btn--ink" href="/shop">Shop the collection</a>
+          <a class="btn btn--line" href="/our-story">Discover Memória</a>
         </div>
-        ${p ? `<a class="chero__caption" href="/product/${esc(p.slug)}"><span>${esc(p.name)}</span><span>${esc(priceLabel(p))}</span></a>` : ''}
       </div>
     </div>
-    ${campaign.hero?.credit ? `<p class="chero__credit">Photograph: ${esc(campaign.hero.credit)}</p>` : ''}
+    ${campaign.hero?.credit ? `<p class="hhero__credit">Photography: ${esc(campaign.hero.credit)}</p>` : ''}
   </section>`;
 }
 
-/* ————— the collection ————— */
+/* ————— the collection band ————— */
 
-function lineupItem(p) {
+function lineupItem(p, i) {
   const v = defaultVariant(p);
-  const buy = isPurchasable(p)
-    ? `<button class="btn btn--small btn--quickadd lineup__add" data-add="${esc(v.id)}">Add</button>`
-    : '';
   return `
-  <div class="lineup__item" data-pcard="${esc(p.slug)}">
-    <a class="lineup__link" href="/product/${esc(p.slug)}" aria-label="${esc(p.name)}, ${esc(priceLabel(p))}"></a>
-    ${productCutout(p, { cls: 'lineup__bottle', sizes: '(max-width: 760px) 40vw, 14vw' })}
-    <strong class="lineup__name">${esc(p.name)}</strong>
-    ${p.category ? `<span class="lineup__for">${esc(p.category.name)}</span>` : ''}
-    <span class="lineup__price">${esc(priceLabel(p))}</span>
-    ${buy}
-  </div>`;
+  <article class="hline__item" data-pcard="${esc(p.slug)}" style="--i:${i}">
+    <a class="hline__link" href="/product/${esc(p.slug)}" aria-label="${esc(p.name)}, ${esc(priceLabel(p))}"></a>
+    <div class="hline__bottle">${productCutout(p, { sizes: '(max-width: 760px) 30vw, 9vw' })}</div>
+    <span class="hline__no">Nº${pad(i + 1)}</span>
+    <h3 class="hline__name">${esc(p.name)}</h3>
+    ${p.concentration ? `<span class="hline__meta">${esc(p.concentration)}</span>` : ''}
+    ${p.category ? `<span class="hline__meta">${esc(p.category.name)}</span>` : ''}
+    <i class="hline__dot" aria-hidden="true"></i>
+    <span class="hline__price">${esc(priceLabel(p))}</span>
+    ${isPurchasable(p) ? `<button class="hline__add" data-add="${esc(v.id)}">Add to bag</button>` : ''}
+  </article>`;
 }
 
 function collectionSection() {
+  const cats = usedCategories();
+  const n = products.length;
+  const word = { 6: 'six', 7: 'seven', 8: 'eight' }[n] || String(n);
   return `
-  <section class="lineup" id="collection" aria-labelledby="collection-title">
-    <div class="container">
-      <div class="lineup__head">
-        <h2 id="collection-title" class="lineup__title" data-reveal>The collection</h2>
-        <p class="lineup__subtitle" data-reveal>${products.length} scents. One bottle, a different memory inside each.</p>
+  <section class="hband" id="collection" aria-labelledby="collection-title">
+    <div class="hband__paper" aria-hidden="true" ${campaign.paper ? `style="--paper:url('${campaign.paper.src}')"` : ''}></div>
+    <div class="container hband__inner">
+      <div class="hband__intro">
+        <h2 id="collection-title" class="hband__title">${word.toUpperCase()} SCENTS.<br/>${word.toUpperCase()} MEMORIES.</h2>
+        <p class="hband__script">Choose the one<br/>that takes you back.<i class="hhero__stroke hhero__stroke--small" aria-hidden="true"></i></p>
       </div>
-      <div class="lineup__row" data-collection-grid>${products.map(lineupItem).join('')}</div>
-      <p class="lineup__more" data-reveal><a class="link-line" href="/shop">Browse the collection →</a></p>
+      <div class="hband__shelf">
+        <div class="hband__tabs" role="group" aria-label="Filter the collection">
+          <button class="hband__tab" data-filter="all" aria-pressed="true">All ${word}</button>
+          ${cats.map((c) => `<button class="hband__tab" data-filter="${esc(c.slug)}" aria-pressed="false">${esc(c.name)}</button>`).join('')}
+        </div>
+        <div class="hline" data-collection-grid>${products.map(lineupItem).join('')}</div>
+      </div>
+      ${rectStamp({ lines: ['MEMÓRIA', 'ARCHIVE'], foot: 'CAIRO', cls: 'hband__stamp' })}
     </div>
   </section>`;
 }
 
-/* ————— featured scent ————— */
+/* ————— featured scent panel (carousel) ————— */
 
-const TURN = ['Opposite three-quarter', 'Front', 'Three-quarter', 'Side'];
+function featureSlide(p) {
+  const v = defaultVariant(p);
+  const notes = [
+    ['Top notes', p.notes.top],
+    ['Heart notes', p.notes.heart],
+    ['Base notes', p.notes.base],
+  ];
+  const hasNotes = notes.some(([, n]) => n.length);
+  return `
+  <div class="hfeat__copy" data-slide="${esc(p.slug)}">
+    <span class="hfeat__ghost" aria-hidden="true">${numberOf(p)}</span>
+    <p class="hfeat__no">Nº ${numberOf(p)}</p>
+    <h3 class="hfeat__name">${esc(p.name)}</h3>
+    <p class="hfeat__meta">${esc([p.category?.name, p.concentration].filter(Boolean).join(' · ') || 'MEMÓRIA')}<i class="hline__dot" aria-hidden="true"></i></p>
+    ${p.shortDescription ? `<p class="hfeat__desc">${esc(p.shortDescription)}</p>` : ''}
+    ${
+      hasNotes
+        ? `<div class="hfeat__notes">${notes
+            .map(([t, n]) => `<div><span>${t}</span><p>${esc(n.join(', ') || '—')}</p></div>`)
+            .join('')}</div>`
+        : ''
+    }
+    <div class="hfeat__buy">
+      ${
+        v && v.price !== null
+          ? `<span class="hfeat__price"><small>EGP</small> ${money(unitPrice(v)).replace('EGP ', '')}</span>
+             <a class="btn btn--ink" href="/product/${esc(p.slug)}">Discover this scent</a>
+             ${v.inStock ? `<button class="btn btn--line" data-add="${esc(v.id)}">Add to bag</button>` : ''}`
+          : `<span class="hfeat__price hfeat__price--muted">Price on request</span>
+             <a class="btn btn--ink" href="/product/${esc(p.slug)}">Discover this scent</a>
+             ${waButton(waLink(enquiryMessage(p)), 'Ask on WhatsApp', 'btn--line')}`
+      }
+    </div>
+  </div>`;
+}
 
 function featuredSection() {
-  const p = getProduct(home().featured_slug) || getFeatured();
-  if (!p) return '';
-  const v = defaultVariant(p);
-  const priced = pricedVariants(p).length > 0;
-  const frames = TURN.map((l) => p.gallery.find((g) => g.view === l)).filter(Boolean);
-  const notes = [...p.notes.top, ...p.notes.heart, ...p.notes.base].slice(0, 6);
+  if (!products.length) return '';
+  const start = getProduct(home().featured_slug) || getFeatured();
+  const order = [start, ...products.filter((p) => p !== start)];
+  const scene = campaign.featured;
   return `
-  <section class="feature" aria-labelledby="feature-title">
-    <div class="container feature__inner">
-      <div class="feature__stage" data-turn>
-        ${frames
-          .map((f, i) => productImg(p, { image: f, cls: `feature__frame${f.view === 'Front' ? ' is-on' : ''}`, sizes: '(max-width: 900px) 90vw, 45vw', alt: i ? '' : f.alt }))
-          .join('')}
-        <i class="feature__sheen" aria-hidden="true" data-sheen></i>
-        ${frames.length > 1 ? `<input class="feature__dial" type="range" min="0" max="${frames.length - 1}" step="1" value="${Math.max(0, frames.findIndex((f) => f.view === 'Front'))}" aria-label="Turn the bottle" data-turn-dial/>` : ''}
-      </div>
-      <div class="feature__copy">
-        <p class="label" data-reveal>Featured scent</p>
-        <h2 id="feature-title" class="feature__name" data-reveal>${esc(p.name)}</h2>
-        ${p.shortDescription ? `<p class="feature__desc" data-reveal>${esc(p.shortDescription)}</p>` : ''}
-        ${notes.length ? `<p class="feature__notes" data-reveal>${esc(notes.join(' · '))}</p>` : ''}
-        <div class="feature__buy" data-reveal>
-          ${
-            priced && v
-              ? `<span class="feature__price">${money(unitPrice(v))}${v.label ? ` <small>${esc(v.label)}</small>` : ''}</span>
-                 <button class="btn btn--primary" data-add="${esc(v.id)}" ${v.inStock ? '' : 'disabled'}>${v.inStock ? 'Add to bag' : 'Sold out'}</button>
-                 ${waButton(waLink(productMessage(p, v, 1)), 'Order via WhatsApp', 'btn--ghost')}`
-              : `<span class="feature__price feature__price--muted">Price on request</span>
-                 ${waButton(waLink(enquiryMessage(p)), 'Ask on WhatsApp', 'btn--ghost')}`
-          }
-          <a class="link-line" href="/product/${esc(p.slug)}">Discover ${esc(p.name)}</a>
+  <section class="hfeat" aria-roledescription="carousel" aria-label="Featured scents" data-feature>
+    <div class="container">
+      <div class="hfeat__frame">
+        <div class="hfeat__scene" aria-hidden="true">
+          ${scene ? `<img class="hfeat__photo" ${campaignImg(scene, { sizes: '(max-width: 900px) 100vw, 55vw' })} alt="" loading="lazy" decoding="async"/>` : ''}
+          <div class="hfeat__bottles">
+            ${order.map((p, i) => `<div class="hfeat__bottle ${i === 0 ? 'is-on' : ''}" data-fbottle="${esc(p.slug)}">${productCutout(p, { sizes: '(max-width: 900px) 40vw, 18vw', alt: '' })}<i class="hhero__contact"></i></div>`).join('')}
+          </div>
+          <button class="hfeat__arrow hfeat__arrow--prev" data-prev aria-label="Previous scent">←</button>
         </div>
-        ${frames.length > 1 ? '<p class="feature__hint">Turn the dial: every angle is a real photograph of the bottle.</p>' : ''}
+        <div class="hfeat__panel" ${campaign.paper ? `style="--paper:url('${campaign.paper.src}')"` : ''}>
+          <div class="hfeat__slides" aria-live="polite">${order.map(featureSlide).join('')}</div>
+          <button class="hfeat__arrow hfeat__arrow--next" data-next aria-label="Next scent">→</button>
+        </div>
+        <div class="hfeat__dots" role="tablist" aria-label="Choose a scent">
+          ${order.map((p, i) => `<button role="tab" aria-selected="${i === 0}" aria-label="${esc(p.name)}" data-dot="${i}"></button>`).join('')}
+        </div>
       </div>
     </div>
   </section>`;
 }
 
-/* ————— objects of memory (photographed props) ————— */
+/* ————— objects of memory ————— */
 
 function memoriesSection() {
   const objs = campaign.objects || [];
@@ -164,12 +211,12 @@ function memoriesSection() {
         ${objs
           .map(
             (o, i) => `
-          <figure class="objects__item objects__item--${esc(o.id)}" data-object="${esc(o.id)}" data-reveal style="--reveal-delay:${i * 70}ms" ${o.interactive ? 'tabindex="0"' : ''}>
+          <figure class="objects__item objects__item--${esc(o.id)}" data-object="${esc(o.id)}" data-reveal style="--reveal-delay:${i * 70}ms" ${o.interactive ? 'tabindex="0" aria-label="Radio dial. Move across it, or use arrow keys, to tune."' : ''}>
             <div class="objects__media">
-              <img ${campaignImg(o, { attrsOnly: true })} alt="${esc(o.alt)}" loading="lazy" decoding="async" data-parallax/>
+              <img ${campaignImg(o, { sizes: '(max-width: 760px) 100vw, 40vw' })} alt="${esc(o.alt)}" loading="lazy" decoding="async" data-parallax/>
               ${o.id === 'dial' ? '<i class="objects__needle" aria-hidden="true" data-needle></i>' : ''}
             </div>
-            <figcaption><span>${esc(o.caption)}</span>${o.credit ? `<small>Photo: ${esc(o.credit)}</small>` : ''}</figcaption>
+            <figcaption><span>${esc(o.caption)}</span>${o.credit ? `<small>Photo: ${esc(o.credit)} / Unsplash</small>` : ''}</figcaption>
           </figure>`
           )
           .join('')}
@@ -189,10 +236,7 @@ function storySection() {
       ${s.image_url ? `<img class="hstory__img" src="${esc(s.image_url)}" alt="" loading="lazy" />` : ''}
       <div class="hstory__copy">
         ${s.title ? `<h2 id="hstory-title" data-reveal>${esc(s.title)}</h2>` : '<h2 id="hstory-title" class="sr-only">Our story</h2>'}
-        ${(s.body || '')
-          .split(/\n{2,}/)
-          .map((para) => `<p data-reveal>${esc(para)}</p>`)
-          .join('')}
+        ${(s.body || '').split(/\n{2,}/).map((para) => `<p data-reveal>${esc(para)}</p>`).join('')}
         <a class="link-line" href="/our-story" data-reveal>Our story →</a>
       </div>
     </div>
@@ -235,84 +279,83 @@ export default {
       title: 'MEMÓRIA — Every Scent Holds a Memory',
       description: 'MEMÓRIA is an Egyptian perfume house. Discover the collection, order online with delivery across Egypt, or order on WhatsApp.',
       path: '/',
-      jsonLd: { '@context': 'https://schema.org', '@type': 'Organization', name: 'MEMÓRIA', url: location.origin, logo: location.origin + '/brand/logo-brown-560.png' },
+      jsonLd: { '@context': 'https://schema.org', '@type': 'Organization', name: 'MEMÓRIA', url: location.origin, logo: location.origin + '/brand/logo-black-560.png' },
     });
-    mountProductCards(root.querySelector('[data-collection-grid]'));
-    root.querySelectorAll('.feature [data-add]').forEach((b) =>
-      b.addEventListener('click', () => {
-        if (cart.add(b.dataset.add, 1)) openCartDrawer();
+    document.body.classList.add('is-home');
+    onPageCleanup(() => document.body.classList.remove('is-home'));
+
+    /* — collection: filter + quick add — */
+    const grid = root.querySelector('[data-collection-grid]');
+    let dispose = mountProductCards(grid);
+    root.querySelectorAll('.hband__tab').forEach((tab) =>
+      tab.addEventListener('click', () => {
+        root.querySelectorAll('.hband__tab').forEach((t) => t.setAttribute('aria-pressed', String(t === tab)));
+        dispose();
+        const list = getByCategory(tab.dataset.filter);
+        grid.innerHTML = list.map((p) => lineupItem(p, products.indexOf(p))).join('');
+        dispose = mountProductCards(grid);
       })
     );
+
+    /* — featured carousel — */
+    const feat = root.querySelector('[data-feature]');
+    if (feat) {
+      const slides = [...feat.querySelectorAll('[data-slide]')];
+      const bottles = [...feat.querySelectorAll('[data-fbottle]')];
+      const dots = [...feat.querySelectorAll('[data-dot]')];
+      let cur = 0;
+      const go = (i) => {
+        cur = (i + slides.length) % slides.length;
+        slides.forEach((s, j) => s.classList.toggle('is-on', j === cur));
+        bottles.forEach((b, j) => b.classList.toggle('is-on', j === cur));
+        dots.forEach((d, j) => d.setAttribute('aria-selected', String(j === cur)));
+      };
+      go(0);
+      feat.querySelector('[data-prev]').addEventListener('click', () => go(cur - 1));
+      feat.querySelector('[data-next]').addEventListener('click', () => go(cur + 1));
+      dots.forEach((d) => d.addEventListener('click', () => go(Number(d.dataset.dot))));
+      feat.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') go(cur + 1);
+        if (e.key === 'ArrowLeft') go(cur - 1);
+      });
+      feat.querySelectorAll('[data-add]').forEach((b) =>
+        b.addEventListener('click', () => {
+          if (cart.add(b.dataset.add, 1)) openCartDrawer();
+        })
+      );
+    }
 
     const ok = motionOK();
     const wide = window.matchMedia('(min-width: 880px)').matches;
 
-    /* hero: slow light across the room, the camera drifts a touch on scroll */
+    /* — hero: slow push-in, light drifting across the wall, props on restrained parallax — */
     const hero = root.querySelector('[data-hero]');
     if (ok && hero) {
+      gsap.from('.hhero__copy > *', { y: 16, opacity: 0, duration: 0.9, stagger: 0.08, ease: 'power2.out', delay: 0.05 });
+      gsap.from('[data-hero-bottle]', { y: 22, opacity: 0, duration: 1.1, ease: 'power3.out', delay: 0.15 });
       const tl = gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.7 } });
-      tl.to('[data-hero-photo]', { yPercent: 6, scale: 1.04, ease: 'none' }, 0)
-        .to('[data-hero-bottle]', { yPercent: -6, ease: 'none' }, 0)
-        .to('[data-hero-light]', { xPercent: 18, opacity: 0.55, ease: 'none' }, 0);
+      tl.to('[data-hero-photo]', { scale: 1.05, yPercent: 4, ease: 'none' }, 0)
+        .to('[data-hero-light]', { xPercent: 22, opacity: 0.6, ease: 'none' }, 0)
+        .to('[data-hero-sheen]', { xPercent: 260, ease: 'none' }, 0);
+      if (wide) tl.to('[data-prop]', { yPercent: -10, ease: 'none' }, 0);
       onPageCleanup(() => {
         tl.scrollTrigger?.kill();
         tl.kill();
       });
-      gsap.from('.chero__copy > *', { y: 18, opacity: 0, duration: 0.9, stagger: 0.08, ease: 'power2.out', delay: 0.1 });
-      gsap.from('[data-hero-bottle]', { y: 26, opacity: 0, duration: 1.2, ease: 'power3.out', delay: 0.2 });
     }
 
-    /* featured: turn the bottle through its real photographed angles */
-    const turn = root.querySelector('[data-turn]');
-    if (turn) {
-      const frames = [...turn.querySelectorAll('.feature__frame')];
-      const dial = turn.querySelector('[data-turn-dial]');
-      const show = (i) => frames.forEach((f, j) => f.classList.toggle('is-on', j === i));
-      dial?.addEventListener('input', () => show(Number(dial.value)));
-      let sx = null;
-      let si = 0;
-      turn.addEventListener('pointerdown', (e) => {
-        if (e.target === dial) return;
-        sx = e.clientX;
-        si = Number(dial?.value || 0);
-        turn.setPointerCapture(e.pointerId);
-      });
-      turn.addEventListener('pointermove', (e) => {
-        if (sx === null || !dial) return;
-        const i = Math.max(0, Math.min(frames.length - 1, si + Math.round((e.clientX - sx) / 70)));
-        dial.value = i;
-        show(i);
-      });
-      const end = () => (sx = null);
-      turn.addEventListener('pointerup', end);
-      turn.addEventListener('pointercancel', end);
-      if (ok) {
-        const sheen = gsap.fromTo(
-          turn.querySelector('[data-sheen]'),
-          { xPercent: -140 },
-          { xPercent: 140, ease: 'none', scrollTrigger: { trigger: turn, start: 'top 85%', end: 'bottom 15%', scrub: 0.6 } }
-        );
-        onPageCleanup(() => {
-          sheen.scrollTrigger?.kill();
-          sheen.kill();
-        });
-      }
-    }
-
-    /* objects: the radio dial follows the pointer; restrained parallax */
+    /* — objects: radio dial follows the pointer; restrained parallax — */
     const dialObj = root.querySelector('[data-object="dial"]');
     if (dialObj) {
       const needle = dialObj.querySelector('[data-needle]');
-      const move = (x) => {
+      dialObj.addEventListener('pointermove', (e) => {
         const r = dialObj.getBoundingClientRect();
-        const t = Math.max(0, Math.min(1, (x - r.left) / r.width));
-        needle.style.setProperty('--x', `${8 + t * 84}%`);
-      };
-      dialObj.addEventListener('pointermove', (e) => move(e.clientX));
+        needle.style.setProperty('--x', `${8 + Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * 84}%`);
+      });
       dialObj.addEventListener('keydown', (e) => {
-        const cur = parseFloat(needle.style.getPropertyValue('--x')) || 30;
-        if (e.key === 'ArrowRight') needle.style.setProperty('--x', `${Math.min(92, cur + 6)}%`);
-        if (e.key === 'ArrowLeft') needle.style.setProperty('--x', `${Math.max(8, cur - 6)}%`);
+        const curX = parseFloat(needle.style.getPropertyValue('--x')) || 30;
+        if (e.key === 'ArrowRight') needle.style.setProperty('--x', `${Math.min(92, curX + 6)}%`);
+        if (e.key === 'ArrowLeft') needle.style.setProperty('--x', `${Math.max(8, curX - 6)}%`);
       });
     }
     if (ok && wide) {

@@ -94,7 +94,7 @@ export default {
               <div class="field">
                 <label for="co-phone">Mobile number</label>
                 <input id="co-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required placeholder="01X XXXX XXXX"
-                  pattern="^(\\+?20|0020)?\\s*0?1[0125][\\s-]?\\d{3,4}[\\s-]?\\d{4}$" />
+                  pattern="(\\+?20|0020)?\\s*0?1[0125][\\s\\-]?\\d{3,4}[\\s\\-]?\\d{4}" />
                 <span class="field__error">Please enter an Egyptian mobile number, e.g. 010 1234 5678.</span>
               </div>
               <div class="field field--full">

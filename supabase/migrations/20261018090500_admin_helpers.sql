@@ -36,7 +36,7 @@ grant execute on function public.admin_customers(text) to authenticated;
 
 -- products that already appear on orders are archived, never hard-deleted
 create or replace function public.guard_product_delete()
-returns trigger language plpgsql as $$
+returns trigger language plpgsql set search_path = public as $$
 begin
   if exists (select 1 from public.order_items where product_id = old.id) then
     raise exception 'This product has orders. Archive it instead of deleting it.';
