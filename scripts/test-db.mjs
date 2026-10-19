@@ -87,6 +87,7 @@ await db.exec(`
   insert into discounts (code, name, kind, value, active, min_order_amount)
     values ('BIGONLY', 'Fixed 100 over 5000', 'fixed', 100, true, 5000);
   insert into discounts (code, name, kind, value, active) values ('OFFCODE', 'Inactive', 'fixed', 50, false);
+  update discounts set active = false where code is null; -- seeded launch offer is tested separately below
 `);
 const liqaa = (await one(`select id from product_variants where sku = 'TEST-LIQAA-100'`)).id;
 const waad = (await one(`select id from product_variants where sku = 'TEST-WAAD-100'`)).id;
@@ -196,6 +197,36 @@ ok(Number((await one(`select quantity from inventory where variant_id = $1`, [li
 ok(Number((await one(`select times_used from discounts where code = 'TEST10'`)).times_used) === 0, 'cancelling releases the coupon use');
 const audits = await rows(`select * from audit_logs where entity = 'product_variants' and actor_id = $1`, [ADMIN]);
 ok(audits.length >= 1 && audits[0].details.price, 'price change written to the audit log with the admin id');
+
+console.log('\nQuantity offer: 1,200 → 999, any 2+ at 899 each');
+await asSuper();
+await db.exec(`
+  update discounts set active = false;
+  insert into product_variants (product_id, sku, label, price, sale_price)
+    select id, 'OFFER-' || slug, 'Bottle', 1200, 999 from products where slug in ('athar', 'safya');
+  update inventory set track_inventory = false where variant_id in (select id from product_variants where sku like 'OFFER-%');
+  insert into discounts (name, kind, value, min_quantity, active) values ('Any 2 or more', 'unit_price', 899, 2, true);
+  insert into discounts (code, name, kind, value, active) values ('SMALL5', 'Five percent', 'percentage', 5, true);
+  insert into discounts (code, name, kind, value, active) values ('BIG30', 'Thirty percent', 'percentage', 30, true);
+`);
+const ath = (await one(`select id from product_variants where sku = 'OFFER-athar'`)).id;
+const saf = (await one(`select id from product_variants where sku = 'OFFER-safya'`)).id;
+await asAnon();
+const qq = async (its, code = null) => (await one(`select quote_cart($1::jsonb, $2, $3) as q`, [JSON.stringify(its), code, aswan])).q;
+q = await qq([{ variant_id: ath, quantity: 1 }]);
+ok(Number(q.total) === 999 && !q.discount, '1 bottle = 999');
+q = await qq([{ variant_id: ath, quantity: 1 }, { variant_id: saf, quantity: 1 }]);
+ok(Number(q.total) === 1798 && q.discount?.kind === 'unit_price', '2 different bottles = 1,798');
+q = await qq([{ variant_id: ath, quantity: 3 }]);
+ok(Number(q.total) === 2697, '3 of the same = 2,697');
+q = await qq([{ variant_id: ath, quantity: 2 }, { variant_id: saf, quantity: 2 }]);
+ok(Number(q.total) === 3596, '4 bottles = 3,596');
+q = await qq([{ variant_id: ath, quantity: 2 }], 'SMALL5');
+ok(Number(q.total) === 1798 && /better offer/.test(q.discount_error || ''), 'weaker code does not stack on the offer');
+q = await qq([{ variant_id: ath, quantity: 2 }], 'BIG30');
+ok(Number(q.total) === 1398.6 && q.discount?.code === 'BIG30', 'a better code replaces the offer (no stacking)');
+r = (await one(`select place_order($1::jsonb) as r`, [JSON.stringify(order({ phone: '01011112222', items: [{ variant_id: ath, quantity: 1 }, { variant_id: saf, quantity: 1 }], expected_total: 1858 }))])).r;
+ok(r.ok && Number(r.total) === 1858, 'order with the offer charges 1,798 + 60 Cairo delivery');
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
