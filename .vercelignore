@@ -1,0 +1,10 @@
+node_modules
+dist
+qa
+brand-src
+.env
+.env.local
+.env.*.local
+vite-dev.log
+*.log
+.claude

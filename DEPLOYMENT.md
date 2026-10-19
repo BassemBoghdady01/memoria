@@ -1,6 +1,8 @@
 # MEMÓRIA — production readiness & deployment
 
-Status as of 18 Oct 2026. **Nothing is deployed.** Deploy only after the owner approves.
+Status as of 19 Oct 2026: **live in production** at https://memoria-rose-beta.vercel.app (Vercel project `memoria`, approved by the owner on 19 Oct 2026). Database: Supabase project `smcprvnjxdkyqfldgyhf` (eu-central-1).
+
+Remaining owner actions: create the owner login (Supabase → Authentication → Users → Add user, then grant admin access — section 3), switch off public sign-ups, set the Supabase Site URL to the live address, confirm cash on delivery, add delivery zones/fees, bottle size and stock levels, and connect a custom domain when ready (Vercel → Domains, then update VITE_SITE_URL).
 
 ## 1. Readiness checklist
 
