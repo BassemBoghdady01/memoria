@@ -104,7 +104,9 @@ async function editProduct(id, categories, onSaved) {
         <label>Heart notes <textarea name="heart_notes" rows="2">${esc((p.heart_notes || []).join(', '))}</textarea></label>
         <label>Base notes <textarea name="base_notes" rows="2">${esc((p.base_notes || []).join(', '))}</textarea></label>
       </div>
-      <details class="a-details"><summary>Memory story &amp; SEO</summary>
+      <details class="a-details" ${p.story?.draft ? 'open' : ''}><summary>Tagline, memory story &amp; SEO${p.story?.draft ? ' — <b>draft copy, please review</b>' : ''}</summary>
+        <label>Tagline (gallery and product page) <input name="story_tagline" maxlength="160" value="${esc(p.story?.tagline || '')}" /></label>
+        <label>Gallery scene <select name="story_scene">${['', 'nile-dusk', 'curtain', 'city-window', 'vanity', 'open-window', 'radio', 'cairo-sunset', 'armchair', 'arcade', 'attic'].map((x) => `<option value="${x}" ${(p.story?.scene || '') === x ? 'selected' : ''}>${x || 'Default'}</option>`).join('')}</select></label>
         <label>Memory place (heading) <input name="story_place" maxlength="120" value="${esc(p.story?.place || '')}" /></label>
         <label>Memory story <textarea name="story_text" rows="3" maxlength="1500">${esc(p.story?.text || '')}</textarea></label>
         <label>SEO title <input name="seo_title" maxlength="70" value="${esc(p.seo_title || '')}" /></label>
@@ -171,7 +173,7 @@ async function editProduct(id, categories, onSaved) {
       top_notes: list(f.top_notes),
       heart_notes: list(f.heart_notes),
       base_notes: list(f.base_notes),
-      story: { ...(p.story || {}), place: f.story_place.trim() || undefined, text: f.story_text.trim() || undefined },
+      story: { ...(p.story || {}), draft: false, tagline: f.story_tagline.trim() || undefined, scene: f.story_scene || undefined, place: f.story_place.trim() || undefined, text: f.story_text.trim() || undefined },
       seo_title: nullable(f.seo_title.trim()),
       seo_description: nullable(f.seo_description.trim()),
     };

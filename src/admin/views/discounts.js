@@ -33,11 +33,11 @@ export default async function discounts(root) {
         .map((d) => {
           const [st, cls] = state(d);
           const scope = d.scope === 'order' ? 'Whole order' : d.scope === 'product' ? `${d.product_ids.length} product(s)` : `${d.category_ids.length} category(ies)`;
-          const rules = [d.min_order_amount && `Min ${money(d.min_order_amount)}`, d.starts_at && `From ${date(d.starts_at)}`, d.ends_at && `Until ${date(d.ends_at)}`, d.per_customer_limit && `${d.per_customer_limit}× per customer`]
+          const rules = [d.min_quantity && `${d.min_quantity}+ bottles`, d.min_order_amount && `Min ${money(d.min_order_amount)}`, d.starts_at && `From ${date(d.starts_at)}`, d.ends_at && `Until ${date(d.ends_at)}`, d.per_customer_limit && `${d.per_customer_limit}× per customer`]
             .filter(Boolean)
             .join(' · ');
           return `<tr data-id="${esc(d.id)}" tabindex="0"><td><b>${esc(d.code || 'Automatic offer')}</b><br/><small class="a-muted">${esc(d.name)}</small></td>
-            <td>${d.kind === 'percentage' ? `${Number(d.value)}%` : money(d.value)}</td><td>${scope}</td><td>${rules || '—'}</td>
+            <td>${d.kind === 'percentage' ? `${Number(d.value)}%` : d.kind === 'unit_price' ? `${money(d.value)} each` : money(d.value)}</td><td>${scope}</td><td>${rules || '—'}</td>
             <td>${d.times_used}${d.usage_limit ? ` / ${d.usage_limit}` : ''}</td><td><span class="pill pill--${cls}">${st}</span></td></tr>`;
         })
         .join('')}</tbody></table>`
@@ -57,12 +57,13 @@ export default async function discounts(root) {
         <div class="a-grid2">
           <label>Code <input name="code" value="${esc(d.code || '')}" pattern="[A-Za-z0-9_-]{3,32}" placeholder="e.g. WELCOME15 (leave empty for an automatic offer)" /></label>
           <label>Internal name <input name="name" required maxlength="120" value="${esc(d.name || '')}" /></label>
-          <label>Type <select name="kind"><option value="percentage" ${d.kind !== 'fixed' ? 'selected' : ''}>Percentage off</option><option value="fixed" ${d.kind === 'fixed' ? 'selected' : ''}>Fixed amount off (EGP)</option></select></label>
+          <label>Type <select name="kind"><option value="percentage" ${d.kind !== 'fixed' ? 'selected' : ''}>Percentage off</option><option value="fixed" ${d.kind === 'fixed' ? 'selected' : ''}>Fixed amount off (EGP)</option><option value="unit_price" ${d.kind === 'unit_price' ? 'selected' : ''}>Fixed price per bottle (quantity offer)</option></select></label>
           <label>Value <input name="value" type="number" min="0.01" step="0.01" required value="${d.value ?? ''}" /></label>
           <label>Applies to <select name="scope">
             <option value="order" ${!d.scope || d.scope === 'order' ? 'selected' : ''}>Whole order</option>
             <option value="product" ${d.scope === 'product' ? 'selected' : ''}>Specific products</option>
             <option value="category" ${d.scope === 'category' ? 'selected' : ''}>Specific categories</option></select></label>
+          <label>Minimum bottles (e.g. 2 for "any 2") <input name="min_quantity" type="number" min="1" value="${d.min_quantity ?? ''}" /></label>
           <label>Minimum order (EGP) <input name="min_order_amount" type="number" min="0" step="0.01" value="${d.min_order_amount ?? ''}" /></label>
           <label>Starts <input name="starts_at" type="datetime-local" value="${local(d.starts_at)}" /></label>
           <label>Ends <input name="ends_at" type="datetime-local" value="${local(d.ends_at)}" /></label>
@@ -74,7 +75,7 @@ export default async function discounts(root) {
         <fieldset data-categories ${d.scope === 'category' ? '' : 'hidden'}><legend>Categories</legend>
           ${categories.map((c) => `<label class="a-check"><input type="checkbox" name="category_ids" value="${c.id}" ${(d.category_ids || []).includes(c.id) ? 'checked' : ''}/> ${esc(c.name)}</label>`).join('')}</fieldset>
         <label class="a-check"><input type="checkbox" name="active" ${d.active ? 'checked' : ''}/> Active</label>
-        <p class="a-muted">One discount applies per order. Without a code, the best eligible automatic offer is applied.</p>
+        <p class="a-muted">One offer applies per order: the database compares automatic offers and any entered code and gives the customer the single best one (no stacking). "Fixed price per bottle" with minimum bottles 2 and value 899 = "any 2 or more at EGP 899 each".</p>
         <div class="a-actions"><button class="a-btn a-btn--primary">Save</button>${d.id ? '<button type="button" class="a-btn a-btn--danger" data-del>Delete</button>' : ''}</div>
       </form>`);
     const form = el.querySelector('[data-form]');
@@ -95,6 +96,7 @@ export default async function discounts(root) {
         product_ids: f.scope === 'product' ? fd.getAll('product_ids') : [],
         category_ids: f.scope === 'category' ? fd.getAll('category_ids') : [],
         min_order_amount: nullableNum(f.min_order_amount),
+        min_quantity: nullableNum(f.min_quantity),
         starts_at: f.starts_at ? new Date(f.starts_at).toISOString() : null,
         ends_at: f.ends_at ? new Date(f.ends_at).toISOString() : null,
         usage_limit: nullableNum(f.usage_limit),

@@ -4,7 +4,7 @@
  * the real photographed angles (no faked rotation). Sticky bag bar on mobile.
  */
 import { esc, money } from '../utils.js';
-import { getProduct, getRelated, pricedVariants, defaultVariant, unitPrice, isSoldOut } from '../data/catalog.js';
+import { settings, getProduct, getRelated, pricedVariants, defaultVariant, unitPrice, isSoldOut } from '../data/catalog.js';
 import { productImg } from '../components/render.js';
 import { renderProductCard, mountProductCards } from '../components/productCard.js';
 import { icons } from '../components/icons.js';
@@ -14,6 +14,7 @@ import { navigate } from '../router.js';
 import { onPageCleanup, motionOK, gsap } from '../motion.js';
 import { waLink, productMessage, enquiryMessage, waButton, waIcon } from '../components/whatsapp.js';
 import { setSeo, productJsonLd } from '../seo.js';
+import { offerLine } from '../components/price.js';
 
 /* order in which the photographed views read as one turn of the bottle */
 const TURN = ['Opposite three-quarter', 'Front', 'Three-quarter', 'Side'];
@@ -70,6 +71,7 @@ function buyBox(p) {
       <span data-price-display></span>
       <span class="pdp__stock" data-stock></span>
     </div>
+    ${offerLine() ? `<p class="pdp__offer">${esc(offerLine())}<small>${esc(settings.offer?.detail || '')}</small></p>` : ''}
     <div class="pdp__ctarow">
       <div class="qty" role="group" aria-label="Quantity">
         <button type="button" data-qty="-1" aria-label="Decrease quantity">−</button>
@@ -145,6 +147,7 @@ export default {
               <h1 class="pdp__title">${esc(p.name)}</h1>
               ${p.family ? `<span class="pdp__fam">${esc(p.family)}</span>` : ''}
             </div>
+            ${p.story?.tagline ? `<p class="pdp__tagline">${esc(p.story.tagline)}</p>` : ''}
             ${p.shortDescription || p.description ? `<p class="pdp__short">${esc(p.description || p.shortDescription)}</p>` : ''}
             ${notesBlock(p)}
             ${buyBox(p)}

@@ -9,6 +9,8 @@ import { renderRoute } from '../router.js';
 import { onPageCleanup } from '../motion.js';
 import { waLink, cartMessage, waButton } from '../components/whatsapp.js';
 import { setSeo } from '../seo.js';
+import { offerLine } from '../components/price.js';
+import { settings } from '../data/catalog.js';
 
 function line(l) {
   return `
@@ -58,6 +60,7 @@ export default {
           <div class="sumline" data-disc-row hidden><span data-disc-label>Discount</span><span data-disc></span></div>
           <div class="sumline"><span>Delivery</span><span>Calculated at checkout</span></div>
           <div class="sumline sumline--total"><span class="label">Estimated total</span><strong data-total>${money(cart.subtotal)}</strong></div>
+          ${settings.offer?.enabled && cart.count === 1 ? `<p class="drawer__hint">Add one more bottle: ${esc(offerLine())}.</p>` : ''}
           <a class="btn btn--primary btn--block" href="/checkout">Checkout</a>
           <div data-wa-slot></div>
           <p class="drawer__note">WhatsApp opens a pre-written message with your bag. The order is confirmed when we reply.</p>

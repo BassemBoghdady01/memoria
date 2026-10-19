@@ -7,22 +7,24 @@ import { sb, q, loadSettings, saveSetting, uploadImage } from '../api.js';
 import { esc, toast, fail } from '../ui.js';
 
 const SECTIONS = [
-  ['collection', 'The collection row'],
-  ['featured', 'Featured scent'],
-  ['memories', 'Objects of memory (campaign photographs)'],
-  ['story', 'Brand story'],
+  ['collection', 'Fragrance gallery'],
+  ['featured', 'Memory Spray film'],
+  ['memories', 'House archive photographs'],
+  ['story', 'Heritage section'],
   ['whatsapp_band', 'WhatsApp band'],
 ];
 
 export default async function content(root) {
   const [s, products] = await Promise.all([
-    loadSettings(['home', 'announcement']),
+    loadSettings(['home', 'announcement', 'offer', 'heritage']),
     q(sb.from('products').select('slug, name').eq('status', 'published').order('sort_order')),
   ]);
   const home = s.home || {};
   const hero = home.hero || {};
   const story = home.story || {};
   const ann = s.announcement || {};
+  const offer = s.offer || {};
+  const her = s.heritage || {};
   const opts = (sel) => products.map((p) => `<option value="${esc(p.slug)}" ${p.slug === sel ? 'selected' : ''}>${esc(p.name)}</option>`).join('');
   const imgField = (name, url, labelText) => `
     <div class="a-imgfield" data-imgfield="${name}">
@@ -60,6 +62,23 @@ export default async function content(root) {
         <label>Title <input name="story_title" maxlength="120" value="${esc(story.title || '')}" /></label>
         <label>Text <textarea name="story_body" rows="8" maxlength="5000">${esc(story.body || '')}</textarea></label>
         ${imgField('story_image', story.image_url, 'Story image')}
+      </section>
+
+      <section class="a-card">
+        <h2>Offer banner</h2>
+        <p class="a-muted">Wording only. The price rules themselves live in Products (regular / sale price) and Discounts (quantity offer).</p>
+        <label class="a-check"><input type="checkbox" name="offer_enabled" ${offer.enabled ? 'checked' : ''}/> Show the offer on the website</label>
+        <label>Headline <input name="offer_headline" maxlength="80" value="${esc(offer.headline || '')}" placeholder="Choose any 2 — EGP 899 each" /></label>
+        <label>Detail <input name="offer_detail" maxlength="140" value="${esc(offer.detail || '')}" /></label>
+      </section>
+
+      <section class="a-card">
+        <h2>Heritage</h2>
+        <label>Years of perfume making <input name="her_years" type="number" min="0" max="200" value="${her.years ?? ''}" /></label>
+        <label>Title <input name="her_title" maxlength="120" value="${esc(her.title || '')}" /></label>
+        <label>Handwritten line <input name="her_script" maxlength="80" value="${esc(her.script || '')}" /></label>
+        <label>Text <textarea name="her_body" rows="5" maxlength="2000">${esc(her.body || '')}</textarea></label>
+        <label>Steps (comma separated) <input name="her_steps" maxlength="200" value="${esc((her.steps || []).join(', '))}" /></label>
       </section>
 
       <section class="a-card">
@@ -115,6 +134,8 @@ export default async function content(root) {
     };
     try {
       await saveSetting('home', next, true);
+      await saveSetting('offer', { enabled: Boolean(f.offer_enabled), headline: f.offer_headline.trim(), detail: f.offer_detail.trim() }, true);
+      await saveSetting('heritage', { years: f.her_years ? Number(f.her_years) : null, title: f.her_title.trim(), script: f.her_script.trim(), body: f.her_body.trim(), steps: f.her_steps.split(',').map((x) => x.trim()).filter(Boolean) }, true);
       await saveSetting('announcement', { enabled: Boolean(f.ann_enabled), text: f.ann_text.trim(), link: f.ann_link.trim() }, true);
       toast('Saved. The website shows it on next load.');
     } catch (err) {

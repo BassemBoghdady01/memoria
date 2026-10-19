@@ -10,6 +10,7 @@ import { productImg } from './render.js';
 import { cart } from '../store/cart.js';
 import { openCartDrawer } from './cartDrawer.js';
 import { onPageCleanup } from '../motion.js';
+import { offerLine } from './price.js';
 import { waLink, enquiryMessage } from './whatsapp.js';
 
 export function priceLabel(p) {
@@ -45,7 +46,7 @@ export function renderProductCard(p, { revealDelay = 0, sizes } = {}) {
       <h3 class="pcard__name">${esc(p.name)}</h3>
       ${meta ? `<span class="pcard__fam">${esc(meta)}</span>` : ''}
       <div class="pcard__row">
-        <span class="pcard__price">${onSale ? `<s>${money(v.price)}</s> ` : ''}${esc(priceLabel(p))}</span>
+        <span class="pcard__price">${onSale ? `<s>${money(v.price)}</s> ` : ''}${esc(priceLabel(p))}${onSale && offerLine() ? `<small class="pcard__offer">${esc(offerLine())}</small>` : ''}</span>
         ${action}
       </div>
     </div>

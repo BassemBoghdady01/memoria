@@ -1,70 +1,402 @@
 {
   "_readme": "Owner-supplied catalogue facts. Fill in category, variants (size_ml, price in EGP), notes and descriptions as they are confirmed, then run: node scripts/build-seed.mjs. Anything left empty stays empty on the site; nothing is invented. After launch, edit products in the dashboard instead.",
   "categories": [
-    { "slug": "women", "name": "For Her" },
-    { "slug": "men", "name": "For Him" },
-    { "slug": "unisex", "name": "Unisex" }
+    {
+      "slug": "women",
+      "name": "For Her"
+    },
+    {
+      "slug": "men",
+      "name": "For Him"
+    },
+    {
+      "slug": "unisex",
+      "name": "Unisex"
+    }
   ],
   "products": [
-    { "slug": "liqaa", "name": "LIQAA", "featured": true, "sort_order": 0 },
-    { "slug": "waad", "name": "WAAD", "sort_order": 1 },
-    { "slug": "shawq", "name": "SHAWQ", "sort_order": 2 },
-    { "slug": "athar", "name": "ATHAR", "sort_order": 3 },
-    { "slug": "safya", "name": "SAFYA", "sort_order": 4 },
-    { "slug": "before", "name": "BEFORE", "sort_order": 5 },
-    { "slug": "after", "name": "AFTER", "sort_order": 6 }
+    {
+      "slug": "liqaa",
+      "name": "LIQAA",
+      "featured": true,
+      "sort_order": 0,
+      "variants": [
+        {
+          "label": "Bottle",
+          "price": 1200,
+          "sale_price": 999,
+          "sku": "MEM-LIQAA"
+        }
+      ],
+      "story": {
+        "scene": "nile-dusk",
+        "tagline": "Liqaa means meeting. For the evening you finally saw them again.",
+        "draft": true
+      }
+    },
+    {
+      "slug": "waad",
+      "name": "WAAD",
+      "sort_order": 1,
+      "variants": [
+        {
+          "label": "Bottle",
+          "price": 1200,
+          "sale_price": 999,
+          "sku": "MEM-WAAD"
+        }
+      ],
+      "story": {
+        "scene": "attic",
+        "tagline": "Waad means promise. Some were kept for a lifetime.",
+        "draft": true
+      }
+    },
+    {
+      "slug": "shawq",
+      "name": "SHAWQ",
+      "sort_order": 2,
+      "variants": [
+        {
+          "label": "Bottle",
+          "price": 1200,
+          "sale_price": 999,
+          "sku": "MEM-SHAWQ"
+        }
+      ],
+      "story": {
+        "scene": "city-window",
+        "tagline": "Shawq means longing. For a place you can still smell.",
+        "draft": true
+      }
+    },
+    {
+      "slug": "athar",
+      "name": "ATHAR",
+      "sort_order": 3,
+      "variants": [
+        {
+          "label": "Bottle",
+          "price": 1200,
+          "sale_price": 999,
+          "sku": "MEM-ATHAR"
+        }
+      ],
+      "story": {
+        "scene": "vanity",
+        "tagline": "Athar means trace. What a person leaves in a room.",
+        "draft": true
+      }
+    },
+    {
+      "slug": "safya",
+      "name": "SAFYA",
+      "sort_order": 4,
+      "variants": [
+        {
+          "label": "Bottle",
+          "price": 1200,
+          "sale_price": 999,
+          "sku": "MEM-SAFYA"
+        }
+      ],
+      "story": {
+        "scene": "armchair",
+        "tagline": "Safya means clear. An afternoon with nothing to forget.",
+        "draft": true
+      }
+    },
+    {
+      "slug": "before",
+      "name": "BEFORE",
+      "sort_order": 5,
+      "variants": [
+        {
+          "label": "Bottle",
+          "price": 1200,
+          "sale_price": 999,
+          "sku": "MEM-BEFORE"
+        }
+      ],
+      "story": {
+        "scene": "radio",
+        "tagline": "For the years before everything changed.",
+        "draft": true
+      }
+    },
+    {
+      "slug": "after",
+      "name": "AFTER",
+      "sort_order": 6,
+      "variants": [
+        {
+          "label": "Bottle",
+          "price": 1200,
+          "sale_price": 999,
+          "sku": "MEM-AFTER"
+        }
+      ],
+      "story": {
+        "scene": "cairo-sunset",
+        "tagline": "For the quiet after, when the memory stays.",
+        "draft": true
+      }
+    }
   ],
   "governorates": [
-    ["Cairo", "القاهرة"], ["Giza", "الجيزة"], ["Alexandria", "الإسكندرية"], ["Qalyubia", "القليوبية"],
-    ["Dakahlia", "الدقهلية"], ["Sharqia", "الشرقية"], ["Gharbia", "الغربية"], ["Monufia", "المنوفية"],
-    ["Beheira", "البحيرة"], ["Kafr El Sheikh", "كفر الشيخ"], ["Damietta", "دمياط"], ["Port Said", "بورسعيد"],
-    ["Ismailia", "الإسماعيلية"], ["Suez", "السويس"], ["Faiyum", "الفيوم"], ["Beni Suef", "بني سويف"],
-    ["Minya", "المنيا"], ["Asyut", "أسيوط"], ["Sohag", "سوهاج"], ["Qena", "قنا"], ["Luxor", "الأقصر"],
-    ["Aswan", "أسوان"], ["Red Sea", "البحر الأحمر"], ["New Valley", "الوادي الجديد"], ["Matrouh", "مطروح"],
-    ["North Sinai", "شمال سيناء"], ["South Sinai", "جنوب سيناء"]
+    [
+      "Cairo",
+      "القاهرة"
+    ],
+    [
+      "Giza",
+      "الجيزة"
+    ],
+    [
+      "Alexandria",
+      "الإسكندرية"
+    ],
+    [
+      "Qalyubia",
+      "القليوبية"
+    ],
+    [
+      "Dakahlia",
+      "الدقهلية"
+    ],
+    [
+      "Sharqia",
+      "الشرقية"
+    ],
+    [
+      "Gharbia",
+      "الغربية"
+    ],
+    [
+      "Monufia",
+      "المنوفية"
+    ],
+    [
+      "Beheira",
+      "البحيرة"
+    ],
+    [
+      "Kafr El Sheikh",
+      "كفر الشيخ"
+    ],
+    [
+      "Damietta",
+      "دمياط"
+    ],
+    [
+      "Port Said",
+      "بورسعيد"
+    ],
+    [
+      "Ismailia",
+      "الإسماعيلية"
+    ],
+    [
+      "Suez",
+      "السويس"
+    ],
+    [
+      "Faiyum",
+      "الفيوم"
+    ],
+    [
+      "Beni Suef",
+      "بني سويف"
+    ],
+    [
+      "Minya",
+      "المنيا"
+    ],
+    [
+      "Asyut",
+      "أسيوط"
+    ],
+    [
+      "Sohag",
+      "سوهاج"
+    ],
+    [
+      "Qena",
+      "قنا"
+    ],
+    [
+      "Luxor",
+      "الأقصر"
+    ],
+    [
+      "Aswan",
+      "أسوان"
+    ],
+    [
+      "Red Sea",
+      "البحر الأحمر"
+    ],
+    [
+      "New Valley",
+      "الوادي الجديد"
+    ],
+    [
+      "Matrouh",
+      "مطروح"
+    ],
+    [
+      "North Sinai",
+      "شمال سيناء"
+    ],
+    [
+      "South Sinai",
+      "جنوب سيناء"
+    ]
   ],
   "settings": {
-    "whatsapp": { "public": true, "value": { "number": "201500007544", "display": "+20 150 000 7544", "enabled": true } },
-    "contact": { "public": true, "value": { "email": "", "phone": "", "address": "", "hours": "" } },
-    "social": { "public": true, "value": { "instagram": "", "facebook": "", "tiktok": "" } },
-    "shipping_info": { "public": true, "value": { "summary": "", "details": "" } },
-    "announcement": { "public": true, "value": { "enabled": false, "text": "", "link": "" } },
+    "whatsapp": {
+      "public": true,
+      "value": {
+        "number": "201500007544",
+        "display": "+20 150 000 7544",
+        "enabled": true
+      }
+    },
+    "contact": {
+      "public": true,
+      "value": {
+        "email": "",
+        "phone": "",
+        "address": "",
+        "hours": ""
+      }
+    },
+    "social": {
+      "public": true,
+      "value": {
+        "instagram": "",
+        "facebook": "",
+        "tiktok": ""
+      }
+    },
+    "shipping_info": {
+      "public": true,
+      "value": {
+        "summary": "",
+        "details": ""
+      }
+    },
+    "announcement": {
+      "public": true,
+      "value": {
+        "enabled": false,
+        "text": "",
+        "link": ""
+      }
+    },
     "home": {
       "public": true,
       "value": {
         "hero": {
-          "eyebrow": "Perfume house · Cairo",
+          "eyebrow": "",
           "headline": "Every scent holds a memory.",
           "script": "memory",
-          "subline": "",
+          "subline": "Seven scents. Twenty-five years. Thousands of places we thought we’d forgotten.",
           "image_url": "",
           "mobile_image_url": "",
           "product_slug": "liqaa"
         },
         "featured_slug": "liqaa",
-        "story": { "title": "", "body": "", "image_url": "" },
+        "story": {
+          "title": "",
+          "body": "",
+          "image_url": ""
+        },
         "campaign_images": [],
-        "sections": { "collection": true, "featured": true, "memories": true, "story": true, "whatsapp_band": true }
+        "sections": {
+          "collection": true,
+          "featured": true,
+          "memories": true,
+          "story": true,
+          "whatsapp_band": true
+        }
       }
     },
     "payments": {
       "public": true,
       "value": {
         "methods": [
-          { "id": "cod", "label": "Cash on delivery", "description": "Pay in cash when your order arrives.", "enabled": true },
-          { "id": "instapay", "label": "InstaPay transfer", "description": "We send transfer details after confirming your order.", "enabled": false },
-          { "id": "card", "label": "Card payment", "description": "Requires a configured payment gateway (Paymob / Fawry / Kashier).", "enabled": false, "requires_gateway": true }
+          {
+            "id": "cod",
+            "label": "Cash on delivery",
+            "description": "Pay in cash when your order arrives.",
+            "enabled": true
+          },
+          {
+            "id": "instapay",
+            "label": "InstaPay transfer",
+            "description": "We send transfer details after confirming your order.",
+            "enabled": false
+          },
+          {
+            "id": "card",
+            "label": "Card payment",
+            "description": "Requires a configured payment gateway (Paymob / Fawry / Kashier).",
+            "enabled": false,
+            "requires_gateway": true
+          }
         ]
       }
     },
     "company": {
       "public": false,
-      "value": { "legal_name": "", "trade_name": "MEMÓRIA", "address": "", "phone": "", "email": "", "tax_registration_number": "", "commercial_register": "" }
+      "value": {
+        "legal_name": "",
+        "trade_name": "MEMÓRIA",
+        "address": "",
+        "phone": "",
+        "email": "",
+        "tax_registration_number": "",
+        "commercial_register": ""
+      }
     },
     "invoice": {
       "public": false,
-      "value": { "prefix": "MEM-INV-", "next_number": 1, "padding": 5, "footer_note": "This document is a sales receipt. It is not an official e-invoice under the Egyptian Tax Authority system unless tax registration details are configured and verified." }
+      "value": {
+        "prefix": "MEM-INV-",
+        "next_number": 1,
+        "padding": 5,
+        "footer_note": "This document is a sales receipt. It is not an official e-invoice under the Egyptian Tax Authority system unless tax registration details are configured and verified."
+      }
     },
-    "inventory": { "public": false, "value": { "default_low_stock_threshold": 3 } }
+    "inventory": {
+      "public": false,
+      "value": {
+        "default_low_stock_threshold": 3
+      }
+    },
+    "offer": {
+      "public": true,
+      "value": {
+        "enabled": true,
+        "headline": "Choose any 2 — EGP 899 each",
+        "detail": "Mix any fragrances. Applied automatically in your bag."
+      }
+    },
+    "heritage": {
+      "public": true,
+      "value": {
+        "years": 25,
+        "title": "25 Years of Crafting Scents.",
+        "script": "A Lifetime of Memories.",
+        "body": "For 25 years, our journey has been shaped by the art of fragrance. From carefully crafted compositions to the moments they become part of, we believe a perfume is never just a scent. It's a place, a person, a feeling — a memory waiting to return.",
+        "steps": [
+          "Craftsmanship",
+          "Fragrance",
+          "Emotion",
+          "Memory"
+        ]
+      }
+    }
   }
 }

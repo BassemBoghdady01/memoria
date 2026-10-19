@@ -1,222 +1,159 @@
 /**
- * MEMÓRIA · Homepage — built to the owner's visual reference.
+ * MEMÓRIA · Homepage — a cinematic memory that stays easy to shop.
  *
- * HERO: a composited campaign photograph (leaf-shadow plaster wall, a
- * real valve radio on its table, licensed photography) with the real
- * bottle cut-out standing on the table, archival props at the edges,
- * serif caps + handwritten "memory." → TORN-PAPER COLLECTION BAND with
- * every scent in a row → FRAMED FEATURED-SCENT PANEL (scene + notes +
- * price, carousel) → objects of memory → story → WhatsApp.
+ *  1 HERO       a Cairo window over the Nile, the real bottle on the ledge
+ *               (composited per product: colour, rim light, glass, shadow)
+ *  2 OFFER      the launch price and the any-2 offer, from store settings
+ *  3 GALLERY    one fragrance at a time in its own photographed place,
+ *               price + Add to bag + WhatsApp always in reach, radio tuning band
+ *  4 SPRAY      the Memory Spray scroll film (skippable, reversible)
+ *  5 HERITAGE   25 years of perfume making (owner-editable copy)
+ *  6 ARCHIVE    objects of memory
+ *  7 WHATSAPP
  *
- * Copy, hero product, featured scent and section visibility come from
- * store settings (Dashboard → Website content). Product data comes from
- * the database.
+ * Copy, hero product, featured scent, heritage text and section visibility
+ * are store settings (Dashboard → Website content). Products and prices
+ * come from the database.
  */
-import { esc, money } from '../utils.js';
-import { products, settings, getProduct, getFeatured, defaultVariant, unitPrice, isPurchasable, usedCategories, getByCategory } from '../data/catalog.js';
-import { productImg, productCutout } from '../components/render.js';
-import { mountProductCards, priceLabel } from '../components/productCard.js';
+import { esc } from '../utils.js';
+import { products, settings, getProduct, getFeatured } from '../data/catalog.js';
 import { gsap, motionOK, onPageCleanup } from '../motion.js';
-import { cart } from '../store/cart.js';
-import { openCartDrawer } from '../components/cartDrawer.js';
-import { waLink, waButton, productMessage, enquiryMessage } from '../components/whatsapp.js';
+import { waLink, waButton } from '../components/whatsapp.js';
 import { campaign, campaignImg } from '../data/campaign.js';
-import { roundStamp, rectStamp } from '../components/stamps.js';
+import { priceBlock, offerLine } from '../components/price.js';
+import { gallerySection, mountGallery } from '../components/gallery.js';
+import { memorySpraySection, mountMemorySpray } from '../components/memorySpray.js';
+import hero from '../data/hero.json';
+import scenes from '../data/scenes.json';
 import { setSeo } from '../seo.js';
 
 const home = () => settings.home || {};
 const on = (key) => home().sections?.[key] !== false;
-const pad = (n) => String(n).padStart(2, '0');
-const numberOf = (p) => pad(products.indexOf(p) + 1);
+const heritage = () => settings.heritage || {};
 
-/* ————— hero ————— */
+/* ————— 1 · hero ————— */
 
 function heroSection() {
   const h = home().hero || {};
   const p = getProduct(h.product_slug) || getFeatured();
-  const scene = h.image_url ? { src: h.image_url } : campaign.hero;
-  const sceneMobile = h.mobile_image_url ? { src: h.mobile_image_url } : campaign.heroMobile;
+  const baked = p && hero.products.includes(p.slug);
+  const years = heritage().years;
   const headline = h.headline || 'Every scent holds a memory.';
   const script = h.script && headline.includes(h.script) ? h.script : '';
   const [before, after] = script ? headline.split(script) : [headline, ''];
-  const sub = h.subline || `${products.length === 7 ? 'Seven' : products.length} scents.\nNo bad memories included.`;
-  const props = campaign.props || {};
+  const sub = h.subline || '';
+  const custom = h.image_url;
+  const desktopSet = baked ? hero.widths.map((w) => `/campaign/hero-${p.slug}-${w}.webp ${w}w`).join(', ') : '';
+  const mobileSet = baked ? hero.mobileWidths.map((w) => `/campaign/hero-m-${p.slug}-${w}.webp ${w}w`).join(', ') : '';
   return `
-  <section class="hhero" aria-labelledby="hero-title" data-hero>
-    <div class="hhero__scene" aria-hidden="true">
+  <section class="h4" aria-labelledby="hero-title" data-hero>
+    <div class="h4__scene" aria-hidden="true">
       ${
-        scene
-          ? `<picture>
-              ${sceneMobile ? `<source media="(max-width: 760px)" ${campaignImg(sceneMobile, { sizes: '100vw' })}/>` : ''}
-              <img class="hhero__photo" ${campaignImg(scene, { sizes: '100vw' })} alt="" fetchpriority="high" decoding="async" data-hero-photo/>
-            </picture>`
+        custom
+          ? `<img class="h4__photo" src="${esc(custom)}" alt="" fetchpriority="high"/>`
+          : baked
+            ? `<picture>
+                <source media="(max-width: 760px)" srcset="${mobileSet}" sizes="100vw"/>
+                <img class="h4__photo" src="/campaign/hero-${p.slug}-1920.webp" srcset="${desktopSet}" sizes="100vw" alt="" fetchpriority="high" decoding="async" width="2600" height="1100" data-hero-photo/>
+              </picture>`
+            : campaign.hero
+              ? `<img class="h4__photo" ${campaignImg(campaign.hero, { sizes: '100vw' })} alt="" fetchpriority="high"/>`
+              : ''
+      }
+      <i class="h4__sun" data-sun></i>
+      <i class="h4__grade"></i>
+    </div>
+    ${p ? `<a class="h4__product" href="/product/${esc(p.slug)}" aria-label="${esc(p.name)} — view the fragrance"><span class="sr-only">${esc(p.name)}</span></a>` : ''}
+
+    <div class="container h4__inner">
+      <div class="h4__copy">
+        ${years ? `<p class="h4__heritage"><span>${esc(String(years))}</span> years of perfume craft · Cairo</p>` : ''}
+        <h1 id="hero-title" class="h4__title">
+          <span class="h4__caps">${esc(before.trim())}</span>
+          ${script ? `<span class="h4__script">${esc(script)}${esc(after.trim())}<i class="h4__stroke" aria-hidden="true"></i></span>` : ''}
+        </h1>
+        ${sub ? `<p class="h4__sub">${esc(sub)}</p>` : ''}
+        <div class="h4__ctas">
+          <a class="btn btn--ink" href="#collection" data-to-collection>Shop now</a>
+          <a class="btn btn--line" href="/our-story">Discover our story</a>
+        </div>
+      </div>
+      ${
+        p
+          ? `<a class="h4__tag" href="/product/${esc(p.slug)}">
+              <span class="h4__tagname">${esc(p.name)}</span>
+              ${priceBlock(p, { cls: 'pblock--light', offer: false })}
+            </a>`
           : ''
       }
-      <i class="hhero__light" data-hero-light></i>
     </div>
-
-    ${props.photos ? `<figure class="hhero__prop hhero__prop--photo" aria-hidden="true" data-prop><img ${campaignImg(props.photos, { sizes: '18vw' })} alt="" loading="eager" decoding="async"/></figure>` : ''}
-    ${props.envelopes ? `<figure class="hhero__prop hhero__prop--letter" aria-hidden="true" data-prop><img ${campaignImg(props.envelopes, { sizes: '16vw' })} alt="" loading="eager" decoding="async"/></figure>` : ''}
-    ${props.letters ? `<figure class="hhero__prop hhero__prop--table" aria-hidden="true" data-prop><img ${campaignImg(props.letters, { sizes: '22vw' })} alt="" loading="eager" decoding="async"/></figure>` : ''}
-    ${roundStamp({ top: 'MEMÓRIA', bottom: 'CAIRO', center: 'PERFUME', cls: 'hhero__stamp' })}
-
-    ${
-      p
-        ? `<a class="hhero__product" href="/product/${esc(p.slug)}" aria-label="${esc(p.name)}, ${esc(priceLabel(p))}" data-hero-bottle>
-            ${productCutout(p, { cls: 'hhero__bottle', sizes: '(max-width: 760px) 46vw, 24vw', eager: true, alt: `${p.name} by MEMÓRIA` })}
-            <i class="hhero__contact" aria-hidden="true"></i>
-            <i class="hhero__sheen" aria-hidden="true" data-hero-sheen></i>
-          </a>`
-        : ''
-    }
-
-    <div class="container hhero__inner">
-      <div class="hhero__copy">
-        <h1 id="hero-title" class="hhero__title">
-          <span class="hhero__caps">${esc(before.trim())}</span>
-          ${script ? `<span class="hhero__script">${esc(script)}${esc(after.trim())}<i class="hhero__stroke" aria-hidden="true"></i></span>` : ''}
-        </h1>
-        <p class="hhero__sub">${esc(sub).replace(/\n/g, '<br/>')}</p>
-        <div class="hhero__ctas">
-          <a class="btn btn--ink" href="/shop">Shop the collection</a>
-          <a class="btn btn--line" href="/our-story">Discover Memória</a>
-        </div>
-      </div>
-    </div>
-    ${campaign.hero?.credit ? `<p class="hhero__credit">Photography: ${esc(campaign.hero.credit)}</p>` : ''}
+    <a class="h4__scroll" href="#collection" aria-label="Scroll to the collection"><i></i><span>Scroll</span></a>
   </section>`;
 }
 
-/* ————— the collection band ————— */
+/* ————— 2 · offer ————— */
 
-function lineupItem(p, i) {
-  const v = defaultVariant(p);
+function offerSection() {
+  const o = settings.offer || {};
+  if (!o.enabled || !offerLine()) return '';
+  const p = products[0];
+  const v = p?.variants?.find((x) => x.price !== null);
   return `
-  <article class="hline__item" data-pcard="${esc(p.slug)}" style="--i:${i}">
-    <a class="hline__link" href="/product/${esc(p.slug)}" aria-label="${esc(p.name)}, ${esc(priceLabel(p))}"></a>
-    <div class="hline__bottle">${productCutout(p, { sizes: '(max-width: 760px) 30vw, 9vw' })}</div>
-    <span class="hline__no">Nº${pad(i + 1)}</span>
-    <h3 class="hline__name">${esc(p.name)}</h3>
-    ${p.concentration ? `<span class="hline__meta">${esc(p.concentration)}</span>` : ''}
-    ${p.category ? `<span class="hline__meta">${esc(p.category.name)}</span>` : ''}
-    <i class="hline__dot" aria-hidden="true"></i>
-    <span class="hline__price">${esc(priceLabel(p))}</span>
-    ${isPurchasable(p) ? `<button class="hline__add" data-add="${esc(v.id)}">Add to bag</button>` : ''}
-  </article>`;
-}
-
-function collectionSection() {
-  const cats = usedCategories();
-  const n = products.length;
-  const word = { 6: 'six', 7: 'seven', 8: 'eight' }[n] || String(n);
-  return `
-  <section class="hband" id="collection" aria-labelledby="collection-title">
-    <div class="hband__paper" aria-hidden="true" ${campaign.paper ? `style="--paper:url('${campaign.paper.src}')"` : ''}></div>
-    <div class="container hband__inner">
-      <div class="hband__intro">
-        <h2 id="collection-title" class="hband__title">${word.toUpperCase()} SCENTS.<br/>${word.toUpperCase()} MEMORIES.</h2>
-        <p class="hband__script">Choose the one<br/>that takes you back.<i class="hhero__stroke hhero__stroke--small" aria-hidden="true"></i></p>
-      </div>
-      <div class="hband__shelf">
-        <div class="hband__tabs" role="group" aria-label="Filter the collection">
-          <button class="hband__tab" data-filter="all" aria-pressed="true">All ${word}</button>
-          ${cats.map((c) => `<button class="hband__tab" data-filter="${esc(c.slug)}" aria-pressed="false">${esc(c.name)}</button>`).join('')}
-        </div>
-        <div class="hline" data-collection-grid>${products.map(lineupItem).join('')}</div>
-      </div>
-      ${rectStamp({ lines: ['MEMÓRIA', 'ARCHIVE'], foot: 'CAIRO', cls: 'hband__stamp' })}
+  <section class="offer" aria-label="Current offer">
+    <div class="container offer__inner">
+      ${v && v.salePrice !== null ? `<p class="offer__price"><s>EGP ${v.price.toLocaleString('en-EG')}</s> <strong>EGP ${v.salePrice.toLocaleString('en-EG')}</strong> <span>per bottle</span></p>` : ''}
+      <p class="offer__line"><span class="offer__script">${esc(o.headline)}</span>${o.detail ? `<small>${esc(o.detail)}</small>` : ''}</p>
+      <a class="offer__link" href="/shop">Shop all fragrances →</a>
     </div>
   </section>`;
 }
 
-/* ————— featured scent panel (carousel) ————— */
+/* ————— 5 · heritage ————— */
 
-function featureSlide(p) {
-  const v = defaultVariant(p);
-  const notes = [
-    ['Top notes', p.notes.top],
-    ['Heart notes', p.notes.heart],
-    ['Base notes', p.notes.base],
-  ];
-  const hasNotes = notes.some(([, n]) => n.length);
+function heritageSection() {
+  const h = heritage();
+  if (!h.title && !h.body) return '';
+  const steps = h.steps?.length ? h.steps : ['Craftsmanship', 'Fragrance', 'Emotion', 'Memory'];
+  const img = (id, cls, sizes) => (scenes[id] ? `<img class="${cls}" src="${esc(scenes[id].src)}" srcset="${esc(scenes[id].srcset)}" sizes="${sizes}" alt="" loading="lazy" decoding="async"/>` : '');
   return `
-  <div class="hfeat__copy" data-slide="${esc(p.slug)}">
-    <span class="hfeat__ghost" aria-hidden="true">${numberOf(p)}</span>
-    <p class="hfeat__no">Nº ${numberOf(p)}</p>
-    <h3 class="hfeat__name">${esc(p.name)}</h3>
-    <p class="hfeat__meta">${esc([p.category?.name, p.concentration].filter(Boolean).join(' · ') || 'MEMÓRIA')}<i class="hline__dot" aria-hidden="true"></i></p>
-    ${p.shortDescription ? `<p class="hfeat__desc">${esc(p.shortDescription)}</p>` : ''}
-    ${
-      hasNotes
-        ? `<div class="hfeat__notes">${notes
-            .map(([t, n]) => `<div><span>${t}</span><p>${esc(n.join(', ') || '—')}</p></div>`)
-            .join('')}</div>`
-        : ''
-    }
-    <div class="hfeat__buy">
-      ${
-        v && v.price !== null
-          ? `<span class="hfeat__price"><small>EGP</small> ${money(unitPrice(v)).replace('EGP ', '')}</span>
-             <a class="btn btn--ink" href="/product/${esc(p.slug)}">Discover this scent</a>
-             ${v.inStock ? `<button class="btn btn--line" data-add="${esc(v.id)}">Add to bag</button>` : ''}`
-          : `<span class="hfeat__price hfeat__price--muted">Price on request</span>
-             <a class="btn btn--ink" href="/product/${esc(p.slug)}">Discover this scent</a>
-             ${waButton(waLink(enquiryMessage(p)), 'Ask on WhatsApp', 'btn--line')}`
-      }
+  <section class="heri" aria-labelledby="heri-title">
+    <div class="heri__media" aria-hidden="true">
+      ${img('heritage-line', 'heri__img heri__img--a', '(max-width: 900px) 100vw, 45vw')}
+      ${img('heritage-apothecary', 'heri__img heri__img--b', '(max-width: 900px) 60vw, 22vw')}
+      ${img('heritage-lab', 'heri__img heri__img--c', '(max-width: 900px) 60vw, 20vw')}
     </div>
-  </div>`;
-}
-
-function featuredSection() {
-  if (!products.length) return '';
-  const start = getProduct(home().featured_slug) || getFeatured();
-  const order = [start, ...products.filter((p) => p !== start)];
-  const scene = campaign.featured;
-  return `
-  <section class="hfeat" aria-roledescription="carousel" aria-label="Featured scents" data-feature>
-    <div class="container">
-      <div class="hfeat__frame">
-        <div class="hfeat__scene" aria-hidden="true">
-          ${scene ? `<img class="hfeat__photo" ${campaignImg(scene, { sizes: '(max-width: 900px) 100vw, 55vw' })} alt="" loading="lazy" decoding="async"/>` : ''}
-          <div class="hfeat__bottles">
-            ${order.map((p, i) => `<div class="hfeat__bottle ${i === 0 ? 'is-on' : ''}" data-fbottle="${esc(p.slug)}">${productCutout(p, { sizes: '(max-width: 900px) 40vw, 18vw', alt: '' })}<i class="hhero__contact"></i></div>`).join('')}
-          </div>
-          <button class="hfeat__arrow hfeat__arrow--prev" data-prev aria-label="Previous scent">←</button>
-        </div>
-        <div class="hfeat__panel" ${campaign.paper ? `style="--paper:url('${campaign.paper.src}')"` : ''}>
-          <div class="hfeat__slides" aria-live="polite">${order.map(featureSlide).join('')}</div>
-          <button class="hfeat__arrow hfeat__arrow--next" data-next aria-label="Next scent">→</button>
-        </div>
-        <div class="hfeat__dots" role="tablist" aria-label="Choose a scent">
-          ${order.map((p, i) => `<button role="tab" aria-selected="${i === 0}" aria-label="${esc(p.name)}" data-dot="${i}"></button>`).join('')}
-        </div>
-      </div>
+    <div class="heri__copy">
+      ${h.years ? `<p class="heri__years" aria-hidden="true">${esc(String(h.years))}</p>` : ''}
+      <h2 id="heri-title" class="heri__title">${esc(h.title || '')}${h.script ? `<span class="heri__script">${esc(h.script)}</span>` : ''}</h2>
+      ${(h.body || '').split(/\n{2,}/).map((t) => `<p class="heri__body" data-reveal>${esc(t)}</p>`).join('')}
+      <ol class="heri__chain">${steps.map((s, i) => `<li style="--i:${i}"><span>${esc(s)}</span></li>`).join('')}</ol>
+      <a class="btn btn--line-light" href="/our-story">Our story</a>
     </div>
   </section>`;
 }
 
-/* ————— objects of memory ————— */
+/* ————— 6 · objects of memory ————— */
 
 function memoriesSection() {
-  const objs = campaign.objects || [];
+  const objs = (campaign.objects || []).slice(0, 3);
   if (!objs.length) return '';
   return `
-  <section class="objects" aria-labelledby="objects-title">
+  <section class="arch" aria-labelledby="arch-title">
     <div class="container">
-      <div class="objects__head">
-        <h2 id="objects-title" data-reveal>Objects that remember</h2>
-        <p data-reveal>A tuning dial, a cassette, a key to a house you left. Scent works the same way.</p>
+      <div class="arch__head">
+        <h2 id="arch-title" data-reveal>From the house archive</h2>
+        <p data-reveal>A tuning dial, a letter, a photograph. Scent keeps what they keep.</p>
       </div>
-      <div class="objects__grid">
+      <div class="arch__grid">
         ${objs
           .map(
             (o, i) => `
-          <figure class="objects__item objects__item--${esc(o.id)}" data-object="${esc(o.id)}" data-reveal style="--reveal-delay:${i * 70}ms" ${o.interactive ? 'tabindex="0" aria-label="Radio dial. Move across it, or use arrow keys, to tune."' : ''}>
-            <div class="objects__media">
-              <img ${campaignImg(o, { sizes: '(max-width: 760px) 100vw, 40vw' })} alt="${esc(o.alt)}" loading="lazy" decoding="async" data-parallax/>
+          <figure class="arch__item" data-object="${esc(o.id)}" data-reveal style="--reveal-delay:${i * 80}ms" ${o.interactive ? 'tabindex="0" aria-label="Radio dial. Move across it, or use the arrow keys, to tune."' : ''}>
+            <div class="arch__media">
+              <img ${campaignImg(o, { sizes: '(max-width: 760px) 100vw, 33vw' })} alt="${esc(o.alt)}" loading="lazy" decoding="async"/>
               ${o.id === 'dial' ? '<i class="objects__needle" aria-hidden="true" data-needle></i>' : ''}
             </div>
-            <figcaption><span>${esc(o.caption)}</span>${o.credit ? `<small>Photo: ${esc(o.credit)} / Unsplash</small>` : ''}</figcaption>
+            <figcaption>${esc(o.caption)}</figcaption>
           </figure>`
           )
           .join('')}
@@ -225,25 +162,7 @@ function memoriesSection() {
   </section>`;
 }
 
-/* ————— house story (owner-written) ————— */
-
-function storySection() {
-  const s = home().story || {};
-  if (!s.title && !s.body) return '';
-  return `
-  <section class="hstory" aria-labelledby="hstory-title">
-    <div class="container hstory__inner">
-      ${s.image_url ? `<img class="hstory__img" src="${esc(s.image_url)}" alt="" loading="lazy" />` : ''}
-      <div class="hstory__copy">
-        ${s.title ? `<h2 id="hstory-title" data-reveal>${esc(s.title)}</h2>` : '<h2 id="hstory-title" class="sr-only">Our story</h2>'}
-        ${(s.body || '').split(/\n{2,}/).map((para) => `<p data-reveal>${esc(para)}</p>`).join('')}
-        <a class="link-line" href="/our-story" data-reveal>Our story →</a>
-      </div>
-    </div>
-  </section>`;
-}
-
-/* ————— whatsapp band ————— */
+/* ————— 7 · whatsapp ————— */
 
 function whatsappSection() {
   const href = waLink('Hello MEMÓRIA, I would like help choosing a scent.');
@@ -264,12 +183,15 @@ export default {
   title: 'MEMÓRIA — Every Scent Holds a Memory',
 
   render() {
+    const featured = getProduct(home().featured_slug) || getFeatured();
     return [
       heroSection(),
-      on('collection') ? collectionSection() : '',
-      on('featured') ? featuredSection() : '',
+      offerSection(),
+      `<div id="collection"></div>`,
+      on('collection') ? gallerySection(featured?.slug) : '',
+      on('featured') ? memorySpraySection(featured, scenes.curtain) : '',
+      on('story') ? heritageSection() : '',
       on('memories') ? memoriesSection() : '',
-      on('story') ? storySection() : '',
       on('whatsapp_band') ? whatsappSection() : '',
     ].join('');
   },
@@ -277,74 +199,40 @@ export default {
   mount(root) {
     setSeo({
       title: 'MEMÓRIA — Every Scent Holds a Memory',
-      description: 'MEMÓRIA is an Egyptian perfume house. Discover the collection, order online with delivery across Egypt, or order on WhatsApp.',
+      description: 'MEMÓRIA — 25 years of perfume craft in Cairo. Seven fragrances, each holding a memory. Order online with delivery across Egypt, or on WhatsApp.',
       path: '/',
       jsonLd: { '@context': 'https://schema.org', '@type': 'Organization', name: 'MEMÓRIA', url: location.origin, logo: location.origin + '/brand/logo-black-560.png' },
     });
     document.body.classList.add('is-home');
     onPageCleanup(() => document.body.classList.remove('is-home'));
 
-    /* — collection: filter + quick add — */
-    const grid = root.querySelector('[data-collection-grid]');
-    let dispose = mountProductCards(grid);
-    root.querySelectorAll('.hband__tab').forEach((tab) =>
-      tab.addEventListener('click', () => {
-        root.querySelectorAll('.hband__tab').forEach((t) => t.setAttribute('aria-pressed', String(t === tab)));
-        dispose();
-        const list = getByCategory(tab.dataset.filter);
-        grid.innerHTML = list.map((p) => lineupItem(p, products.indexOf(p))).join('');
-        dispose = mountProductCards(grid);
+    const ok = motionOK();
+    const mobile = window.matchMedia('(max-width: 760px)').matches;
+
+    root.querySelectorAll('[data-to-collection], .h4__scroll').forEach((a) =>
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        root.querySelector('#collection')?.scrollIntoView({ behavior: ok ? 'smooth' : 'auto' });
       })
     );
 
-    /* — featured carousel — */
-    const feat = root.querySelector('[data-feature]');
-    if (feat) {
-      const slides = [...feat.querySelectorAll('[data-slide]')];
-      const bottles = [...feat.querySelectorAll('[data-fbottle]')];
-      const dots = [...feat.querySelectorAll('[data-dot]')];
-      let cur = 0;
-      const go = (i) => {
-        cur = (i + slides.length) % slides.length;
-        slides.forEach((s, j) => s.classList.toggle('is-on', j === cur));
-        bottles.forEach((b, j) => b.classList.toggle('is-on', j === cur));
-        dots.forEach((d, j) => d.setAttribute('aria-selected', String(j === cur)));
-      };
-      go(0);
-      feat.querySelector('[data-prev]').addEventListener('click', () => go(cur - 1));
-      feat.querySelector('[data-next]').addEventListener('click', () => go(cur + 1));
-      dots.forEach((d) => d.addEventListener('click', () => go(Number(d.dataset.dot))));
-      feat.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight') go(cur + 1);
-        if (e.key === 'ArrowLeft') go(cur - 1);
-      });
-      feat.querySelectorAll('[data-add]').forEach((b) =>
-        b.addEventListener('click', () => {
-          if (cart.add(b.dataset.add, 1)) openCartDrawer();
-        })
-      );
-    }
+    mountGallery(root);
+    mountMemorySpray(root, { reduced: !ok, mobile });
 
-    const ok = motionOK();
-    const wide = window.matchMedia('(min-width: 880px)').matches;
-
-    /* — hero: slow push-in, light drifting across the wall, props on restrained parallax — */
-    const hero = root.querySelector('[data-hero]');
-    if (ok && hero) {
-      gsap.from('.hhero__copy > *', { y: 16, opacity: 0, duration: 0.9, stagger: 0.08, ease: 'power2.out', delay: 0.05 });
-      gsap.from('[data-hero-bottle]', { y: 22, opacity: 0, duration: 1.1, ease: 'power3.out', delay: 0.15 });
-      const tl = gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.7 } });
-      tl.to('[data-hero-photo]', { scale: 1.05, yPercent: 4, ease: 'none' }, 0)
-        .to('[data-hero-light]', { xPercent: 22, opacity: 0.6, ease: 'none' }, 0)
-        .to('[data-hero-sheen]', { xPercent: 260, ease: 'none' }, 0);
-      if (wide) tl.to('[data-prop]', { yPercent: -10, ease: 'none' }, 0);
+    /* hero: a slow push-in and sunlight drifting across the room as you scroll */
+    const heroEl = root.querySelector('[data-hero]');
+    if (ok && heroEl) {
+      gsap.from('.h4__copy > *', { y: 18, opacity: 0, duration: 1, stagger: 0.09, ease: 'power2.out', delay: 0.1 });
+      gsap.fromTo('[data-hero-photo]', { scale: 1.06 }, { scale: 1, duration: 2.4, ease: 'power2.out' });
+      const tl = gsap.timeline({ scrollTrigger: { trigger: heroEl, start: 'top top', end: 'bottom top', scrub: 0.7 } });
+      tl.to('[data-hero-photo]', { yPercent: 5, ease: 'none' }, 0).to('[data-sun]', { xPercent: 30, opacity: 0.75, ease: 'none' }, 0);
       onPageCleanup(() => {
         tl.scrollTrigger?.kill();
         tl.kill();
       });
     }
 
-    /* — objects: radio dial follows the pointer; restrained parallax — */
+    /* archive: the radio dial follows the pointer / arrow keys */
     const dialObj = root.querySelector('[data-object="dial"]');
     if (dialObj) {
       const needle = dialObj.querySelector('[data-needle]');
@@ -353,19 +241,18 @@ export default {
         needle.style.setProperty('--x', `${8 + Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * 84}%`);
       });
       dialObj.addEventListener('keydown', (e) => {
-        const curX = parseFloat(needle.style.getPropertyValue('--x')) || 30;
-        if (e.key === 'ArrowRight') needle.style.setProperty('--x', `${Math.min(92, curX + 6)}%`);
-        if (e.key === 'ArrowLeft') needle.style.setProperty('--x', `${Math.max(8, curX - 6)}%`);
+        const c = parseFloat(needle.style.getPropertyValue('--x')) || 30;
+        if (e.key === 'ArrowRight') needle.style.setProperty('--x', `${Math.min(92, c + 6)}%`);
+        if (e.key === 'ArrowLeft') needle.style.setProperty('--x', `${Math.max(8, c - 6)}%`);
       });
     }
-    if (ok && wide) {
-      root.querySelectorAll('.objects [data-parallax]').forEach((img, i) => {
-        const tw = gsap.fromTo(img, { yPercent: -4 - (i % 3) }, { yPercent: 4 + (i % 3), ease: 'none', scrollTrigger: { trigger: img, start: 'top bottom', end: 'bottom top', scrub: 0.8 } });
-        onPageCleanup(() => {
-          tw.scrollTrigger?.kill();
-          tw.kill();
-        });
-      });
+
+    /* heritage chain lights up step by step */
+    const chain = root.querySelector('.heri__chain');
+    if (chain) {
+      const io = new IntersectionObserver(([e]) => e.isIntersecting && chain.classList.add('is-in'), { threshold: 0.4 });
+      io.observe(chain);
+      onPageCleanup(() => io.disconnect());
     }
   },
 };

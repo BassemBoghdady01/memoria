@@ -1,0 +1,100 @@
+{
+  "nile-dusk": {
+    "src": "/campaign/scene-nile-dusk-1600.webp",
+    "srcset": "/campaign/scene-nile-dusk-800.webp 800w, /campaign/scene-nile-dusk-1600.webp 1600w",
+    "width": 1600,
+    "height": 1200,
+    "credit": "Crankylama / Unsplash"
+  },
+  "curtain": {
+    "src": "/campaign/scene-curtain-1600.webp",
+    "srcset": "/campaign/scene-curtain-800.webp 800w, /campaign/scene-curtain-1600.webp 1600w",
+    "width": 1600,
+    "height": 1408,
+    "credit": "Alan Rostovtev / Unsplash"
+  },
+  "city-window": {
+    "src": "/campaign/scene-city-window-1600.webp",
+    "srcset": "/campaign/scene-city-window-800.webp 800w, /campaign/scene-city-window-1600.webp 1600w",
+    "width": 1600,
+    "height": 900,
+    "credit": "Nguyen Phan Nam Anh / Unsplash"
+  },
+  "vanity": {
+    "src": "/campaign/scene-vanity-1600.webp",
+    "srcset": "/campaign/scene-vanity-800.webp 800w, /campaign/scene-vanity-1600.webp 1600w",
+    "width": 1600,
+    "height": 1422,
+    "credit": "Cemrecan Yurtman / Unsplash"
+  },
+  "open-window": {
+    "src": "/campaign/scene-open-window-1600.webp",
+    "srcset": "/campaign/scene-open-window-800.webp 800w, /campaign/scene-open-window-1600.webp 1600w",
+    "width": 1600,
+    "height": 1334,
+    "credit": "Rob Wingate / Unsplash"
+  },
+  "radio": {
+    "src": "/campaign/scene-radio-1600.webp",
+    "srcset": "/campaign/scene-radio-800.webp 800w, /campaign/scene-radio-1600.webp 1600w",
+    "width": 1600,
+    "height": 1066,
+    "credit": "Maximilian Hofer / Unsplash"
+  },
+  "cairo-sunset": {
+    "src": "/campaign/scene-cairo-sunset-1600.webp",
+    "srcset": "/campaign/scene-cairo-sunset-800.webp 800w, /campaign/scene-cairo-sunset-1600.webp 1600w",
+    "width": 1600,
+    "height": 800,
+    "credit": "Jens Aber / Unsplash"
+  },
+  "armchair": {
+    "src": "/campaign/scene-armchair-1600.webp",
+    "srcset": "/campaign/scene-armchair-800.webp 800w, /campaign/scene-armchair-1600.webp 1600w",
+    "width": 1600,
+    "height": 2134,
+    "credit": "Alec Krum / Unsplash"
+  },
+  "arcade": {
+    "src": "/campaign/scene-arcade-1600.webp",
+    "srcset": "/campaign/scene-arcade-800.webp 800w, /campaign/scene-arcade-1600.webp 1600w",
+    "width": 1600,
+    "height": 2400,
+    "credit": "Yousef Salhamoud / Unsplash"
+  },
+  "attic": {
+    "src": "/campaign/scene-attic-1600.webp",
+    "srcset": "/campaign/scene-attic-800.webp 800w, /campaign/scene-attic-1600.webp 1600w",
+    "width": 1600,
+    "height": 1008,
+    "credit": "Alexander Mass / Unsplash"
+  },
+  "heritage-line": {
+    "src": "/campaign/scene-heritage-line-1600.webp",
+    "srcset": "/campaign/scene-heritage-line-800.webp 800w, /campaign/scene-heritage-line-1600.webp 1600w",
+    "width": 1600,
+    "height": 1066,
+    "credit": "Fulvio Ciccolo / Unsplash"
+  },
+  "heritage-lab": {
+    "src": "/campaign/scene-heritage-lab-1600.webp",
+    "srcset": "/campaign/scene-heritage-lab-800.webp 800w, /campaign/scene-heritage-lab-1600.webp 1600w",
+    "width": 1600,
+    "height": 994,
+    "credit": "Fulvio Ciccolo / Unsplash"
+  },
+  "heritage-apothecary": {
+    "src": "/campaign/scene-heritage-apothecary-1600.webp",
+    "srcset": "/campaign/scene-heritage-apothecary-800.webp 800w, /campaign/scene-heritage-apothecary-1600.webp 1600w",
+    "width": 1600,
+    "height": 1066,
+    "credit": "Matt Briney / Unsplash"
+  },
+  "heritage-drawers": {
+    "src": "/campaign/scene-heritage-drawers-1600.webp",
+    "srcset": "/campaign/scene-heritage-drawers-800.webp 800w, /campaign/scene-heritage-drawers-1600.webp 1600w",
+    "width": 1600,
+    "height": 2400,
+    "credit": "Tobias Arweiler / Unsplash"
+  }
+}

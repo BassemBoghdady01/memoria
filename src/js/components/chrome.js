@@ -15,11 +15,11 @@ const LOGO_CREAM = '/brand/logo-cream-320.png';
 
 /* Announcement bar — owner-written in the dashboard (Content → Announcement). */
 /* Black ticker. Owner announcement first (Dashboard → Website content), then house lines. */
-const HOUSE_LINES = ['Made to be remembered', 'Rooted in memory', 'Inspired by Cairo', 'Delivery across Egypt', 'Order on WhatsApp'];
+const houseLines = () => ['Made to be remembered', 'Rooted in Cairo', ...(settings.heritage?.years ? [`${settings.heritage.years} years of perfume craft`] : []), 'Delivery across Egypt', 'Order on WhatsApp'];
 
 export function renderRibbon() {
   const a = settings.announcement || {};
-  const lines = [...(a.enabled && a.text ? [a.text] : []), ...HOUSE_LINES];
+  const lines = [...(a.enabled && a.text ? [a.text] : []), ...houseLines()];
   const items = lines
     .map((t, i) => `<span class="ribbon__item"><span>${i === 0 && a.enabled && a.text ? `<em>${esc(t)}</em>` : esc(t)}</span><span class="ribbon__dot" aria-hidden="true"></span></span>`)
     .join('');

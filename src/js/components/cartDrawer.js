@@ -6,6 +6,8 @@ import { icons } from './icons.js';
 import { cart } from '../store/cart.js';
 import { productImg } from './render.js';
 import { waLink, cartMessage, waButton } from './whatsapp.js';
+import { offerLine } from './price.js';
+import { settings } from '../data/catalog.js';
 
 let drawer = null;
 let untrap = null;
@@ -28,6 +30,9 @@ function ensureDrawer() {
             <span class="label">Subtotal</span>
             <strong data-drawer-subtotal></strong>
           </div>
+          <div class="drawer__subtotal drawer__offer" data-drawer-offer hidden><span data-drawer-offer-label></span><strong data-drawer-offer-amount></strong></div>
+          <div class="drawer__subtotal" data-drawer-total-row hidden><span class="label">Estimated total</span><strong data-drawer-total></strong></div>
+          <p class="drawer__hint" data-drawer-hint hidden></p>
           <a class="btn btn--primary btn--block" href="/checkout" data-drawer-link>Checkout</a>
           <div data-drawer-wa></div>
           <a class="link-line" style="align-self:center" href="/cart" data-drawer-link>View bag &amp; apply a code</a>
@@ -110,8 +115,12 @@ function renderBody() {
 
   foot.hidden = false;
   drawer.querySelector('[data-drawer-subtotal]').textContent = money(cart.subtotal);
-  const wa = waLink(cartMessage(null));
-  drawer.querySelector('[data-drawer-wa]').innerHTML = waButton(wa, 'Order via WhatsApp', 'btn--block');
+  drawer.querySelector('[data-drawer-wa]').innerHTML = waButton(waLink(cartMessage(null)), 'Order via WhatsApp', 'btn--block');
+  const hint = drawer.querySelector('[data-drawer-hint]');
+  const o = settings.offer || {};
+  hint.hidden = !(o.enabled && cart.count === 1);
+  if (!hint.hidden) hint.textContent = `Add one more bottle: ${offerLine()}.`;
+  refreshQuote();
 
   if (focusMemo) {
     const row = body.querySelector(`[data-line="${CSS.escape(focusMemo.line)}"]`) || body.querySelector('[data-line]');
@@ -121,6 +130,27 @@ function renderBody() {
       target?.focus();
     }
   }
+}
+
+let quoteSeq = 0;
+async function refreshQuote() {
+  const mine = ++quoteSeq;
+  let q;
+  try {
+    q = await cart.quote();
+  } catch {
+    return;
+  }
+  if (mine !== quoteSeq || !drawer) return;
+  const has = q.discount && Number(q.discount_total) > 0;
+  drawer.querySelector('[data-drawer-offer]').hidden = !has;
+  drawer.querySelector('[data-drawer-total-row]').hidden = !has;
+  if (has) {
+    drawer.querySelector('[data-drawer-offer-label]').textContent = q.discount.code || q.discount.name;
+    drawer.querySelector('[data-drawer-offer-amount]').textContent = '−' + money(q.discount_total);
+    drawer.querySelector('[data-drawer-total]').textContent = money(Number(q.subtotal) - Number(q.discount_total));
+  }
+  drawer.querySelector('[data-drawer-wa]').innerHTML = waButton(waLink(cartMessage(q)), 'Order via WhatsApp', 'btn--block');
 }
 
 export function openCartDrawer() {

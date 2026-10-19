@@ -1,0 +1,21 @@
+{
+  "products": [
+    "after",
+    "athar",
+    "before",
+    "liqaa",
+    "safya",
+    "shawq",
+    "waad"
+  ],
+  "widths": [
+    1280,
+    1920,
+    2600
+  ],
+  "mobileWidths": [
+    720,
+    1080
+  ],
+  "credit": "Fabio Tura & 11th gate / Unsplash"
+}

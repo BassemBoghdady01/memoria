@@ -88,7 +88,21 @@ export function mountWhatsAppFloat() {
   a.innerHTML = WA_ICON;
   document.body.appendChild(a);
   /* appear after the first screen, so it never sits on top of hero CTAs */
-  const sync = () => a.classList.toggle('is-shown', window.scrollY > window.innerHeight * 0.55);
+  /* hidden on the first screen and whenever another WhatsApp button is visible,
+     so it never sits on top of a control that does the same job */
+  const visible = new Set();
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)));
+    sync();
+  });
+  const scan = () => {
+    io.disconnect();
+    visible.clear();
+    document.querySelectorAll('#main .btn--wa, #main .btn--wa-light, .drawer .btn--wa').forEach((n) => io.observe(n));
+  };
+  const sync = () => a.classList.toggle('is-shown', window.scrollY > window.innerHeight * 0.55 && visible.size === 0);
+  new MutationObserver(() => requestAnimationFrame(scan)).observe(document.querySelector('#main'), { childList: true });
   window.addEventListener('scroll', sync, { passive: true });
+  scan();
   sync();
 }
