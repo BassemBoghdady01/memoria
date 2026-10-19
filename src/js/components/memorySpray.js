@@ -53,7 +53,7 @@ export function memorySpraySection(p, scene, { line = 'Some memories never leave
       </div>
     </div>
   </section>
-  <span id="after-spray"></span>`;
+  <div id="after-spray" aria-hidden="true"></div>`;
 }
 
 export function mountMemorySpray(root, { reduced = false, mobile = false } = {}) {

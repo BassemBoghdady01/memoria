@@ -210,7 +210,8 @@ body.is-home .header__navlink, body.is-home .iconbtn { color: #1a120c; }
   .h4__sub { display: none; }
   .h4__ctas { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 4.6rem; margin: 0; gap: 0.6rem; }
   .h4__ctas .btn { flex: 1 1 0; padding: 0.95rem 0.6rem; font-size: 0.66rem; }
-  .h4__ctas .btn--line { background: rgba(244, 234, 217, 0.9); }
+  .h4__ctas .btn--ink { background: var(--cream-2); color: #17110d; border-color: var(--cream-2); }
+  .h4__ctas .btn--line { background: transparent; color: var(--cream-2); border-color: rgba(244, 234, 217, 0.7); }
   .h4__tag { display: none; }
   .h4__product { left: 30%; top: 30%; width: 40%; height: 44%; }
   .h4__scroll { display: none; }

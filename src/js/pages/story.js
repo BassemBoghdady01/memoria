@@ -11,7 +11,10 @@ import { setSeo } from '../seo.js';
 export default {
   title: 'Our Story — MEMÓRIA',
   render() {
-    const s = settings.home?.story || {};
+    const story = settings.home?.story || {};
+    const her = settings.heritage || {};
+    /* the owner's story if written; otherwise the approved heritage text */
+    const s = story.body ? story : { title: her.title ? `${her.title} ${her.script || ''}`.trim() : '', body: her.body || '', image_url: story.image_url };
     const paras = String(s.body || '').split(/\n{2,}/).filter(Boolean);
     const obj = (campaign.objects || []).find((o) => o.id === 'keys') || (campaign.objects || [])[0];
     return `

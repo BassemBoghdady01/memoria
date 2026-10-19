@@ -49,7 +49,7 @@ function buyBox(p) {
   const sold = isSoldOut(p);
   return `
     ${
-      priced.length > 1 || priced[0].label
+      priced.length > 1
         ? `<div class="field">
       <span class="label" id="size-label">Size</span>
       <div class="sizes" role="radiogroup" aria-labelledby="size-label" data-sizes>
