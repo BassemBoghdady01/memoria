@@ -7,6 +7,7 @@ import { settings, products } from '../data/catalog.js';
 import { productCutout } from '../components/render.js';
 import { campaign, campaignImg } from '../data/campaign.js';
 import { setSeo } from '../seo.js';
+import scenes from '../data/scenes.json';
 
 export default {
   title: 'Our Story — MEMÓRIA',
@@ -30,7 +31,7 @@ export default {
           <a class="btn btn--primary" href="/shop" data-reveal>Explore the collection</a>
         </div>
         <div class="storypage__art" aria-hidden="true">
-          ${s.image_url ? `<img src="${esc(s.image_url)}" alt="" loading="lazy"/>` : obj ? `<img ${campaignImg(obj, { sizes: '(max-width: 900px) 100vw, 40vw' })} alt="" loading="lazy"/>` : ''}
+          ${s.image_url ? `<img src="${esc(s.image_url)}" alt="" loading="lazy"/>` : scenes['heritage-line'] ? `<img src="${esc(scenes['heritage-line'].src)}" srcset="${esc(scenes['heritage-line'].srcset)}" sizes="(max-width: 900px) 100vw, 45vw" alt="" loading="lazy"/>` : obj ? `<img ${campaignImg(obj, { sizes: '(max-width: 900px) 100vw, 40vw' })} alt="" loading="lazy"/>` : ''}
         </div>
       </section>
       <section class="container storypage__shelf" aria-label="The collection">

@@ -51,7 +51,7 @@ async function buildScene() {
   const { w: W, h: H, data } = desk;
   const s = W / 1200; // the mask boxes were measured on a 1200-wide preview
   const box = (x0, y0, x1, y1) => [x0 * s, y0 * s, x1 * s, y1 * s];
-  const keep = [box(398, 462, 488, 668), box(484, 572, 560, 672), box(628, 560, 732, 680), box(818, 560, 940, 692)];
+  const keep = [box(404, 462, 483, 549), box(429, 540, 454, 664), box(420, 636, 466, 668), box(513, 578, 533, 614), box(493, 610, 552, 671), box(635, 563, 725, 677), box(838, 588, 926, 692), box(866, 562, 884, 590)];
   const winRight = 962 * s;
   const winBottom = 642 * s;
   /* window = everything inside the frame except the painted mullions and the
@@ -106,11 +106,20 @@ async function buildScene() {
     }
   }
   /* garden still visible under the curtain hem */
-  for (let y = Math.round(500 * s); y < winBottom; y++) {
+  for (let y = Math.round(380 * s); y < winBottom; y++) {
     for (let x = Math.round(winRight); x < Math.round(1012 * s); x++) {
       const i = (y * W + x) * 3;
       const [hu, sa] = rgb2hsv(data[i], data[i + 1], data[i + 2]);
       if (hu >= 58 && hu <= 200 && sa > 0.15) mask[y * W + x] = 255;
+    }
+  }
+  /* the glass dome on the right showed the garden through it: let it show the river instead */
+  const dome = box(832, 566, 930, 650);
+  for (let y = Math.round(dome[1]); y < dome[3]; y++) {
+    for (let x = Math.round(dome[0]); x < dome[2]; x++) {
+      const i = (y * W + x) * 3;
+      const [hu, sa] = rgb2hsv(data[i], data[i + 1], data[i + 2]);
+      if (hu >= 58 && hu <= 200 && sa > 0.1) mask[y * W + x] = 200;
     }
   }
   /* close small holes, soften edges */

@@ -15,6 +15,15 @@ import { onPageCleanup, motionOK, gsap } from '../motion.js';
 import { waLink, productMessage, enquiryMessage, waButton, waIcon } from '../components/whatsapp.js';
 import { setSeo, productJsonLd } from '../seo.js';
 import { offerLine } from '../components/price.js';
+import scenes from '../data/scenes.json';
+
+/* product photos → the matching transparent cut-out of the same real photograph */
+const cutOf = (g) => {
+  const m = String(g?.url || '').match(/^(.*)\/(\d\d)-960\.webp$/);
+  if (!m) return { url: g?.url, srcset: g?.srcset };
+  return { url: `${m[1]}/cutout-${m[2]}-1200.webp`, srcset: `${m[1]}/cutout-${m[2]}-600.webp 600w, ${m[1]}/cutout-${m[2]}-1200.webp 1200w` };
+};
+const sceneFor = (p) => scenes[p.story?.scene] || scenes['nile-dusk'];
 
 /* order in which the photographed views read as one turn of the bottle */
 const TURN = ['Opposite three-quarter', 'Front', 'Three-quarter', 'Side'];
@@ -114,7 +123,10 @@ export default {
         <div class="pdp__layout">
           <div class="pdp__gallery">
             <div class="pdp__stage" data-pdp-stage ${turnFrames.length > 1 ? 'data-turnable' : ''}>
-              ${productImg(p, { image: thumbs[0], cls: 'pdp__main', sizes: '(max-width: 900px) 100vw, 55vw', eager: true })}
+              <img class="pdp__scene" src="${esc(sceneFor(p).src)}" srcset="${esc(sceneFor(p).srcset)}" sizes="(max-width: 900px) 100vw, 55vw" alt="" aria-hidden="true" decoding="async"/>
+              <i class="pdp__veil" aria-hidden="true"></i>
+              <img class="pdp__main" src="${esc(cutOf(thumbs[0]).url)}" srcset="${esc(cutOf(thumbs[0]).srcset)}" sizes="(max-width: 900px) 70vw, 30vw" alt="${esc(thumbs[0]?.alt || p.name)}" fetchpriority="high" decoding="async"/>
+              <i class="pdp__floor" aria-hidden="true"></i>
               <i class="pdp__sheen" aria-hidden="true"></i>
             </div>
             ${
@@ -128,7 +140,7 @@ export default {
                 ${thumbs
                   .map(
                     (g, i) => `<button type="button" role="tab" class="pdp__thumb" data-thumb="${i}" aria-selected="${i === 0}" aria-label="${esc(g.view || 'View ' + (i + 1))}">
-                      ${productImg(p, { image: g, sizes: '80px', alt: '' })}</button>`
+                      <img src="${esc(cutOf(g).url.replace('-1200.', '-600.'))}" alt="" loading="lazy" decoding="async"/></button>`
                   )
                   .join('')}
               </div>`
@@ -178,7 +190,7 @@ export default {
           ? `<section class="related" aria-labelledby="related-title">
         <div class="container">
           <div class="sechead"><h2 id="related-title" data-reveal>More from the collection</h2></div>
-          <div class="pgrid pgrid--3" data-related>
+          <div class="sgrid sgrid--3" data-related>
             ${related.map((r, i) => renderProductCard(r, { revealDelay: i * 90 })).join('')}
           </div>
         </div>
@@ -220,8 +232,9 @@ export default {
     const main = stage.querySelector('.pdp__main');
     const show = (img) => {
       if (!img || !main) return;
-      main.src = img.url;
-      if (img.srcset) main.srcset = img.srcset;
+      const c = cutOf(img);
+      main.src = c.url;
+      if (c.srcset) main.srcset = c.srcset;
       main.alt = img.alt || p.name;
     };
     const thumbs = [...root.querySelectorAll('[data-thumb]')];
@@ -235,8 +248,7 @@ export default {
     if (frames.length > 1) {
       frames.forEach((f) => {
         const pre = new Image();
-        pre.srcset = f.srcset || '';
-        pre.src = f.url;
+        pre.src = cutOf(f).url;
       });
       let idx = Math.max(0, frames.findIndex((f) => f.view === 'Front'));
       let startX = null;

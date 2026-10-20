@@ -64,6 +64,7 @@ export async function renderRoute({ scroll = true } = {}) {
 
   flushPage();
 
+  document.body.dataset.route = path.split('/')[1] || 'home';
   const main = $('#main');
   main.innerHTML = page.render(params);
   document.title = typeof page.title === 'function' ? page.title(params) : page.title;

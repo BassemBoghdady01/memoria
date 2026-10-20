@@ -45,7 +45,9 @@
         "label": "Elevated",
         "source": "MEMORIA_AFTER_05_Elevated.png",
         "src": "/products/after/05-960.webp",
-        "srcset": "/products/after/05-480.webp 480w, /products/after/05-960.webp 960w, /products/after/05-1600.webp 1600w"
+        "srcset": "/products/after/05-480.webp 480w, /products/after/05-960.webp 960w, /products/after/05-1600.webp 1600w",
+        "cutout": "/products/after/cutout-05-1200.webp",
+        "cutoutSrcset": "/products/after/cutout-05-600.webp 600w, /products/after/cutout-05-1200.webp 1200w"
       }
     ]
   },
@@ -95,7 +97,9 @@
         "label": "Elevated",
         "source": "MEMORIA_ATHAR_05_Elevated.png",
         "src": "/products/athar/05-960.webp",
-        "srcset": "/products/athar/05-480.webp 480w, /products/athar/05-960.webp 960w, /products/athar/05-1600.webp 1600w"
+        "srcset": "/products/athar/05-480.webp 480w, /products/athar/05-960.webp 960w, /products/athar/05-1600.webp 1600w",
+        "cutout": "/products/athar/cutout-05-1200.webp",
+        "cutoutSrcset": "/products/athar/cutout-05-600.webp 600w, /products/athar/cutout-05-1200.webp 1200w"
       }
     ]
   },
@@ -145,7 +149,9 @@
         "label": "Elevated",
         "source": "MEMORIA_BEFORE_05_Elevated.png",
         "src": "/products/before/05-960.webp",
-        "srcset": "/products/before/05-480.webp 480w, /products/before/05-960.webp 960w, /products/before/05-1600.webp 1600w"
+        "srcset": "/products/before/05-480.webp 480w, /products/before/05-960.webp 960w, /products/before/05-1600.webp 1600w",
+        "cutout": "/products/before/cutout-05-1200.webp",
+        "cutoutSrcset": "/products/before/cutout-05-600.webp 600w, /products/before/cutout-05-1200.webp 1200w"
       }
     ]
   },
@@ -195,7 +201,9 @@
         "label": "Elevated",
         "source": "MEMORIA_LIQAA_05_Elevated.png",
         "src": "/products/liqaa/05-960.webp",
-        "srcset": "/products/liqaa/05-480.webp 480w, /products/liqaa/05-960.webp 960w, /products/liqaa/05-1600.webp 1600w"
+        "srcset": "/products/liqaa/05-480.webp 480w, /products/liqaa/05-960.webp 960w, /products/liqaa/05-1600.webp 1600w",
+        "cutout": "/products/liqaa/cutout-05-1200.webp",
+        "cutoutSrcset": "/products/liqaa/cutout-05-600.webp 600w, /products/liqaa/cutout-05-1200.webp 1200w"
       }
     ]
   },
@@ -245,7 +253,9 @@
         "label": "Elevated",
         "source": "MEMORIA_SAFYA_05_Elevated.png",
         "src": "/products/safya/05-960.webp",
-        "srcset": "/products/safya/05-480.webp 480w, /products/safya/05-960.webp 960w, /products/safya/05-1600.webp 1600w"
+        "srcset": "/products/safya/05-480.webp 480w, /products/safya/05-960.webp 960w, /products/safya/05-1600.webp 1600w",
+        "cutout": "/products/safya/cutout-05-1200.webp",
+        "cutoutSrcset": "/products/safya/cutout-05-600.webp 600w, /products/safya/cutout-05-1200.webp 1200w"
       }
     ]
   },
@@ -295,7 +305,9 @@
         "label": "Elevated",
         "source": "MEMORIA_SHAWQ_05_Elevated.png",
         "src": "/products/shawq/05-960.webp",
-        "srcset": "/products/shawq/05-480.webp 480w, /products/shawq/05-960.webp 960w, /products/shawq/05-1600.webp 1600w"
+        "srcset": "/products/shawq/05-480.webp 480w, /products/shawq/05-960.webp 960w, /products/shawq/05-1600.webp 1600w",
+        "cutout": "/products/shawq/cutout-05-1200.webp",
+        "cutoutSrcset": "/products/shawq/cutout-05-600.webp 600w, /products/shawq/cutout-05-1200.webp 1200w"
       }
     ]
   },
@@ -345,7 +357,9 @@
         "label": "Elevated",
         "source": "MEMORIA_WAAD_05_Elevated.png",
         "src": "/products/waad/05-960.webp",
-        "srcset": "/products/waad/05-480.webp 480w, /products/waad/05-960.webp 960w, /products/waad/05-1600.webp 1600w"
+        "srcset": "/products/waad/05-480.webp 480w, /products/waad/05-960.webp 960w, /products/waad/05-1600.webp 1600w",
+        "cutout": "/products/waad/cutout-05-1200.webp",
+        "cutoutSrcset": "/products/waad/cutout-05-600.webp 600w, /products/waad/cutout-05-1200.webp 1200w"
       }
     ]
   }

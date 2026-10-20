@@ -28,7 +28,7 @@ if (!SRC) {
 
 const OUT = 'public/products';
 const WIDTHS = [480, 960, 1600];
-const CUTOUT_VIEWS = ['01', '02', '03', '04'];
+const CUTOUT_VIEWS = ['01', '02', '03', '04', '05'];
 const CUTOUT_WIDTHS = [600, 1200];
 const VIEW_LABELS = {
   '01': 'Front',

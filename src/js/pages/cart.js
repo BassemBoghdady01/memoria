@@ -4,7 +4,7 @@
  */
 import { esc, money } from '../utils.js';
 import { cart } from '../store/cart.js';
-import { productImg } from '../components/render.js';
+import { productCutout } from '../components/render.js';
 import { renderRoute } from '../router.js';
 import { onPageCleanup } from '../motion.js';
 import { waLink, cartMessage, waButton } from '../components/whatsapp.js';
@@ -15,7 +15,7 @@ import { settings } from '../data/catalog.js';
 function line(l) {
   return `
   <div class="bagline" data-line="${esc(l.variantId)}">
-    <a class="bagline__thumb" href="/product/${esc(l.product.slug)}" tabindex="-1" aria-hidden="true">${productImg(l.product, { sizes: '140px', alt: '' })}</a>
+    <a class="bagline__thumb" href="/product/${esc(l.product.slug)}" tabindex="-1" aria-hidden="true">${productCutout(l.product, { sizes: '140px', alt: '' })}</a>
     <div class="bagline__info">
       <a class="bagline__name" href="/product/${esc(l.product.slug)}">${esc(l.product.name)}</a>
       <span class="bagline__meta">${esc(l.variant.label)} · ${money(l.unit)} each${l.variant.inStock ? '' : ' · <strong>sold out</strong>'}</span>

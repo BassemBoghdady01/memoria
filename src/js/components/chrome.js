@@ -42,7 +42,8 @@ export function renderHeader() {
           ${cats.map((c) => `<a class="header__navlink" data-navlink href="/shop?c=${esc(c.slug)}">${esc(c.name)}</a>`).join('')}
         </nav>
         <a class="header__logo" href="/" aria-label="MEMÓRIA — home">
-          <img src="${LOGO}" alt="MEMÓRIA" width="560" height="141" />
+          <img class="logo--ink" src="${LOGO}" alt="MEMÓRIA" width="560" height="141" />
+          <img class="logo--cream" src="/brand/logo-cream-560.png" alt="" aria-hidden="true" width="560" height="141" />
         </a>
         <nav class="header__nav header__nav--right" aria-label="House">
           <a class="header__navlink" data-navlink href="/our-story">Our Story</a>

@@ -11,6 +11,7 @@ import { cart } from '../store/cart.js';
 import { openCartDrawer } from './cartDrawer.js';
 import { onPageCleanup } from '../motion.js';
 import { offerLine } from './price.js';
+import scenes from '../data/scenes.json';
 import { waLink, enquiryMessage } from './whatsapp.js';
 
 export function priceLabel(p) {
@@ -19,43 +20,44 @@ export function priceLabel(p) {
   return `${pricedVariants(p).length > 1 ? 'From ' : ''}${money(from)}`;
 }
 
-export function renderProductCard(p, { revealDelay = 0, sizes } = {}) {
+export function renderProductCard(p, { revealDelay = 0 } = {}) {
   const v = defaultVariant(p);
-  const second = p.gallery.find((g) => g.view === 'Three-quarter') || p.gallery[1];
   const buyable = isPurchasable(p);
   const sold = isSoldOut(p);
   const onSale = v && v.salePrice !== null && v.price !== null;
-  const meta = [p.category?.name, p.concentration].filter(Boolean).join(' · ');
+  const scene = scenes[p.story?.scene] || scenes['nile-dusk'];
+  const cut = (w) => `/products/${p.slug}/cutout-01-${w}.webp`;
   let action;
-  if (buyable) action = `<button class="btn btn--small btn--quickadd" data-add="${v.id}">Add to bag</button>`;
-  else if (sold) action = `<span class="pcard__flag">Sold out</span>`;
+  if (buyable) action = `<button class="scard__add" data-add="${v.id}">Add to bag</button>`;
+  else if (sold) action = `<span class="scard__flag">Sold out</span>`;
   else {
     const wa = waLink(enquiryMessage(p));
-    action = wa ? `<a class="btn btn--small btn--ghost" href="${esc(wa)}" target="_blank" rel="noopener">Enquire</a>` : '';
+    action = wa ? `<a class="scard__add" href="${esc(wa)}" target="_blank" rel="noopener">Enquire</a>` : '';
   }
   return `
-  <article class="pcard" data-reveal style="--reveal-delay:${revealDelay}ms" data-pcard="${esc(p.slug)}">
-    <a class="pcard__link" href="/product/${esc(p.slug)}" aria-label="${esc(p.name)}${meta ? `, ${esc(meta)}` : ''}, ${esc(priceLabel(p))}"></a>
-    <div class="pcard__plate">
-      ${productImg(p, { cls: 'pcard__img', sizes: sizes || '(max-width: 700px) 50vw, (max-width: 1100px) 33vw, 25vw' })}
-      ${second ? productImg(p, { image: second, cls: 'pcard__img pcard__img--alt', sizes: sizes || '(max-width: 700px) 50vw, 25vw', alt: '' }) : ''}
-      ${onSale ? '<span class="pcard__badge">Offer</span>' : ''}
-      ${sold ? '<span class="pcard__badge pcard__badge--muted">Sold out</span>' : ''}
+  <article class="scard" data-reveal style="--reveal-delay:${revealDelay}ms" data-pcard="${esc(p.slug)}">
+    <a class="scard__link" href="/product/${esc(p.slug)}" aria-label="${esc(p.name)}, ${esc(priceLabel(p))}"></a>
+    <div class="scard__media" aria-hidden="true">
+      <img class="scard__scene" src="${esc(scene.src.replace('-1600.', '-800.'))}" alt="" loading="lazy" decoding="async"/>
+      <i class="scard__veil"></i>
+      <img class="scard__bottle" src="${cut(600)}" srcset="${cut(600)} 600w, ${cut(1200)} 1200w" sizes="(max-width: 700px) 45vw, 16vw" alt="" loading="lazy" decoding="async"/>
+      <i class="scard__shadow"></i>
     </div>
-    <div class="pcard__info">
-      <h3 class="pcard__name">${esc(p.name)}</h3>
-      ${meta ? `<span class="pcard__fam">${esc(meta)}</span>` : ''}
-      <div class="pcard__row">
-        <span class="pcard__price">${onSale ? `<s>${money(v.price)}</s> ` : ''}${esc(priceLabel(p))}${onSale && offerLine() ? `<small class="pcard__offer">${esc(offerLine())}</small>` : ''}</span>
+    <div class="scard__body">
+      <h3 class="scard__name">${esc(p.name)}</h3>
+      ${p.story?.tagline ? `<p class="scard__tag">${esc(p.story.tagline)}</p>` : ''}
+      <div class="scard__row">
+        <span class="scard__price">${onSale ? `<s>${money(v.price)}</s> ` : ''}<strong>${esc(priceLabel(p))}</strong></span>
         ${action}
       </div>
+      ${onSale && offerLine() ? `<small class="scard__offer">${esc(offerLine())}</small>` : ''}
     </div>
   </article>`;
 }
 
 export function renderProductGrid(list, opts = {}) {
   if (!list.length) return `<div class="shop__empty"><p>No scents here yet.</p><a class="btn" href="/shop">See the full collection</a></div>`;
-  return `<div class="pgrid">${list.map((p, i) => renderProductCard(p, { revealDelay: (i % 4) * 80, ...opts })).join('')}</div>`;
+  return `<div class="sgrid">${list.map((p, i) => renderProductCard(p, { revealDelay: (i % 4) * 80, ...opts })).join('')}</div>`;
 }
 
 /** Wire quick-add buttons in a container. Returns a disposer. */
