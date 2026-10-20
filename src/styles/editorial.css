@@ -1,0 +1,144 @@
+/* ————————————————————————————————————————————————
+   MEMÓRIA · Art direction "Afternoon Light"
+   One room, one sun, one film stock.
+   Palette (from the official sheet): Parchment #E8DDC8 ground,
+   Warm Sand #D8C3A3 shade, Archive Brown #5A3522 type,
+   Deep Cocoa #3E281B headlines/buttons, Terracotta #B66A4B accent only.
+   Type: Cormorant Garamond (display) + Jost (everything else).
+   ———————————————————————————————————————————————— */
+
+:root {
+  --ed-ground: #e8ddc8;
+  --ed-sand: #d8c3a3;
+  --ed-brown: #5a3522;
+  --ed-cocoa: #3e281b;
+  --ed-accent: #b66a4b;
+  --ed-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --ed-sans: 'Jost', 'Century Gothic', system-ui, sans-serif;
+}
+
+/* chrome on the homepage: the ticker sits in the same paper, not black */
+body.is-home #ribbon .ribbon { background: #d9cab0; color: var(--ed-cocoa); border-bottom: 1px solid rgba(62, 40, 27, 0.12); }
+body.is-home .header__navlink, body.is-home .iconbtn { color: var(--ed-cocoa); }
+
+.ed-label {
+  font-family: var(--ed-sans); font-weight: 500; font-size: 0.7rem;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--ed-brown); margin: 0;
+}
+.ed-price { font-family: var(--ed-sans); font-variant-numeric: tabular-nums; display: inline-flex; align-items: baseline; gap: 0.6rem; color: var(--ed-cocoa); }
+.ed-price s { color: rgba(90, 53, 34, 0.62); font-size: 0.92em; text-decoration-thickness: 1px; }
+.ed-price strong { font-weight: 500; color: var(--ed-accent); }
+
+.ed-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+  min-height: 3.1rem; padding: 0 1.9rem;
+  font-family: var(--ed-sans); font-weight: 500; font-size: 0.74rem; letter-spacing: 0.2em; text-transform: uppercase;
+  background: var(--ed-cocoa); color: #f3eadb; border: 1px solid var(--ed-cocoa); border-radius: 0;
+  cursor: pointer; text-decoration: none; transition: background 0.4s var(--ease-out), color 0.4s var(--ease-out);
+}
+.ed-btn:hover { background: #2a1b12; }
+.ed-btn:focus-visible { outline: 2px solid var(--ed-accent); outline-offset: 3px; }
+.ed-btn svg { width: 1.05rem; height: 1.05rem; }
+.ed-btn--line { background: transparent; color: var(--ed-cocoa); border-color: rgba(62, 40, 27, 0.45); }
+.ed-btn--line:hover { background: var(--ed-cocoa); color: #f3eadb; }
+.ed-btn--block { width: 100%; }
+
+/* ——— HERO: one still life ——— */
+.edh {
+  position: relative; isolation: isolate; overflow: hidden;
+  height: max(40rem, min(100svh, 62vw)); background: #b8a184; color: var(--ed-cocoa);
+}
+.edh__frame, .edh__frame picture, .edh__photo, .edh__leaves, .edh__leaves img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+}
+.edh__photo, .edh__leaves img { object-fit: cover; object-position: 66% 50%; }
+.edh__frame { z-index: -1; }
+.edh__photo { transform: scale(1.035); transition: transform 3.2s var(--ease-slow); }
+.edh.is-in .edh__photo { transform: none; }
+/* leaf shadows from a real photograph, multiplied over wall and bottle alike */
+.edh__leaves { mix-blend-mode: multiply; }
+.edh__leaves img { transform-origin: 70% 40%; animation: ed-leaves 26s ease-in-out infinite alternate; }
+@keyframes ed-leaves {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  100% { transform: translate3d(-1.2%, 0.8%, 0) rotate(-0.6deg); }
+}
+.edh.is-still .edh__leaves img { animation: none; }
+
+.edh__copy {
+  position: absolute; left: clamp(1.25rem, 7vw, 8rem); top: 50%; transform: translateY(-42%);
+  max-width: 34rem; display: flex; flex-direction: column; gap: 1.5rem;
+}
+.edh__copy > * { opacity: 0; transform: translateY(14px); transition: opacity 1.2s var(--ease-out), transform 1.2s var(--ease-out); }
+.edh.is-in .edh__copy > * { opacity: 1; transform: none; }
+.edh.is-in .edh__copy > :nth-child(2) { transition-delay: 0.12s; }
+.edh.is-in .edh__copy > :nth-child(3) { transition-delay: 0.24s; }
+.edh.is-in .edh__copy > :nth-child(4) { transition-delay: 0.36s; }
+.edh__title {
+  font-family: var(--ed-serif); font-weight: 500; color: var(--ed-cocoa);
+  font-size: clamp(3rem, 1.4rem + 4.6vw, 6.2rem); line-height: 0.98; letter-spacing: -0.01em; margin: 0;
+}
+.edh__sub { font-family: var(--ed-sans); font-size: 1.02rem; line-height: 1.65; color: var(--ed-brown); max-width: 26rem; margin: 0; }
+.edh__buy { display: flex; align-items: center; gap: 1.4rem; flex-wrap: wrap; margin-top: 0.4rem; }
+.edh__buy .ed-price { font-size: 0.98rem; }
+.edh__buy .ed-price strong { color: var(--ed-cocoa); }
+.edh__caption {
+  position: absolute; right: clamp(1.25rem, 4vw, 3.5rem); bottom: 1.6rem; margin: 0;
+  font-family: var(--ed-sans); font-size: 0.68rem; letter-spacing: 0.24em; text-transform: uppercase; color: rgba(62, 40, 27, 0.7);
+}
+
+/* ——— ONE SCENT, ONE SPREAD ——— */
+.eds {
+  display: grid; grid-template-columns: 5fr 4fr 3.4fr; align-items: stretch;
+  background: var(--ed-ground); color: var(--ed-cocoa); min-height: min(100svh, 56rem);
+}
+.eds__memory, .eds__plate { margin: 0; position: relative; overflow: hidden; display: block; }
+.eds__memory img, .eds__plate img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.eds__plate img { transition: transform 1.6s var(--ease-slow); }
+.eds__plate:hover img { transform: scale(1.02); }
+.eds__info {
+  display: flex; flex-direction: column; justify-content: center; gap: 1rem;
+  padding: clamp(2rem, 4vw, 4.5rem) clamp(1.5rem, 3.4vw, 4rem);
+}
+.eds__name { font-family: var(--ed-serif); font-weight: 500; font-size: clamp(3rem, 1.6rem + 3vw, 5rem); line-height: 1; letter-spacing: 0.04em; margin: 0.2rem 0 0; color: var(--ed-cocoa); }
+.eds__meaning { font-family: var(--ed-serif); font-size: 1.45rem; line-height: 1.3; margin: 0; color: var(--ed-brown); }
+.eds__line { font-family: var(--ed-sans); font-size: 0.98rem; line-height: 1.65; margin: 0; color: var(--ed-brown); max-width: 22rem; }
+.eds__price { font-size: 1.2rem; margin-top: 0.8rem; padding-top: 1.2rem; border-top: 1px solid rgba(62, 40, 27, 0.18); }
+.eds__offer { font-family: var(--ed-sans); font-size: 0.86rem; color: var(--ed-brown); margin: -0.3rem 0 0.4rem; }
+.eds__actions { display: flex; flex-direction: column; gap: 0.7rem; }
+.eds__more {
+  align-self: flex-start; margin-top: 0.4rem; font-family: var(--ed-sans); font-size: 0.74rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ed-cocoa); text-decoration: none; border-bottom: 1px solid rgba(62, 40, 27, 0.4); padding-bottom: 0.25rem;
+}
+.eds__more:hover { border-color: var(--ed-cocoa); }
+
+@media (max-width: 1100px) {
+  .eds { grid-template-columns: 1fr 1fr; }
+  .eds__memory { grid-row: span 2; }
+  .eds__plate { aspect-ratio: 4 / 5; }
+}
+
+@media (max-width: 760px) {
+  .edh { height: max(40rem, 100svh); }
+  .edh__photo, .edh__leaves img { object-position: 50% 100%; }
+  .edh__copy {
+    left: 1.25rem; right: 1.25rem; top: calc(var(--header-h) + 2.6rem); transform: none; gap: 0.9rem;
+    align-items: center; text-align: center; max-width: none;
+  }
+  .edh__title { font-size: clamp(2.6rem, 11vw, 3.4rem); }
+  .edh__sub { font-size: 0.92rem; max-width: 20rem; }
+  .edh__buy { justify-content: center; gap: 0.9rem; margin-top: 0.2rem; }
+  .edh__caption { left: 0; right: 0; text-align: center; bottom: 1rem; }
+
+  .eds { grid-template-columns: 1fr; }
+  .eds__plate { order: 1; aspect-ratio: 4 / 5; }
+  .eds__info { order: 2; padding: 2.2rem 1.25rem 2.8rem; align-items: stretch; }
+  .eds__memory { order: 3; grid-row: auto; aspect-ratio: 4 / 5; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .edh__leaves img { animation: none; }
+  .edh__photo, .edh__copy > * { transition: none; transform: none; opacity: 1; }
+}
+
+/* the floating WhatsApp button joins the palette */
+body.is-home .wa-float { background: var(--ed-cocoa); color: #f3eadb; box-shadow: 0 10px 30px -12px rgba(62, 40, 27, 0.5); }

@@ -26,6 +26,7 @@ import { memorySpraySection, mountMemorySpray } from '../components/memorySpray.
 import hero from '../data/hero.json';
 import scenes from '../data/scenes.json';
 import { setSeo } from '../seo.js';
+import { edHero, edSpread, mountEditorial } from '../components/editorial.js';
 
 const home = () => settings.home || {};
 const on = (key) => home().sections?.[key] !== false;
@@ -184,10 +185,12 @@ export default {
 
   render() {
     const featured = getProduct(home().featured_slug) || getFeatured();
+    const heroP = getProduct(home().hero?.product_slug) || getFeatured();
+    /* Art-direction review: the new hero and one featured spread lead; the
+       sections below are unchanged until the direction is approved. */
     return [
-      heroSection(),
-      offerSection(),
-      `<div id="collection"></div>`,
+      edHero(heroP),
+      edSpread(featured, { index: 1 }),
       on('collection') ? gallerySection(featured?.slug) : '',
       on('featured') ? memorySpraySection(featured, scenes.curtain) : '',
       on('story') ? heritageSection() : '',
@@ -216,6 +219,7 @@ export default {
       })
     );
 
+    mountEditorial(root, { reduced: !ok });
     mountGallery(root);
     mountMemorySpray(root, { reduced: !ok, mobile });
 
