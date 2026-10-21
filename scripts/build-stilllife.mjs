@@ -421,7 +421,13 @@ async function gradePhoto(file, name, W, H, widths, { position = 'centre', expos
   const rand = rng(11);
   const buf = Buffer.alloc(W * H * 3);
   for (let i = 0; i < W * H; i++) {
-    const [r, g, b] = grade((data[i * 3] / 255) * exposure, (data[i * 3 + 1] / 255) * exposure, (data[i * 3 + 2] / 255) * exposure, rand, { grain: 0.016, warm: 0.6 });
+    let [r, g, b] = grade((data[i * 3] / 255) * exposure, (data[i * 3 + 1] / 255) * exposure, (data[i * 3 + 2] / 255) * exposure, rand, { grain: 0.016, warm: 1 });
+    // split-tone toward the house palette: shadows to cocoa, highlights to parchment
+    const l = 0.299 * r + 0.587 * g + 0.114 * b;
+    const tone = [0.243 + (0.93 - 0.243) * l, 0.157 + (0.87 - 0.157) * l, 0.106 + (0.77 - 0.106) * l];
+    r = r * 0.74 + tone[0] * 0.26;
+    g = g * 0.74 + tone[1] * 0.26;
+    b = b * 0.74 + tone[2] * 0.26;
     buf[i * 3] = Math.round(clamp(r) * 255);
     buf[i * 3 + 1] = Math.round(clamp(g) * 255);
     buf[i * 3 + 2] = Math.round(clamp(b) * 255);
@@ -479,12 +485,24 @@ const manifest = {};
   manifest.heroMobile = { w: W, h: H, widths: [720, 1080], leaves: [720, 1080], edge: r.edgeColour };
 }
 
-// FEATURED · LIQAA packshot plate, 4:5, same room, same light
-{
+// COLLECTION · every scent on the same plaster, in the same light, 4:5
+const SCENTS = {
+  liqaa: { memory: 'armchair.jpg', alt: 'Late sun through a window falls across an armchair and a telephone.' },
+  waad: { memory: 'letters.jpg', alt: 'Old handwritten letters, one dated in ink.' },
+  shawq: { memory: 'citywindow.jpg', alt: 'The sun setting over the city, seen through a dark window frame.' },
+  athar: { memory: 'vanity.jpg', alt: 'An old dressing table with its brushes and bottles, in warm light.' },
+  safya: { memory: 'curtain.jpg', alt: 'Afternoon sun through a sheer curtain.' },
+  before: { memory: 'photos.jpg', alt: 'A small stack of old family photographs.' },
+  after: { memory: 'windowlight.jpg', alt: 'The last light of the day on a wall beside a window.' },
+};
+manifest.plate = {};
+manifest.memory = {};
+let seed = 9;
+for (const [slug, s] of Object.entries(SCENTS)) {
   const W = 1600,
     H = 2000;
   const r = await stillLife({
-    slug: 'liqaa',
+    slug,
     view: '04',
     W,
     H,
@@ -495,15 +513,79 @@ const manifest = {};
     leaves: null,
     shear: 0.4,
     vignette: { x: 0.5, y: 0.5 },
-    seed: 9,
+    seed: seed++,
   });
-  await writeSizes(r.buf, W, H, 'plate-liqaa', [800, 1200, 1600]);
-  manifest.plate = { liqaa: { w: W, h: H, widths: [800, 1200, 1600], edge: r.edgeColour } };
+  await writeSizes(r.buf, W, H, `plate-${slug}`, [400, 800, 1200, 1600]);
+  manifest.plate[slug] = { w: W, h: H, widths: [400, 800, 1200, 1600], edge: r.edgeColour };
+  // the moment the scent is named after (licensed photo, the same grade)
+  await gradePhoto(s.memory, `memory-${slug}`, 1600, 2000, [800, 1200, 1600], { position: 'centre', exposure: 0.98 });
+  manifest.memory[slug] = { w: 1600, h: 2000, widths: [800, 1200, 1600], credit: s.memory, alt: s.alt };
 }
 
-// MEMORY · the moment LIQAA is named after (licensed photo, same grade)
-await gradePhoto('armchair.jpg', 'memory-liqaa', 1600, 2000, [800, 1200, 1600], { position: 'centre', exposure: 0.98 });
-manifest.memory = { liqaa: { w: 1600, h: 2000, widths: [800, 1200, 1600], credit: 'armchair.jpg' } };
+// THE LIGHT CHANGES · one bottle while the afternoon passes over it (AFTER)
+manifest.light = { slug: 'after', frames: [], mobile: [] };
+const PASSES = [
+  { cx: 0.42, sun: [0.5, 0.37, 0.2], amb: [0.745, 0.715, 0.68] },
+  { cx: 0.6, sun: [0.46, 0.3, 0.14], amb: [0.7, 0.66, 0.62] },
+  { cx: 0.8, sun: [0.38, 0.2, 0.08], amb: [0.6, 0.55, 0.52] },
+];
+for (const [k, pass] of PASSES.entries()) {
+  for (const mobile of [false, true]) {
+    const W = mobile ? 1080 : 2400,
+      H = mobile ? 1600 : 1350;
+    const r = await stillLife({
+      slug: 'after',
+      view: '01',
+      W,
+      H,
+      cx: W * 0.5,
+      base: H * 0.86,
+      bh: H * (mobile ? 0.5 : 0.62),
+      win: { cx: pass.cx, cy: 0.5, w: mobile ? 0.9 : 0.42, h: 1.08, skew: -0.42, bar: 0.05, soft: 0.006 },
+      leaves: null,
+      shear: 0.55,
+      sun: pass.sun,
+      amb: pass.amb,
+      vignette: { x: 0.5, y: 0.55 },
+      seed: 30 + k,
+    });
+    const name = `light-${mobile ? 'm-' : ''}${k}`;
+    const widths = mobile ? [720, 1080] : [1280, 1920];
+    await writeSizes(r.buf, W, H, name, widths);
+    (mobile ? manifest.light.mobile : manifest.light.frames).push({ name, w: W, h: H, widths });
+  }
+}
+
+// DETAILS · close crops of the real bottle for the heritage chapters
+// (crop boxes are fractions of the 1600px packshot; graded like everything else)
+manifest.details = [];
+{
+  const crops = [
+    { name: 'cap', slug: 'liqaa', view: '05', box: [0.3, 0.02, 0.4, 0.5] },
+    { name: 'glass', slug: 'shawq', view: '02', box: [0.31, 0.3, 0.38, 0.475] },
+    { name: 'label', slug: 'athar', view: '01', box: [0.33, 0.33, 0.34, 0.425] },
+    { name: 'base', slug: 'safya', view: '04', box: [0.3, 0.6, 0.42, 0.36] },
+  ];
+  for (const c of crops) {
+    const meta = { width: 1600, height: 1600 };
+    const region = { left: Math.round(c.box[0] * meta.width), top: Math.round(c.box[1] * meta.height), width: Math.round(c.box[2] * meta.width), height: Math.round(c.box[3] * meta.height) };
+    const W = 800,
+      H = 1000;
+    const { data } = await sharp(`public/products/${c.slug}/${c.view}-1600.webp`).removeAlpha().extract(region).resize(W, H, { fit: 'cover' }).raw().toBuffer({ resolveWithObject: true });
+    const rand = rng(77);
+    const buf = Buffer.alloc(W * H * 3);
+    const paper = [0.93, 0.885, 0.81];
+    for (let i = 0; i < W * H; i++) {
+      // white studio → parchment (multiply), then the house grade
+      const [r, g, b] = grade((data[i * 3] / 255) * paper[0], (data[i * 3 + 1] / 255) * paper[1], (data[i * 3 + 2] / 255) * paper[2], rand, { grain: 0.014 });
+      buf[i * 3] = Math.round(clamp(r) * 255);
+      buf[i * 3 + 1] = Math.round(clamp(g) * 255);
+      buf[i * 3 + 2] = Math.round(clamp(b) * 255);
+    }
+    await writeSizes(buf, W, H, `detail-${c.name}`, [400, 800]);
+    manifest.details.push({ name: c.name, w: W, h: H, widths: [400, 800] });
+  }
+}
 
 await writeFile('src/js/data/editorial.json', JSON.stringify(manifest, null, 2) + '\n');
-console.log(manifest);
+console.log(Object.keys(manifest));

@@ -31,6 +31,73 @@
       "w": 1600,
       "h": 2000,
       "widths": [
+        400,
+        800,
+        1200,
+        1600
+      ],
+      "edge": "#b9a385"
+    },
+    "waad": {
+      "w": 1600,
+      "h": 2000,
+      "widths": [
+        400,
+        800,
+        1200,
+        1600
+      ],
+      "edge": "#b9a385"
+    },
+    "shawq": {
+      "w": 1600,
+      "h": 2000,
+      "widths": [
+        400,
+        800,
+        1200,
+        1600
+      ],
+      "edge": "#b9a285"
+    },
+    "athar": {
+      "w": 1600,
+      "h": 2000,
+      "widths": [
+        400,
+        800,
+        1200,
+        1600
+      ],
+      "edge": "#b9a285"
+    },
+    "safya": {
+      "w": 1600,
+      "h": 2000,
+      "widths": [
+        400,
+        800,
+        1200,
+        1600
+      ],
+      "edge": "#b9a285"
+    },
+    "before": {
+      "w": 1600,
+      "h": 2000,
+      "widths": [
+        400,
+        800,
+        1200,
+        1600
+      ],
+      "edge": "#b9a386"
+    },
+    "after": {
+      "w": 1600,
+      "h": 2000,
+      "widths": [
+        400,
         800,
         1200,
         1600
@@ -47,7 +114,173 @@
         1200,
         1600
       ],
-      "credit": "armchair.jpg"
+      "credit": "armchair.jpg",
+      "alt": "Late sun through a window falls across an armchair and a telephone."
+    },
+    "waad": {
+      "w": 1600,
+      "h": 2000,
+      "widths": [
+        800,
+        1200,
+        1600
+      ],
+      "credit": "letters.jpg",
+      "alt": "Old handwritten letters, one dated in ink."
+    },
+    "shawq": {
+      "w": 1600,
+      "h": 2000,
+      "widths": [
+        800,
+        1200,
+        1600
+      ],
+      "credit": "citywindow.jpg",
+      "alt": "The sun setting over the city, seen through a dark window frame."
+    },
+    "athar": {
+      "w": 1600,
+      "h": 2000,
+      "widths": [
+        800,
+        1200,
+        1600
+      ],
+      "credit": "vanity.jpg",
+      "alt": "An old dressing table with its brushes and bottles, in warm light."
+    },
+    "safya": {
+      "w": 1600,
+      "h": 2000,
+      "widths": [
+        800,
+        1200,
+        1600
+      ],
+      "credit": "curtain.jpg",
+      "alt": "Afternoon sun through a sheer curtain."
+    },
+    "before": {
+      "w": 1600,
+      "h": 2000,
+      "widths": [
+        800,
+        1200,
+        1600
+      ],
+      "credit": "photos.jpg",
+      "alt": "A small stack of old family photographs."
+    },
+    "after": {
+      "w": 1600,
+      "h": 2000,
+      "widths": [
+        800,
+        1200,
+        1600
+      ],
+      "credit": "windowlight.jpg",
+      "alt": "The last light of the day on a wall beside a window."
     }
-  }
+  },
+  "light": {
+    "slug": "after",
+    "frames": [
+      {
+        "name": "light-0",
+        "w": 2400,
+        "h": 1350,
+        "widths": [
+          1280,
+          1920
+        ]
+      },
+      {
+        "name": "light-1",
+        "w": 2400,
+        "h": 1350,
+        "widths": [
+          1280,
+          1920
+        ]
+      },
+      {
+        "name": "light-2",
+        "w": 2400,
+        "h": 1350,
+        "widths": [
+          1280,
+          1920
+        ]
+      }
+    ],
+    "mobile": [
+      {
+        "name": "light-m-0",
+        "w": 1080,
+        "h": 1600,
+        "widths": [
+          720,
+          1080
+        ]
+      },
+      {
+        "name": "light-m-1",
+        "w": 1080,
+        "h": 1600,
+        "widths": [
+          720,
+          1080
+        ]
+      },
+      {
+        "name": "light-m-2",
+        "w": 1080,
+        "h": 1600,
+        "widths": [
+          720,
+          1080
+        ]
+      }
+    ]
+  },
+  "details": [
+    {
+      "name": "cap",
+      "w": 800,
+      "h": 1000,
+      "widths": [
+        400,
+        800
+      ]
+    },
+    {
+      "name": "glass",
+      "w": 800,
+      "h": 1000,
+      "widths": [
+        400,
+        800
+      ]
+    },
+    {
+      "name": "label",
+      "w": 800,
+      "h": 1000,
+      "widths": [
+        400,
+        800
+      ]
+    },
+    {
+      "name": "base",
+      "w": 800,
+      "h": 1000,
+      "widths": [
+        400,
+        800
+      ]
+    }
+  ]
 }

@@ -1,0 +1,115 @@
+/* ————————————————————————————————————————————————
+   MEMÓRIA · "Afternoon Light" — the rest of the homepage
+   (intro + index, alternating spreads, The Light Changes,
+   heritage, WhatsApp). Tokens live in editorial.css.
+   ———————————————————————————————————————————————— */
+
+/* the whole homepage sits in the same paper */
+body.is-home { background: var(--ed-ground); color: var(--ed-cocoa); }
+body.is-home #main { background: var(--ed-ground); }
+body.is-home #footer .footer { margin-top: 0; }
+.ed-btn--light { background: #f3eadb; color: var(--ed-cocoa); border-color: #f3eadb; }
+.ed-btn--light:hover { background: transparent; color: #f3eadb; }
+
+/* hero scroll cue */
+.edh__scroll {
+  position: absolute; left: 50%; bottom: 1.4rem; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.6rem; text-decoration: none;
+  font-family: var(--ed-sans); font-size: 0.66rem; letter-spacing: 0.26em; text-transform: uppercase; color: rgba(62, 40, 27, 0.75);
+}
+.edh__scroll i { width: 1px; height: 2.6rem; background: linear-gradient(rgba(62, 40, 27, 0.6), rgba(62, 40, 27, 0)); transform-origin: top; animation: ed-cue 2.8s var(--ease-out) infinite; }
+@keyframes ed-cue { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+
+/* ——— INTRO + INDEX ——— */
+.edi { text-align: center; padding: clamp(5rem, 10vw, 9rem) clamp(1.25rem, 5vw, 4rem) clamp(3.5rem, 7vw, 6rem); display: flex; flex-direction: column; align-items: center; gap: 1.2rem; }
+.edi__title { font-family: var(--ed-serif); font-weight: 500; font-size: clamp(2.3rem, 1.3rem + 2.8vw, 4.2rem); line-height: 1.04; margin: 0; color: var(--ed-cocoa); }
+.edi__sub { font-family: var(--ed-sans); color: var(--ed-brown); margin: 0; font-size: 1rem; }
+.edi__sub span { color: var(--ed-accent); }
+.edi__index { list-style: none; margin: clamp(2.2rem, 4vw, 3.5rem) 0 0; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: clamp(0.6rem, 1.4vw, 1.4rem); width: min(100%, 72rem); }
+.edi__index a { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--ed-cocoa); }
+.edi__thumb { display: block; width: 100%; aspect-ratio: 4 / 5; overflow: hidden; }
+.edi__thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease-slow); }
+.edi__index a:hover .edi__thumb img { transform: scale(1.04); }
+.edi__no { font-family: var(--ed-sans); font-size: 0.64rem; letter-spacing: 0.22em; color: rgba(90, 53, 34, 0.7); margin-top: 0.3rem; }
+.edi__name { font-family: var(--ed-serif); font-size: 1.15rem; letter-spacing: 0.08em; line-height: 1; }
+
+/* spreads alternate sides; a hairline between them */
+.eds { min-height: min(92svh, 54rem); }
+.eds + .eds { border-top: 1px solid rgba(62, 40, 27, 0.1); }
+.eds--flip { grid-template-columns: 3.4fr 4fr 5fr; }
+.eds--flip .eds__info { order: 1; }
+.eds--flip .eds__plate { order: 2; }
+.eds--flip .eds__memory { order: 3; }
+
+/* ——— THE LIGHT CHANGES ——— */
+.edl { position: relative; height: 340svh; background: #2c1d13; }
+.edl__pin { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.edl__layer, .edl__layer img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.edl__layer:not([data-layer='0']) { opacity: 0; will-change: opacity; }
+.edl__veil { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(36, 24, 16, 0.6) 0%, rgba(36, 24, 16, 0) 45%); pointer-events: none; }
+.edl__times { list-style: none; margin: 0; padding: 0; position: absolute; left: clamp(1.25rem, 6vw, 6rem); bottom: clamp(2rem, 7vh, 4.5rem); }
+.edl__times li {
+  position: absolute; bottom: 0; left: 0; white-space: nowrap; opacity: 0; transform: translateY(8px);
+  font-family: var(--ed-serif); font-size: clamp(1.5rem, 1rem + 1.4vw, 2.4rem); color: #f3eadb;
+  transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+}
+.edl__times li.is-on { opacity: 1; transform: none; }
+.edl__end {
+  position: absolute; left: 50%; bottom: clamp(2.5rem, 9vh, 6rem); transform: translate(-50%, 12px); width: min(90%, 40rem);
+  text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem; color: #f3eadb;
+  opacity: 0; transition: opacity 1.1s var(--ease-out), transform 1.1s var(--ease-out); pointer-events: none;
+}
+.edl__end.is-on { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.edl__end .ed-label { color: rgba(243, 234, 219, 0.82); }
+.edl__title { font-family: var(--ed-serif); font-weight: 500; font-size: clamp(2.4rem, 1.4rem + 3vw, 4.4rem); line-height: 1.02; margin: 0; }
+.edl__sub { font-family: var(--ed-sans); margin: 0; color: rgba(243, 234, 219, 0.88); }
+.edl.is-still { height: auto; }
+.edl.is-still .edl__pin { position: relative; }
+
+/* ——— HERITAGE ——— */
+.edr { padding: clamp(5rem, 10vw, 9rem) clamp(1.25rem, 6vw, 6rem); display: flex; flex-direction: column; gap: clamp(3rem, 6vw, 5rem); }
+.edr__head { display: grid; grid-template-columns: auto minmax(0, 36rem); gap: clamp(2rem, 6vw, 6rem); align-items: center; justify-content: center; }
+.edr__years { font-family: var(--ed-serif); font-weight: 500; font-size: clamp(9rem, 5rem + 12vw, 17rem); line-height: 0.8; margin: 0; color: var(--ed-sand); letter-spacing: -0.03em; }
+.edr__head > div { display: flex; flex-direction: column; gap: 1.1rem; }
+.edr__title { font-family: var(--ed-serif); font-weight: 500; font-size: clamp(2.2rem, 1.3rem + 2.4vw, 3.6rem); line-height: 1.05; margin: 0; color: var(--ed-cocoa); }
+.edr__title span { display: block; color: var(--ed-brown); font-size: 0.62em; margin-top: 0.4rem; }
+.edr__body { font-family: var(--ed-sans); font-size: 1rem; line-height: 1.75; color: var(--ed-brown); margin: 0; }
+.edr__chapters { list-style: none; margin: 0 auto; padding: 0; width: min(100%, 76rem); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(0.8rem, 2vw, 1.8rem); }
+.edr__chapters li { display: flex; flex-direction: column; gap: 0.5rem; }
+.edr__img { display: block; aspect-ratio: 4 / 5; overflow: hidden; margin-bottom: 0.5rem; }
+.edr__img img { width: 100%; height: 100%; object-fit: cover; }
+.edr__no { font-family: var(--ed-sans); font-size: 0.64rem; letter-spacing: 0.22em; color: rgba(90, 53, 34, 0.7); }
+.edr__step { font-family: var(--ed-serif); font-size: 1.5rem; color: var(--ed-cocoa); line-height: 1.1; }
+
+/* ——— WHATSAPP ——— */
+.edw { text-align: center; padding: clamp(4.5rem, 9vw, 8rem) 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 1.1rem; background: #dfd1b8; border-top: 1px solid rgba(62, 40, 27, 0.1); }
+.edw__title { font-family: var(--ed-serif); font-weight: 500; font-size: clamp(2.1rem, 1.3rem + 2.2vw, 3.4rem); line-height: 1.05; margin: 0; color: var(--ed-cocoa); }
+.edw__sub { font-family: var(--ed-sans); color: var(--ed-brown); max-width: 30rem; line-height: 1.65; margin: 0 0 0.6rem; }
+
+@media (max-width: 1100px) {
+  .eds--flip { grid-template-columns: 1fr 1fr; }
+  .eds--flip .eds__memory { order: 0; }
+  .edi__index { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .edh__scroll { display: none; }
+  .edi { padding-top: 4rem; }
+  .edi__index {
+    grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 34%; overflow-x: auto; scroll-snap-type: x mandatory;
+    width: calc(100% + 2.5rem); margin-inline: -1.25rem; padding: 0 1.25rem 0.6rem;
+  }
+  .edi__index li { scroll-snap-align: start; }
+  .eds--flip { grid-template-columns: 1fr; }
+  .eds--flip .eds__plate { order: 1; }
+  .eds--flip .eds__info { order: 2; }
+  .eds--flip .eds__memory { order: 3; }
+  .eds__memory, .eds--flip .eds__memory { aspect-ratio: 3 / 2; }
+  .edl { height: 300svh; }
+  .edl__times { left: 1.25rem; bottom: 2rem; }
+  .edr__head { grid-template-columns: 1fr; }
+  .edr__years { font-size: 8rem; }
+  .edr__chapters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* footer in Deep Cocoa, the darkest colour of the palette */
+body.is-home #footer .footer { background: var(--ed-cocoa); }
