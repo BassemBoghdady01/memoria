@@ -15,15 +15,28 @@ import { onPageCleanup, motionOK, gsap } from '../motion.js';
 import { waLink, productMessage, enquiryMessage, waButton, waIcon } from '../components/whatsapp.js';
 import { setSeo, productJsonLd } from '../seo.js';
 import { offerLine } from '../components/price.js';
-import scenes from '../data/scenes.json';
+import ed from '../data/editorial.json';
 
-/* product photos → the matching transparent cut-out of the same real photograph */
-const cutOf = (g) => {
-  const m = String(g?.url || '').match(/^(.*)\/(\d\d)-960\.webp$/);
-  if (!m) return { url: g?.url, srcset: g?.srcset };
-  return { url: `${m[1]}/cutout-${m[2]}-1200.webp`, srcset: `${m[1]}/cutout-${m[2]}-600.webp 600w, ${m[1]}/cutout-${m[2]}-1200.webp 1200w` };
-};
-const sceneFor = (p) => scenes[p.story?.scene] || scenes['nile-dusk'];
+/*
+ * Views on the stage: first the still life (the real packshot on sunlit
+ * plaster), then the studio photographs themselves. Those sit on the same
+ * paper with a multiply blend, so their white studio sweep becomes the page
+ * and their own shadows stay: nothing is cut out or redrawn.
+ */
+function viewsOf(p) {
+  const pl = ed.plate?.[p.slug];
+  const plate = pl
+    ? [{
+        url: `/editorial/plate-${p.slug}-1200.webp`,
+        srcset: pl.widths.map((w) => `/editorial/plate-${p.slug}-${w}.webp ${w}w`).join(', '),
+        thumb: `/editorial/plate-${p.slug}-400.webp`,
+        alt: `${p.name} in afternoon light`,
+        view: 'In the light',
+        plate: true,
+      }]
+    : [];
+  return [...plate, ...p.gallery.map((g) => ({ ...g, thumb: String(g.url).replace('-960.', '-480.') }))];
+}
 
 /* order in which the photographed views read as one turn of the bottle */
 const TURN = ['Opposite three-quarter', 'Front', 'Three-quarter', 'Side'];
@@ -42,6 +55,23 @@ function notesBlock(p) {
       ${rows.map(([t, n]) => `<div class="notes-row"><span class="label">${t}</span><p>${esc(n.join(' · '))}</p></div>`).join('')}
     </div>
   </div>`;
+}
+
+function memorySection(p, storyText) {
+  const m = ed.memory?.[p.slug];
+  const [meaning, ...rest] = String(p.story?.tagline || '').split(/(?<=\.)\s+/);
+  if (!m && !storyText) return '';
+  const srcset = m ? m.widths.map((w) => `/editorial/memory-${p.slug}-${w}.webp ${w}w`).join(', ') : '';
+  return `
+  <section class="pdp-memory" aria-labelledby="memory-title">
+    ${m ? `<figure class="pdp-memory__img" data-reveal><img src="/editorial/memory-${esc(p.slug)}-1200.webp" srcset="${srcset}" sizes="(max-width: 900px) 100vw, 50vw" alt="${esc(m.alt || '')}" loading="lazy" decoding="async" width="${m.w}" height="${m.h}"/></figure>` : ''}
+    <div class="pdp-memory__copy">
+      <p class="ed-label" data-reveal>The memory</p>
+      <h2 id="memory-title" data-reveal>${esc(meaning || p.name)}</h2>
+      ${rest.length ? `<p class="pdp-memory__line" data-reveal>${esc(rest.join(' '))}</p>` : ''}
+      ${storyText ? `<p data-reveal>${esc(storyText)}</p>` : ''}
+    </div>
+  </section>`;
 }
 
 function buyBox(p) {
@@ -113,7 +143,7 @@ export default {
     }
     const related = getRelated(p, 3);
     const turnFrames = TURN.map((label) => p.gallery.find((g) => g.view === label)).filter(Boolean);
-    const thumbs = p.gallery;
+    const views = viewsOf(p);
     const crumbCat = p.category ? `<a href="/shop?c=${esc(p.category.slug)}">${esc(p.category.name)}</a><span aria-hidden="true">/</span>` : '';
     const storyText = p.story?.text || p.story?.memoryStory;
 
@@ -122,25 +152,21 @@ export default {
       <div class="container">
         <div class="pdp__layout">
           <div class="pdp__gallery">
-            <div class="pdp__stage" data-pdp-stage ${turnFrames.length > 1 ? 'data-turnable' : ''}>
-              <img class="pdp__scene" src="${esc(sceneFor(p).src)}" srcset="${esc(sceneFor(p).srcset)}" sizes="(max-width: 900px) 100vw, 55vw" alt="" aria-hidden="true" decoding="async"/>
-              <i class="pdp__veil" aria-hidden="true"></i>
-              <img class="pdp__main" src="${esc(cutOf(thumbs[0]).url)}" srcset="${esc(cutOf(thumbs[0]).srcset)}" sizes="(max-width: 900px) 70vw, 30vw" alt="${esc(thumbs[0]?.alt || p.name)}" fetchpriority="high" decoding="async"/>
-              <i class="pdp__floor" aria-hidden="true"></i>
-              <i class="pdp__sheen" aria-hidden="true"></i>
+            <div class="pdp__stage${views[0]?.plate ? '' : ' is-studio'}" data-pdp-stage ${turnFrames.length > 1 ? 'data-turnable' : ''}>
+              <img class="pdp__main" src="${esc(views[0]?.url || '')}" ${views[0]?.srcset ? `srcset="${esc(views[0].srcset)}"` : ''} sizes="(max-width: 900px) 100vw, 50vw" alt="${esc(views[0]?.alt || p.name)}" fetchpriority="high" decoding="async"/>
             </div>
             ${
               turnFrames.length > 1
-                ? `<p class="pdp__hint" data-turn-hint>${icons.arrowRight()} Drag the bottle to turn it · real photographed angles</p>`
+                ? `<p class="pdp__hint" data-turn-hint>${icons.arrowRight()} Drag the studio photographs to turn the bottle</p>`
                 : ''
             }
             ${
-              thumbs.length > 1
+              views.length > 1
                 ? `<div class="pdp__thumbs" role="tablist" aria-label="Product photographs">
-                ${thumbs
+                ${views
                   .map(
-                    (g, i) => `<button type="button" role="tab" class="pdp__thumb" data-thumb="${i}" aria-selected="${i === 0}" aria-label="${esc(g.view || 'View ' + (i + 1))}">
-                      <img src="${esc(cutOf(g).url.replace('-1200.', '-600.'))}" alt="" loading="lazy" decoding="async"/></button>`
+                    (g, i) => `<button type="button" role="tab" class="pdp__thumb${g.plate ? '' : ' is-studio'}" data-thumb="${i}" aria-selected="${i === 0}" aria-label="${esc(g.view || 'View ' + (i + 1))}">
+                      <img src="${esc(g.thumb)}" alt="" loading="lazy" decoding="async"/></button>`
                   )
                   .join('')}
               </div>`
@@ -171,26 +197,14 @@ export default {
         </div>
       </div>
 
-      ${
-        storyText
-          ? `<section class="pdp-story" aria-labelledby="memory-title">
-        <div class="container pdp-story__inner">
-          <div class="pdp-story__copy">
-            <span class="stamp" data-reveal>The memory</span>
-            ${p.story.place ? `<h2 id="memory-title" data-reveal>${esc(p.story.place)}</h2>` : `<h2 id="memory-title" class="sr-only">The memory behind ${esc(p.name)}</h2>`}
-            <p data-reveal>${esc(storyText)}</p>
-          </div>
-        </div>
-      </section>`
-          : ''
-      }
+      ${memorySection(p, storyText)}
 
       ${
         related.length
           ? `<section class="related" aria-labelledby="related-title">
         <div class="container">
           <div class="sechead"><h2 id="related-title" data-reveal>More from the collection</h2></div>
-          <div class="sgrid sgrid--3" data-related>
+          <div class="pgrid pgrid--3" data-related>
             ${related.map((r, i) => renderProductCard(r, { revealDelay: i * 90 })).join('')}
           </div>
         </div>
@@ -230,17 +244,19 @@ export default {
     /* — gallery: thumbnails + drag-to-turn through the real angles — */
     const stage = root.querySelector('[data-pdp-stage]');
     const main = stage.querySelector('.pdp__main');
+    const views = viewsOf(p);
     const show = (img) => {
       if (!img || !main) return;
-      const c = cutOf(img);
-      main.src = c.url;
-      if (c.srcset) main.srcset = c.srcset;
+      main.src = img.url;
+      if (img.srcset) main.srcset = img.srcset;
+      else main.removeAttribute('srcset');
       main.alt = img.alt || p.name;
+      stage.classList.toggle('is-studio', !img.plate);
     };
     const thumbs = [...root.querySelectorAll('[data-thumb]')];
     const selectThumb = (i) => {
       thumbs.forEach((t, j) => t.setAttribute('aria-selected', String(j === i)));
-      show(p.gallery[i]);
+      show(views[i]);
     };
     thumbs.forEach((t, i) => t.addEventListener('click', () => selectThumb(i)));
 
@@ -248,7 +264,7 @@ export default {
     if (frames.length > 1) {
       frames.forEach((f) => {
         const pre = new Image();
-        pre.src = cutOf(f).url;
+        pre.src = f.url;
       });
       let idx = Math.max(0, frames.findIndex((f) => f.view === 'Front'));
       let startX = null;
@@ -257,7 +273,7 @@ export default {
       const setFrame = (i) => {
         idx = Math.max(0, Math.min(frames.length - 1, i));
         show(frames[idx]);
-        const ti = p.gallery.indexOf(frames[idx]);
+        const ti = views.findIndex((v) => v.url === frames[idx].url);
         thumbs.forEach((t, j) => t.setAttribute('aria-selected', String(j === ti)));
       };
       stage.addEventListener('pointerdown', (e) => {
@@ -358,16 +374,7 @@ export default {
       document.body.classList.remove('has-stickybuy');
     });
 
-    /* light passes across the glass as the page scrolls */
-    if (motionOK()) {
-      const sheen = gsap.fromTo(
-        stage.querySelector('.pdp__sheen'),
-        { xPercent: -120 },
-        { xPercent: 120, ease: 'none', scrollTrigger: { trigger: stage, start: 'top 80%', end: 'bottom 20%', scrub: 0.6 } }
-      );
-      onPageCleanup(() => sheen.scrollTrigger?.kill() || sheen.kill());
-      gsap.from(root.querySelector('.pdp__buy'), { opacity: 0, y: 18, duration: 0.8, ease: 'power2.out' });
-    }
+    if (motionOK()) gsap.from(root.querySelector('.pdp__buy'), { opacity: 0, y: 18, duration: 0.8, ease: 'power2.out' });
     mountRelated(root);
   },
 };

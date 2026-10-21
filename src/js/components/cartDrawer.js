@@ -4,7 +4,7 @@
 import { el, esc, money, trapFocus, lockScroll, unlockScroll } from '../utils.js';
 import { icons } from './icons.js';
 import { cart } from '../store/cart.js';
-import { productCutout } from './render.js';
+import { productPlate } from './render.js';
 import { waLink, cartMessage, waButton } from './whatsapp.js';
 import { offerLine } from './price.js';
 import { settings } from '../data/catalog.js';
@@ -82,7 +82,7 @@ function renderBody() {
       (l) => `
       <div class="cartline" data-line="${esc(l.variantId)}">
         <a class="cartline__thumb" href="/product/${esc(l.product.slug)}" aria-hidden="true" tabindex="-1">
-          ${productCutout(l.product, { sizes: '96px', alt: '' })}
+          ${productPlate(l.product, { sizes: '96px', alt: '' })}
         </a>
         <div class="cartline__info">
           <a class="cartline__name" href="/product/${esc(l.product.slug)}">${esc(l.product.name)}</a>

@@ -10,7 +10,7 @@ import { esc, money, toast } from '../utils.js';
 import { cart } from '../store/cart.js';
 import { governorates, settings } from '../data/catalog.js';
 import { backendConfigured, rpc } from '../data/backend.js';
-import { productCutout } from '../components/render.js';
+import { productPlate } from '../components/render.js';
 import { navigate, renderRoute } from '../router.js';
 import { onPageCleanup } from '../motion.js';
 import { waLink, cartMessage, waButton } from '../components/whatsapp.js';
@@ -27,7 +27,7 @@ function summary() {
         .map(
           (l) => `
         <div class="miniline">
-          <span class="cartline__thumb">${productCutout(l.product, { sizes: '64px', alt: '' })}</span>
+          <span class="cartline__thumb">${productPlate(l.product, { sizes: '64px', alt: '' })}</span>
           <span>
             <span class="miniline__name">${esc(l.product.name)}</span><br/>
             <span class="miniline__meta">${esc(l.variant.label)} × ${l.qty}</span>
