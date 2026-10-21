@@ -25,6 +25,7 @@ import { waLink, productMessage, enquiryMessage, waIcon } from './whatsapp.js';
 import { offerLine } from './price.js';
 import { onPageCleanup, ScrollTrigger } from '../motion.js';
 import ed from '../data/editorial.json';
+import { postmark } from './postmark.js';
 
 const set = (name, widths) => widths.map((w) => `/editorial/${name}-${w}.webp ${w}w`).join(', ');
 const no = (i) => String(i).padStart(2, '0');
@@ -60,6 +61,8 @@ export function edHero(p) {
         <img src="/editorial/hero-liqaa-leaves-1920.webp" srcset="${set('hero-liqaa-leaves', H.leaves)}" sizes="100vw" alt="" decoding="async"/>
       </picture>
     </div>
+    ${postmark({ cls: 'edh__postmark' })}
+    ${p ? `<p class="edh__note" aria-hidden="true">No. 01 · ${esc(p.name)} · Cairo, four in the afternoon</p>` : ''}
     <div class="edh__copy">
       <p class="ed-label">Perfume house · Cairo</p>
       <h1 id="edh-title" class="edh__title">Memories<br/>you can wear.</h1>
@@ -88,13 +91,13 @@ export function edIntro(list) {
     <p class="ed-label" data-reveal>The collection</p>
     <h2 id="edi-title" class="edi__title" data-reveal>${shown.length === 7 ? 'Seven' : shown.length} scents, each named<br/>for a moment.</h2>
     <p class="edi__sub" data-reveal>Wear the one you remember.${offer ? ` <span>${esc(offer)}.</span>` : ''}</p>
-    <ol class="edi__index" data-reveal>
+    <ol class="edi__index edi__film" data-reveal>
       ${shown
         .map(
           (p, i) => `
         <li><a href="#scent-${esc(p.slug)}" data-ed-jump>
           <span class="edi__thumb"><img src="/editorial/plate-${esc(p.slug)}-400.webp" alt="" loading="lazy" decoding="async" width="400" height="500"/></span>
-          <span class="edi__no">${no(i + 1)}</span>
+          <span class="edi__no">${no(i + 1)}A</span>
           <span class="edi__name">${esc(p.name)}</span>
         </a></li>`
         )
@@ -119,7 +122,11 @@ export function edSpread(p, { index = 1, flip = false } = {}) {
   return `
   <section class="eds${flip ? ' eds--flip' : ''}" id="scent-${esc(p.slug)}" aria-labelledby="eds-${esc(p.slug)}">
     <figure class="eds__memory" data-reveal>
-      <img src="/editorial/memory-${esc(p.slug)}-1200.webp" srcset="${set(`memory-${p.slug}`, memory.widths)}" sizes="(max-width: 760px) 100vw, 42vw" alt="${esc(memory.alt || '')}" loading="lazy" decoding="async" width="${memory.w}" height="${memory.h}"/>
+      <span class="eds__print">
+        <img src="/editorial/memory-${esc(p.slug)}-1200.webp" srcset="${set(`memory-${p.slug}`, memory.widths)}" sizes="(max-width: 760px) 90vw, 34vw" alt="${esc(memory.alt || '')}" loading="lazy" decoding="async" width="${memory.w}" height="${memory.h}"/>
+      </span>
+      <figcaption class="eds__caption">No. ${no(index)} · ${esc(p.name)}${meaning ? ` · ${esc(meaning.replace(/.$/, ''))}` : ''}</figcaption>
+      ${postmark({ cls: 'eds__postmark', top: esc(p.name), middle: no(index), bottom: 'CAIRO' })}
     </figure>
     <a class="eds__plate" href="/product/${esc(p.slug)}" data-reveal style="--reveal-delay:120ms" aria-label="${esc(p.name)}, view the fragrance">
       <img src="/editorial/plate-${esc(p.slug)}-1200.webp" srcset="${set(`plate-${p.slug}`, plate.widths)}" sizes="(max-width: 760px) 100vw, 33vw" alt="${esc(p.name)} bottle in afternoon light" loading="lazy" decoding="async" width="${plate.w}" height="${plate.h}"/>

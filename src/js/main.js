@@ -2,16 +2,14 @@
  * MEMÓRIA · Bootstrap.
  * Load the catalogue from the database first, then draw the chrome and route.
  */
-import '@fontsource/fraunces/400.css';
-import '@fontsource/fraunces/400-italic.css';
-import '@fontsource/fraunces/500.css';
-import '@fontsource/fraunces/600.css';
-import '@fontsource/cormorant-garamond/500.css';
-import '@fontsource/cormorant-garamond/600.css';
-import '@fontsource/kaushan-script/400.css'; /* brand brush accent — used sparingly */
-import '@fontsource/jost/400.css';
-import '@fontsource/jost/500.css';
-import '@fontsource/jost/600.css';
+/* Type: Marcellus (flared Roman capitals, the same family of letter as the
+   bottle label), Libre Caslon Text (old book typography) for reading,
+   Courier Prime (typewriter) for captions and labels. */
+import '@fontsource/marcellus/400.css';
+import '@fontsource/libre-caslon-text/400.css';
+import '@fontsource/libre-caslon-text/400-italic.css';
+import '@fontsource/libre-caslon-text/700.css';
+import '@fontsource/courier-prime/400.css';
 import '../styles/main.css';
 
 import { initSmoothScroll } from './motion.js';

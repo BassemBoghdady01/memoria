@@ -1,0 +1,134 @@
+/* ————————————————————————————————————————————————
+   MEMÓRIA · Brand layer: typography, the full official palette,
+   and the nostalgia details (paper grain, prints, postmarks,
+   film strip, typewritten captions).
+   Loaded last so it wins over the earlier passes.
+   ———————————————————————————————————————————————— */
+
+/* ——— TYPE ———
+   Marcellus: flared Roman capitals, the same kind of letter as the
+   LIQAA / MEMORIA label on the bottle. Used in capitals or title case,
+   never for long text.
+   Libre Caslon Text: old book typography for anything you read.
+   Courier Prime: the typewriter, for labels, numbers and captions. */
+body { font-family: var(--ed-sans); }
+.edh__title, .edi__title, .eds__name, .edl__title, .edr__title, .edw__title, .edr__step, .edi__name,
+.pagehead h1, .pdp__title, .pcard__name, .pdp-memory__copy h2, .story2__copy h1, .story2__shelf h2,
+.related .sechead h2, .checkout__step h2, .bagline__name, .cartline__name, .miniline__name, .drawer__title,
+.notfound h1, .shop__empty h1, .story2__bottle {
+  font-family: var(--ed-serif); font-weight: 400;
+}
+.edh__title { font-size: clamp(2.8rem, 1.3rem + 4.2vw, 5.6rem); line-height: 1.02; letter-spacing: 0.005em; }
+.eds__name, .pdp__title { letter-spacing: 0.12em; }
+.pcard__name, .edi__name, .story2__bottle { letter-spacing: 0.14em; text-transform: uppercase; }
+.pcard__name { font-size: 1.35rem; }
+.eds__meaning, .pcard__tag, .pdp__tagline, .pdp-memory__line, .serif-lede, .edr__title span, .story2__copy h1 span {
+  font-family: var(--ed-sans); font-style: italic;
+}
+.eds__meaning { font-size: 1.3rem; }
+.pdp__tagline { font-size: 1.3rem; }
+.edh__sub, .eds__line, .edr__body, .edw__sub, .edi__sub, .pdp__short, .story2__body, .pdp-memory__copy p { font-family: var(--ed-sans); }
+
+/* the typewriter */
+.ed-label, .edi__no, .edr__no, .eds__offer, .eds__more, .pdp__hint, .crumbs, .crumbs a, .shop__count, .label, .stamp,
+.edh__note, .eds__caption, .edl__times li, .ribbon, .header__navlink, .footer h3, .pcard__add, .pcard__flag, .drawer__note,
+.pdp__wanote, .pdp__assure, .pdp__offer, .field label, .story2__years {
+  font-family: var(--ed-type); font-weight: 400;
+}
+.ed-label { font-size: 0.78rem; letter-spacing: 0.16em; }
+.edl__times li { font-size: clamp(1.1rem, 0.8rem + 1vw, 1.6rem); letter-spacing: 0.04em; color: #f0a35e; text-shadow: 0 0 6px rgba(240, 120, 40, 0.55); }
+
+/* buttons and prices in the label letter */
+.ed-btn, .btn { font-family: var(--ed-serif); font-weight: 400; font-size: 0.86rem; letter-spacing: 0.18em; }
+.ed-price, .pdp__price, .pcard__price, .sumline--total strong, .bagline__total, .cartline__price, .miniline__price, .drawer__subtotal strong {
+  font-family: var(--ed-serif); letter-spacing: 0.04em;
+}
+
+/* ——— PALETTE ——— (Parchment ground, Archive Brown type, Deep Cocoa depth,
+   Warm Sand shade, Dust/Faded Paper greys for rules, Terracotta for price,
+   Nile Teal as the Cairo highlight) */
+.eds + .eds, .pcard__row, .eds__price, .pdp__price { border-color: rgba(123, 120, 111, 0.35); }
+.eds__offer, .pdp__offer, .edi__sub span { color: var(--ed-teal); }
+.eds__more:hover, .crumbs a:hover, .pcard__add:hover { color: var(--ed-teal); border-color: var(--ed-teal); }
+.ed-btn:focus-visible, .btn:focus-visible { outline-color: var(--ed-teal); }
+.edr__years { color: var(--ed-sand); -webkit-text-stroke: 1px rgba(90, 53, 34, 0.25); }
+.edw { background: var(--ed-teal); color: #efe6d6; border-top: 0; }
+.edw .ed-label, .edw__sub { color: rgba(239, 230, 214, 0.85); }
+.edw__title { color: #f3eadb; }
+.edw .ed-btn--line { color: #f3eadb; border-color: rgba(243, 234, 219, 0.6); }
+.edw .ed-btn--line:hover { background: #f3eadb; color: var(--ed-teal); }
+#ribbon .ribbon { background: var(--ed-cocoa) !important; color: #e8ddc8 !important; border: 0 !important; }
+.checkout__step .num { background: var(--ed-teal); }
+
+/* ——— NOSTALGIA DETAILS ——— */
+
+/* paper: a faint fibre grain over everything, like printed stock */
+body::after {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 2147483000; opacity: 0.22; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .16 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* postmarks in Nile Teal ink */
+.postmark { position: absolute; width: clamp(8.5rem, 12vw, 11.5rem); height: auto; color: var(--ed-teal); opacity: 0.72; mix-blend-mode: multiply; pointer-events: none; z-index: 2; }
+.edh__postmark { left: clamp(15rem, 34vw, 31rem); top: calc(var(--header-h) + 3.2rem); transform: rotate(-11deg); }
+.edh__note {
+  position: absolute; right: clamp(1.25rem, 5vw, 4rem); bottom: 1.4rem; margin: 0; z-index: 2;
+  font-family: var(--ed-type); font-size: 0.8rem; color: rgba(62, 40, 27, 0.78);
+}
+
+/* memory photographs become old prints: cream border, slight tilt, caption typed under */
+.eds__memory { background: var(--ed-sand); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.1rem; padding: clamp(2.2rem, 4vw, 4rem) clamp(1.5rem, 3.5vw, 3.5rem); }
+.eds__memory img { position: static; width: 100%; height: 100%; object-fit: cover; display: block; }
+.eds__print {
+  display: block; width: min(100%, 30rem); aspect-ratio: 4 / 5; padding: clamp(0.6rem, 1vw, 0.9rem) clamp(0.6rem, 1vw, 0.9rem) clamp(2.4rem, 4vw, 3.4rem);
+  background: #f4ecdc; box-shadow: 0 1px 1px rgba(62, 40, 27, 0.18), 0 18px 34px -16px rgba(62, 40, 27, 0.45);
+  transform: rotate(-1.6deg); position: relative;
+}
+.eds--flip .eds__print { transform: rotate(1.4deg); }
+/* photo corners, like an album */
+.eds__print::before, .eds__print::after {
+  content: ''; position: absolute; width: 2.1rem; height: 2.1rem; background: var(--ed-cocoa); opacity: 0.85;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.eds__print::before { left: -0.35rem; top: -0.35rem; }
+.eds__print::after { right: -0.35rem; bottom: -0.35rem; transform: rotate(180deg); }
+.eds__caption { font-family: var(--ed-type); font-size: 0.82rem; color: var(--ed-brown); text-align: center; max-width: 30rem; margin: 0; }
+.eds__postmark { right: clamp(0.5rem, 2vw, 2rem); top: clamp(1rem, 3vw, 2.4rem); transform: rotate(12deg); width: clamp(7.5rem, 10vw, 10rem); }
+.eds--flip .eds__postmark { right: auto; left: clamp(0.5rem, 2vw, 2rem); transform: rotate(-9deg); }
+
+/* the index as a strip of film: sprockets, frame numbers typed in the margin */
+.edi__film {
+  background: #2a1c13; padding: 1.7rem 1.1rem; gap: 0.7rem; position: relative;
+  box-shadow: 0 20px 40px -24px rgba(42, 28, 19, 0.7);
+}
+.edi__film::before, .edi__film::after {
+  content: ''; position: absolute; left: 0.6rem; right: 0.6rem; height: 0.55rem;
+  background: repeating-linear-gradient(90deg, rgba(232, 221, 200, 0.82) 0 0.9rem, transparent 0.9rem 1.6rem);
+  border-radius: 1px;
+}
+.edi__film::before { top: 0.55rem; }
+.edi__film::after { bottom: 0.55rem; }
+.edi__film a { color: #e8ddc8; gap: 0.35rem; }
+.edi__film .edi__thumb { outline: 1px solid rgba(0, 0, 0, 0.4); }
+.edi__film .edi__no { color: #f0a35e; order: -1; align-self: flex-start; font-size: 0.66rem; letter-spacing: 0.12em; margin: 0; }
+.edi__film .edi__name { color: #e8ddc8; font-size: 0.86rem; }
+.edi__film a:hover .edi__name { color: #f0a35e; }
+
+/* shop cards: the same print border so the collection reads as photographs */
+.pcard__media { background: #f4ecdc; padding: 0.55rem 0.55rem 1.6rem; box-shadow: 0 1px 1px rgba(62, 40, 27, 0.15), 0 14px 26px -16px rgba(62, 40, 27, 0.4); }
+.pcard__media img { aspect-ratio: 4 / 5; height: auto; }
+.pcard__media { aspect-ratio: auto; }
+
+/* product memory as a print too */
+.pdp-memory__img { background: #f4ecdc; padding: 0.9rem 0.9rem 3rem; box-shadow: 0 1px 1px rgba(62, 40, 27, 0.15), 0 18px 34px -18px rgba(62, 40, 27, 0.45); transform: rotate(-1deg); aspect-ratio: auto; margin: 0 0 0 clamp(1.25rem, 6vw, 6rem); }
+.pdp-memory__img img { aspect-ratio: 4 / 5; height: auto; }
+
+@media (max-width: 760px) {
+  .edh__postmark { left: auto; right: 0.8rem; top: auto; bottom: 30%; width: 6.5rem; }
+  .edh__note { display: none; }
+  .eds__memory { padding: 2rem 1.5rem 2.4rem; aspect-ratio: auto !important; }
+  .eds__print { width: 82%; }
+  .eds__postmark { width: 6.5rem; }
+  .edi__film { padding: 1.6rem 1.25rem; }
+  .pdp-memory__img { margin: 0 1.25rem; }
+}

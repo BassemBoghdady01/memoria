@@ -40,9 +40,9 @@
   /* Type system — retro display serif with personality (Fraunces),
      brush brand accent related to the logo (Kaushan Script, used
      sparingly), clean modern commerce UI (Jost), ledger mono. */
-  --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
-  --font-brand: 'Kaushan Script', 'Segoe Script', cursive;
-  --font-ui: 'Jost', 'Jost Fallback', 'Century Gothic', 'Futura', system-ui, sans-serif;
+  --font-serif: 'Marcellus', 'Libre Caslon Text', Georgia, serif;
+  --font-brand: 'Marcellus', Georgia, serif;
+  --font-ui: 'Libre Caslon Text', Georgia, 'Times New Roman', serif;
   --font-mono: 'Courier Prime', 'Courier New', monospace;
 
   /* Fluid type scale — editorial display runs big, UI stays quiet */

@@ -4,7 +4,10 @@
    Palette (from the official sheet): Parchment #E8DDC8 ground,
    Warm Sand #D8C3A3 shade, Archive Brown #5A3522 type,
    Deep Cocoa #3E281B headlines/buttons, Terracotta #B66A4B accent only.
-   Type: Cormorant Garamond (display) + Jost (everything else).
+   Nile Teal #2F6670 cultural highlight (postmarks, help band),
+   Archive Dust #7B786F / Faded Paper #B5B0A6 for lines and details.
+   Type: Marcellus (display, like the bottle label), Libre Caslon Text
+   (reading), Courier Prime (typewriter captions and labels).
    ———————————————————————————————————————————————— */
 
 :root {
@@ -13,8 +16,12 @@
   --ed-brown: #5a3522;
   --ed-cocoa: #3e281b;
   --ed-accent: #b66a4b;
-  --ed-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-  --ed-sans: 'Jost', 'Century Gothic', system-ui, sans-serif;
+  --ed-teal: #2f6670;
+  --ed-dust: #7b786f;
+  --ed-paper-grey: #b5b0a6;
+  --ed-serif: 'Marcellus', Georgia, 'Times New Roman', serif;
+  --ed-sans: 'Libre Caslon Text', Georgia, 'Times New Roman', serif;
+  --ed-type: 'Courier Prime', 'Courier New', monospace;
 }
 
 /* chrome on the homepage: the ticker sits in the same paper, not black */
