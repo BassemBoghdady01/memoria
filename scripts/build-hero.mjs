@@ -114,16 +114,16 @@ async function buildScene() {
     }
   }
   /* close small holes, soften edges */
-  const soft = await sharp(mask, { raw: { width: W, height: H, channels: 1 } }).blur(1.4).extractChannel(0).raw().toBuffer();
+  const soft = await sharp(mask, { raw: { width: W, height: H, channels: 1 } }).blur(3.2).extractChannel(0).raw().toBuffer();
 
   /* the view: Nile at Zamalek, graded to a hazy golden afternoon, softly out of focus */
   const vW = Math.round(1012 * s + 20 * s), vH = Math.round(winBottom + 20 * s);
   const nile = await sharp(P + 'nile.jpg')
     .resize(vW, vH, { fit: 'cover', position: 'centre' })
     .recomb([[1.12, 0.1, 0.0], [0.04, 1.0, 0.0], [0.0, 0.06, 0.74]])
-    .modulate({ brightness: 1.22, saturation: 0.8 })
-    .linear(0.85, 40)
-    .blur(1.6)
+    .modulate({ brightness: 1.3, saturation: 0.66 })
+    .linear(0.66, 78)
+    .blur(5)
     .raw()
     .toBuffer();
 
@@ -136,11 +136,26 @@ async function buildScene() {
       for (let c = 0; c < 3; c++) out[i + c] = Math.round(out[i + c] * (1 - a) + nile[j + c] * a);
     }
   }
+  /* any garden leaves or flowers the key missed (green, or saturated pink/red)
+     become the hazy view behind them, softly */
+  for (let y = 0; y < Math.min(vH, H); y++) {
+    for (let x = 0; x < Math.min(vW, W); x++) {
+      if (soft[y * W + x] > 200) continue;
+      const i = (y * W + x) * 3, j = (y * vW + x) * 3;
+      const [hu, sa, v] = rgb2hsv(data[i], data[i + 1], data[i + 2]);
+      const green = hu >= 60 && hu <= 200 && sa > 0.12;
+      const flower = (hu > 300 || hu < 12) && sa > 0.35 && v > 0.35;
+      if (!green && !flower) continue;
+      const k = green ? Math.min(1, (sa - 0.12) * 4) : 0.85;
+      for (let c = 0; c < 3; c++) out[i + c] = Math.round(out[i + c] * (1 - k) + nile[j + c] * k);
+    }
+  }
   /* whole-room grade: afternoon warmth, a touch of teal kept in the shadows */
   return sharp(out, { raw: { width: W, height: H, channels: 3 } })
     .recomb([[1.08, 0.05, 0.0], [0.02, 0.97, 0.0], [0.0, 0.04, 0.86]])
     .modulate({ brightness: 1.0, saturation: 0.92 })
     .linear(1.12, -14)
+    .blur(2.4)
     .png()
     .toBuffer();
 }
@@ -169,15 +184,15 @@ async function integrateBottle(sceneBuf, slug, { cx, baseY, height }) {
       if (X < 0 || Y < 0 || X >= W || Y >= scene.h) continue;
       let r = px[k * 4], g = px[k * 4 + 1], b = px[k * 4 + 2];
       /* colour match: the studio white light becomes warm room light */
-      r = r * 1.0; g = g * 0.95; b = b * 0.86;
+      r = r * 0.93; g = g * 0.82; b = b * 0.7;
       /* light from the window passing through the liquid (glass body only) */
       if (y > capEnd) {
         const t = smooth(clamp((y - capEnd) / (bh - capEnd)));
-        const glow = 0.1 * (1 - Math.abs(t - 0.45) * 1.6);
+        const glow = 0.14 * (1 - Math.abs(t - 0.45) * 1.6);
         r += 120 * glow; g += 62 * glow; b += 18 * glow;
       }
       /* rim light from behind */
-      const rim = (1 - eroded[k] / 255) * (x < bw * 0.5 ? 0.4 : 0.22);
+      const rim = (1 - eroded[k] / 255) * (x < bw * 0.5 ? 0.5 : 0.3);
       r += 160 * rim; g += 132 * rim; b += 92 * rim;
       /* ambient occlusion towards the base */
       const ao = 1 - 0.18 * smooth(clamp((y - bh * 0.86) / (bh * 0.14)));
@@ -197,12 +212,12 @@ async function integrateBottle(sceneBuf, slug, { cx, baseY, height }) {
   }
 
   /* contact shadow + soft forward shadow on the ledge */
-  const shW = Math.round(bw * 1.5), shH = Math.round(bh * 0.09);
+  const shW = Math.round(bw * 1.3), shH = Math.round(bh * 0.07);
   const shadow = await sharp(Buffer.from(`<svg width="${shW}" height="${shH}"><defs><radialGradient id="g"><stop offset="0" stop-color="#000" stop-opacity="0.7"/><stop offset="0.55" stop-color="#000" stop-opacity="0.35"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs><ellipse cx="${shW / 2}" cy="${shH / 2}" rx="${shW / 2}" ry="${shH / 2}" fill="url(#g)"/></svg>`)).blur(3).raw().ensureAlpha().toBuffer({ resolveWithObject: true });
   const sx = Math.round(cx - shW / 2), sy = Math.round(baseY - shH * 0.45);
   for (let y = 0; y < shH; y++) {
     for (let x = 0; x < shW; x++) {
-      const a = (shadow.data[(y * shW + x) * 4 + 3] / 255) * 0.85;
+      const a = (shadow.data[(y * shW + x) * 4 + 3] / 255) * 0.95;
       const X = sx + x, Y = sy + y;
       if (!a || X < 0 || Y < 0 || X >= W || Y >= scene.h) continue;
       if (Y < baseY - 2 && px[((Y - top) * bw + (X - left)) * 4 + 3] > 10) continue; // never over the glass
@@ -215,7 +230,7 @@ async function integrateBottle(sceneBuf, slug, { cx, baseY, height }) {
   const reflH = Math.round(bh * 0.16);
   for (let y = 0; y < reflH; y++) {
     const srcY = bh - 1 - y;
-    const fade = 0.16 * (1 - y / reflH) ** 2;
+    const fade = 0.22 * (1 - y / reflH) ** 2;
     for (let x = 0; x < bw; x++) {
       const k = srcY * bw + x;
       const a = (px[k * 4 + 3] / 255) * fade;
@@ -241,7 +256,7 @@ async function exportSet(name, buf, widths) {
 const scene = await buildScene();
 const { width: W, height: H } = await sharp(scene).metadata();
 /* the ledge top runs at ~73.6% of the photo's height */
-const ledge = Math.round(H * 0.736);
+const ledge = Math.round(H * 0.75);
 
 /* desktop frame: wide crop with the ledge near the bottom */
 const dTop = Math.round(H * 0.27), dH = Math.round(H * 0.565);
@@ -253,7 +268,7 @@ const assets = JSON.parse(await readFile('supabase/seed/product-assets.json', 'u
 const done = [];
 for (const a of assets) {
   if (only && a.slug !== only) continue;
-  const comp = await integrateBottle(scene, a.slug, { cx: W * 0.535, baseY: ledge, height: dH * 0.6 });
+  const comp = await integrateBottle(scene, a.slug, { cx: W * 0.535, baseY: ledge, height: dH * 0.52 });
   const desktop = await sharp(comp).extract({ left: 0, top: dTop, width: W, height: dH }).composite([{ input: vignette(W, dH) }]).png().toBuffer();
   await exportSet(`hero-${a.slug}`, desktop, [1280, 1920, 2600]);
   const mobile = await sharp(comp).extract({ left: mLeft, top: mTop, width: mW, height: mH }).composite([{ input: vignette(mW, mH, 0.35) }]).png().toBuffer();

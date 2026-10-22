@@ -3,11 +3,10 @@
  *
  *  A  the room darkens, the camera moves in, the bottle turns through its
  *     four real photographed angles while light slides across the glass
- *  B  a fine spray leaves the bottle: a short
- *     dense burst, then thousands of droplets drifting and diffusing in
- *     the back-light (2D canvas, deterministic: scrolling up rewinds it)
- *  C  the mist opens onto a memory — sunlight through a curtain — revealed
- *     through a soft mask that follows the cloud
+ *  B  warm light gathers behind the glass, like sun coming through a
+ *     curtain (no drawn particles: a soft bloom, nothing more)
+ *  C  the light opens onto a memory — sunlight through a curtain — revealed
+ *     through a soft widening mask
  *  D  the memory settles back behind the bottle, the line and the action
  *
  * Native sticky positioning (no scroll hijack); progress is read from the
@@ -42,7 +41,7 @@ export function memorySpraySection(p, scene, { line = 'Some memories never leave
         </div>
         <div class="spray2__glass" style="-webkit-mask-image:url(${cut('01', 600)});mask-image:url(${cut('01', 600)})"><i class="spray2__sheen" data-sheen></i></div>
       </div>
-      <canvas class="spray2__mist" data-mist aria-hidden="true"></canvas>
+      <i class="spray2__bloom" data-bloom aria-hidden="true"></i>
       <div class="spray2__copy">
         <p class="spray2__kicker" data-kicker>The memory spray</p>
         <h2 class="spray2__line" id="spray-line" data-line>${esc(line)}</h2>
@@ -72,82 +71,7 @@ export function mountMemorySpray(root, { reduced = false, mobile = false } = {})
   const kicker = $('[data-kicker]');
   const lineEl = $('[data-line]');
   const cta = $('[data-cta]');
-  const canvas = $('[data-mist]');
-  const ctx = canvas.getContext('2d');
-
-  /* deterministic droplets */
-  const N = mobile ? 420 : 1100;
-  let seed = 7;
-  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-  const drops = Array.from({ length: N }, () => {
-    const burst = rnd() < 0.45;
-    const fine = rnd() < 0.6; // most droplets are tiny and sharp; the rest are soft haze
-    return {
-      t0: burst ? rnd() * 0.06 : 0.03 + rnd() * 0.3,
-      speed: (burst ? 1.2 : 0.5) + rnd() * (burst ? 1.4 : 0.9),
-      ang: -0.18 + (rnd() - 0.5) * (burst ? 0.26 : 0.9),
-      drag: 1.6 + rnd() * 3.6,
-      size: fine ? 0.5 + rnd() * 1.1 : 2 + rnd() * 4,
-      fine,
-      wob: rnd() * Math.PI * 2,
-      rise: 0.03 + rnd() * 0.16,
-      bright: 0.5 + rnd() * 0.5,
-    };
-  });
-
-  /* soft round sprite, pre-rendered once */
-  const sprite = document.createElement('canvas');
-  sprite.width = sprite.height = 64;
-  const sg = sprite.getContext('2d');
-  const grad = sg.createRadialGradient(32, 32, 0, 32, 32, 32);
-  grad.addColorStop(0, 'rgba(255,244,226,1)');
-  grad.addColorStop(0.35, 'rgba(255,236,210,0.55)');
-  grad.addColorStop(1, 'rgba(255,230,200,0)');
-  sg.fillStyle = grad;
-  sg.fillRect(0, 0, 64, 64);
-
-  let W = 0, H = 0, dpr = 1;
-  const resize = () => {
-    dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2);
-    W = canvas.clientWidth;
-    H = canvas.clientHeight;
-    canvas.width = Math.round(W * dpr);
-    canvas.height = Math.round(H * dpr);
-  };
-
-  function drawMist(t, nozzle, fade) {
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, W, H);
-    if (t <= 0 || fade <= 0) return;
-    ctx.globalCompositeOperation = 'lighter';
-    const unit = H;
-    for (const d of drops) {
-      const age = t - d.t0;
-      if (age <= 0) continue;
-      const travel = (d.speed / d.drag) * (1 - Math.exp(-d.drag * age));
-      const spread = age * 0.3;
-      const x = nozzle.x + Math.cos(d.ang) * travel * unit + Math.sin(d.wob + age * 3) * spread * unit * 0.25;
-      const y = nozzle.y + Math.sin(d.ang) * travel * unit - d.rise * age * age * unit + Math.cos(d.wob + age * 2.3) * spread * unit * 0.18;
-      const life = clamp(1 - age / (d.fine ? 0.55 : 1.0));
-      const a = Math.min(1, age * 18) * life * life * d.bright * fade;
-      if (a < 0.01) continue;
-      const r = (d.fine ? d.size + age * 2.5 : d.size + age * 30) * (mobile ? 0.85 : 1);
-      ctx.globalAlpha = a * (d.fine ? 0.75 : 0.11);
-      ctx.drawImage(sprite, x - r, y - r, r * 2, r * 2);
-    }
-    /* the initial jet: a brief bright core leaving the nozzle */
-    const jet = clamp(1 - t / 0.12) * fade;
-    if (jet > 0) {
-      const g = ctx.createRadialGradient(nozzle.x + 30, nozzle.y - 4, 0, nozzle.x + 30, nozzle.y - 4, H * 0.12);
-      g.addColorStop(0, `rgba(255,246,232,${0.28 * jet})`);
-      g.addColorStop(1, 'rgba(255,240,220,0)');
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = g;
-      ctx.fillRect(nozzle.x - 20, nozzle.y - H * 0.12, H * 0.3, H * 0.24);
-    }
-    ctx.globalAlpha = 1;
-    ctx.globalCompositeOperation = 'source-over';
-  }
+  const bloom = $('[data-bloom]');
 
   let lastFrame = -1;
   let raf = 0;
@@ -166,8 +90,8 @@ export function mountMemorySpray(root, { reduced = false, mobile = false } = {})
       frames.forEach((f, i) => f.classList.toggle('is-on', i === frameIdx));
       lastFrame = frameIdx;
     }
-    /* B: spray (.36 → .7) */
-    const sprayT = seg(p, 0.36, 0.72) * 0.9;
+    /* B: light gathers (.34 → .6) */
+    const glow = ease(seg(p, 0.34, 0.6));
     /* C: memory opens (.5 → .72), holds, D: settles (.8 → .92) */
     const open = ease(seg(p, 0.5, 0.72));
     const close = ease(seg(p, 0.8, 0.92));
@@ -191,13 +115,9 @@ export function mountMemorySpray(root, { reduced = false, mobile = false } = {})
     cta.style.opacity = seg(p, 0.9, 0.97);
     cta.style.pointerEvents = p > 0.9 ? 'auto' : 'none';
 
-    /* mist: nozzle sits at the top of the collar, on screen */
-    const br = bottle.getBoundingClientRect();
-    const cr = canvas.getBoundingClientRect();
-    /* the mist leaves from the neck, just under the cap, and drifts out into the light */
-    const nozzle = { x: br.left - cr.left + br.width * 0.66, y: br.top - cr.top + br.height * (CAP_SPLIT + 0.02) };
-    const mistFade = 1 - seg(p, 0.74, 0.86);
-    drawMist(sprayT, nozzle, mistFade);
+    /* the bloom grows behind the bottle, then gives way to the memory */
+    bloom.style.opacity = String(glow * (1 - open * 0.7) * (1 - close));
+    bloom.style.transform = `translate(-50%, -50%) scale(${0.6 + glow * 0.9 + open * 0.6})`;
   };
   const onScroll = () => {
     if (!raf) raf = requestAnimationFrame(render);
@@ -208,21 +128,17 @@ export function mountMemorySpray(root, { reduced = false, mobile = false } = {})
   const io = new IntersectionObserver(([e]) => {
     if (e.isIntersecting && !active) {
       active = true;
-      resize();
       window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', resize);
       render();
     } else if (!e.isIntersecting && active) {
       active = false;
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', resize);
     }
   }, { rootMargin: '200px 0px' });
   io.observe(sec);
   onPageCleanup(() => {
     io.disconnect();
     window.removeEventListener('scroll', onScroll);
-    window.removeEventListener('resize', resize);
     if (raf) cancelAnimationFrame(raf);
   });
 }

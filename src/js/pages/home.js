@@ -118,9 +118,7 @@ function heritageSection() {
   return `
   <section class="heri" aria-labelledby="heri-title">
     <div class="heri__media" aria-hidden="true">
-      ${img('heritage-line', 'heri__img heri__img--a', '(max-width: 900px) 100vw, 45vw')}
-      ${img('heritage-apothecary', 'heri__img heri__img--b', '(max-width: 900px) 60vw, 22vw')}
-      ${img('heritage-lab', 'heri__img heri__img--c', '(max-width: 900px) 60vw, 20vw')}
+      <figure class="heri__frame">${img('heritage-apothecary', 'heri__img heri__img--solo', '(max-width: 900px) 100vw, 42vw') || img('heritage-line', 'heri__img heri__img--solo', '(max-width: 900px) 100vw, 42vw')}</figure>
     </div>
     <div class="heri__copy">
       ${h.years ? `<p class="heri__years" aria-hidden="true">${esc(String(h.years))}</p>` : ''}

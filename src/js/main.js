@@ -2,12 +2,9 @@
  * MEMÓRIA · Bootstrap.
  * Load the catalogue from the database first, then draw the chrome and route.
  */
-import '@fontsource/fraunces/400.css';
-import '@fontsource/fraunces/400-italic.css';
-import '@fontsource/fraunces/500.css';
-import '@fontsource/fraunces/600.css';
 import '@fontsource/cormorant-garamond/500.css';
 import '@fontsource/cormorant-garamond/600.css';
+import '@fontsource/cormorant-garamond/500-italic.css';
 import '@fontsource/kaushan-script/400.css'; /* brand brush accent — used sparingly */
 import '@fontsource/jost/400.css';
 import '@fontsource/jost/500.css';
