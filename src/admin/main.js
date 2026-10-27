@@ -20,6 +20,7 @@ const VIEWS = {
   discounts: { label: 'Discounts', load: () => import('./views/discounts.js') },
   invoices: { label: 'Invoices', load: () => import('./views/invoices.js') },
   customers: { label: 'Customers', load: () => import('./views/customers.js') },
+  memories: { label: 'Memories', load: () => import('./views/memories.js') },
   shipping: { label: 'Shipping', load: () => import('./views/shipping.js') },
   content: { label: 'Website content', load: () => import('./views/content.js') },
   settings: { label: 'Store settings', load: () => import('./views/settings.js') },

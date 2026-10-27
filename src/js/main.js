@@ -29,6 +29,7 @@ import cartPage from './pages/cart.js';
 import checkoutPage from './pages/checkout.js';
 import orderPage from './pages/order.js';
 import { searchPage, helpPage, notFoundPage } from './pages/misc.js';
+import memoryPage from './pages/memory.js';
 
 const main = document.querySelector('#main');
 main.innerHTML = '<div class="boot" role="status"><span class="boot__mark">MEMÓRIA</span></div>';
@@ -60,6 +61,7 @@ if (catalogState.error) {
   register('/order/:number', orderPage);
   register('/search', searchPage);
   register('/help', helpPage);
+  register('/memory', memoryPage);
   redirect('/archive', '/our-story');
   redirect('/account', '/shop');
   setNotFound(notFoundPage);

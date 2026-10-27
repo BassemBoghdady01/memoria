@@ -1,0 +1,85 @@
+/* ——— Memory card (QR landing, /memory) ——— */
+.memorycard {
+  max-width: 38rem;
+  padding-block: clamp(3rem, 8vw, 6rem) var(--space-7);
+}
+.memorycard__head h1 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: var(--fs-h2);
+  line-height: 1.05;
+  margin: 0.8rem 0 1rem;
+}
+.memorycard__lede {
+  font-family: var(--font-serif);
+  font-size: var(--fs-lede);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.memorycard__lede strong { color: var(--terracotta-deep); font-weight: 500; }
+.memorycard__form {
+  margin-top: var(--space-5);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4) var(--space-3);
+}
+.memorycard__form .field--full,
+.memorycard__form .field:first-of-type + .field { grid-column: 1 / -1; }
+.memorycard__form > .memorycard__error,
+.memorycard__form > .btn,
+.memorycard__form > .memorycard__fine { grid-column: 1 / -1; }
+.memorycard__form textarea {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  resize: vertical;
+  background: var(--parchment-bright);
+  min-height: 7.5rem;
+}
+.field.has-error textarea { border-color: var(--terracotta-deep); }
+.memorycard__error {
+  color: var(--terracotta-deep);
+  font-size: var(--fs-small);
+  margin: 0;
+}
+.memorycard__fine {
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  text-align: center;
+  margin: 0;
+}
+.memorycard__done {
+  margin-top: var(--space-5);
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  display: grid;
+  gap: var(--space-3);
+  text-align: center;
+}
+.memorycard__done[hidden], .memorycard__form[hidden] { display: none; }
+.memorycard__done:focus { outline: none; }
+.memorycard__done h2 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: var(--fs-h3);
+  margin: 0;
+}
+.memorycard__code {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  padding: var(--space-4) var(--space-3);
+  border: 1px dashed var(--line-strong);
+  background: var(--parchment);
+}
+.memorycard__code strong {
+  font-family: var(--font-mono);
+  font-size: clamp(1.6rem, 1.2rem + 2vw, 2.2rem);
+  letter-spacing: 0.12em;
+  color: var(--cocoa);
+}
+@media (max-width: 560px) {
+  .memorycard__form { grid-template-columns: 1fr; }
+}
